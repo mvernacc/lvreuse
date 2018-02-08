@@ -48,19 +48,21 @@ def main():
             plt.subplot(gs[i, j])
             # Plot contours of r_c
             cs = plt.contour(b_grid, q_grid, r_c_grid,
-                             np.linspace(0, 1, 11))
-            plt.clabel(cs, inline=1, fontsize=8)
+                             levels=np.linspace(0, 1, 11))
+            plt.clabel(cs, inline=1, fontsize=8, fmt='%.1f')
 
             # Shade the r_c > 1 bad region
             plt.fill_between(b, q_be, 1, facecolor='grey')
 
             plt.xlabel('Prod. cost ratio $b$ [-]')
             plt.ylabel('Refurb. ratio $q$ [-]')
-            plt.title('n={:d}, z={:.2f}'.format(n[i], z[j]))
+            plt.title('n={:d}, z={:.1f}'.format(n[i], z[j]))
             plt.ylim([0, 0.5])
     plt.suptitle('Cost factor $r_c$')
     plt.tight_layout()
     plt.subplots_adjust(top=0.95)
+
+    plt.savefig('cost_model.png')
     plt.show()
 
 

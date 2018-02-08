@@ -26,6 +26,12 @@
 These instructions give you guidelines for preparing papers for AIAA Technical Papers using \LaTeX{}. Define all symbols used in the abstract. Do not cite references in the abstract. The footnote on the first page should list the Job Title and AIAA Member Grade for each author, if known Authors do not have to be AIAA members.
 \end{abstract}
 
+\section{Description of Recovery Strategies}
+TODO
+
+\section{Performance Model}
+TODO
+
 \section{Cost Model}
 Next, we attempt to quantify the cost savings from reusing the first stage. The cost savings are quantified by the cost factor $r_c$, which is the ratio of the average cost of one flight of a reusable first stage to the average cost of an expendable first stage. For $r_c < 1$, the reusable system has lower recurring costs. Write $r_c$ in terms of some of the cost elements identified in \cite{Sforza2015}:
 
@@ -80,6 +86,35 @@ There is substantial uncertainty and project-to-project variation in the cost ra
 r_c > 1 - z
 \end{equation}
 
+The cost model is further explored in Figure \ref{fig:cost_model}, which shows contours of $r_c$ over a plausible range of $q$ and $b$. Each subplot shows an different scenario for the recovered cost ratio $z$ and the component life $n$. Several interesting factors are apparent. First, partial recovery strategies ($z=0.5$, right column of plots) are more sensitive to changes in the production cost ratio $b$, and are impractical for $b>2$ even with long life and low refurbishment costs. Second, full recovery strategies can offer large 1st stage cost savings (low $r_c$) if the refurbishment costs are kept low and the stages have long lifetimes, even if production costs for reusable stages are relatively high. In a full-recovery strategy, it is likely worthwhile to make design changes which can streamline refurbishment and increase life, even if they increase the production cost.
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=1\textwidth]{../cost_model}
+	\label{fig:cost_model}
+	\caption{First stage re-use cost factor $r_c$ as a function of the recovery and refurbishment cost ratio $q$ and the production cost ratio $b$. Impractical regimes where re-use would not reduce cost ($r_c>1$) are shaded grey. The plots in the left column correspond to full recovery strategies ($z=1$), and the right to partial recovery ($z=0.5$). The top row corresponds to a conservative reusable component life ($n=4$ flights), the middle to a moderate life ($n=16$) and the bottom to an optimistic life ($n=64$).}
+\end{figure}
+
+To facilitate later comparisons of full vs partial recovery strategies, I compute their cost ratios in two scenarios: one making optimistic assumptions about the other variables in the reuse cost model, and one making more moderate assumptions. Table \ref{tab:cost_scenarios} shows that we can reasonably expect the cost factor to be between $0.05$ and $0.52$ for full recovery, and $0.78$ or more for partial recovery.
+
+\begin{table}
+\caption{\label{tab:cost_scenarios} Cost factor $r_c$ in hypothetical reuse scenarios}
+\centering
+\begin{tabular}{lcc}
+\hline
+& Optimistic & Moderate \\
+& $q=0.02, b=1.5, n=64$ & $q=0.20, b=2.0, n=16$ \\
+\hline
+Full recovery $z=1$ & 0.05 & 0.53 \\
+Partial recovery $z=0.5$ & 0.78 & 1.3 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\section{Cost \& Performance Tradeoffs/Comparison}
+TODO
+Pareto set of best strategies.
 
 
 \bibliography{first_stage_recovery}
