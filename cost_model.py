@@ -1,6 +1,7 @@
 """Cost model for 1st stage re-use."""
 import numpy as np
 from matplotlib import pyplot as plt
+import matplotlib.gridspec as gridspec
 
 
 def cost_ratio(n, z, b, q):
@@ -22,35 +23,44 @@ def cost_ratio(n, z, b, q):
 
 
 def main():
-    n = 16
-    z = 0.5
+    n = (4, 16, 64)
+    z = (1, 0.5)
     b = np.linspace(1, 3)
-    q = np.linspace(0, 1)
+    q = np.linspace(0, 0.5)
 
     b_grid, q_grid = np.meshgrid(b, q)
 
-    r_c_grid = cost_ratio(n, z, b_grid, q_grid)
+    gs = gridspec.GridSpec(len(n), len(z))
+    plt.figure(figsize=(8, 10))
 
-    # Find the minimum value of r_c
-    r_c_min = cost_ratio(n, z, 1, 0)
-    print 'r_c min = {:.3f}'.format(r_c_min)
+    for i in range(len(n)):
+        for j in range(len(z)):
+            r_c_grid = cost_ratio(n[i], z[j], b_grid, q_grid)
 
-    # Find the r_c=1 "break-even" curve
-    q_be = 1/(z*b) - 1/float(n) - (1 - z) / z
-    q_be[q_be < 0] = 0
+            # Find the minimum value of r_c
+            r_c_min = cost_ratio(n[i], z[j], 1, 0)
+            print 'r_c min = {:.3f}'.format(r_c_min)
 
+            # Find the r_c=1 "break-even" curve
+            q_be = 1/(z[j]*b) - 1/float(n[i]) - (1 - z[j]) / z[j]
+            q_be[q_be < 0] = 0
 
-    plt.figure()
-    # Plot contours of r_c
-    cs = plt.contour(b_grid, q_grid, r_c_grid, 16)
-    plt.clabel(cs, inline=1, fontsize=10)
+            plt.subplot(gs[i, j])
+            # Plot contours of r_c
+            cs = plt.contour(b_grid, q_grid, r_c_grid,
+                             np.linspace(0, 1, 11))
+            plt.clabel(cs, inline=1, fontsize=8)
 
-    # Shade the r_c > 1 bad region
-    plt.fill_between(b, q_be, 1, facecolor='grey')
+            # Shade the r_c > 1 bad region
+            plt.fill_between(b, q_be, 1, facecolor='grey')
 
-    plt.xlabel('Recov./Expend. prod. cost $b$ [-]')
-    plt.ylabel('(Recov.+Refurb.)/prod. cost $q$ [-]')
-    plt.title('Cost ratio $r_c$\nfor n={:d}, z={:.2f}'.format(n, z))
+            plt.xlabel('Prod. cost ratio $b$ [-]')
+            plt.ylabel('Refurb. ratio $q$ [-]')
+            plt.title('n={:d}, z={:.2f}'.format(n[i], z[j]))
+            plt.ylim([0, 0.5])
+    plt.suptitle('Cost factor $r_c$')
+    plt.tight_layout()
+    plt.subplots_adjust(top=0.95)
     plt.show()
 
 
