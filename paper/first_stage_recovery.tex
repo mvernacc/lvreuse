@@ -1,0 +1,87 @@
+\documentclass[conf]{new-aiaa}
+%\documentclass[journal]{new-aiaa} for journal papers
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage[version=4]{mhchem}
+\usepackage{siunitx}
+\usepackage{longtable,tabularx}
+\setlength\LTleft{0pt} 
+
+\title{Preparation of Papers for AIAA Technical Conferences}
+
+\author{First A. Author\footnote{Insert Job Title, Department Name, Address/Mail Stop, and AIAA Member Grade (if any) for first author.} and Second B. Author Jr.\footnote{Insert Job Title, Department Name, Address/Mail Stop, and AIAA Member Grade (if any) for second author.}}
+\affil{Business or Academic Affiliation 1, City, State, Zip Code}
+\author{Third C. Author\footnote{Insert Job Title, Department Name, Address/Mail Stop, and AIAA Member Grade (if any) for third author.}}
+\affil{Business or Academic Affiliation 2, City, Province, Zip Code, Country}
+\author{Fourth D. Author\footnote{Insert Job Title, Department Name, Address/Mail Stop, and AIAA Member Grade (if any) for fourth author (etc.).}}
+\affil{Business or Academic Affiliation 2, City, State, Zip Code}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+These instructions give you guidelines for preparing papers for AIAA Technical Papers using \LaTeX{}. Define all symbols used in the abstract. Do not cite references in the abstract. The footnote on the first page should list the Job Title and AIAA Member Grade for each author, if known Authors do not have to be AIAA members.
+\end{abstract}
+
+\section{Cost Model}
+Next, we attempt to quantify the cost savings from reusing the first stage. The cost savings are quantified by the cost factor $r_c$, which is the ratio of the average cost of one flight of a reusable first stage to the average cost of an expendable first stage. For $r_c < 1$, the reusable system has lower recurring costs. Write $r_c$ in terms of some of the cost elements identified in \cite{Sforza2015}:
+
+\begin{equation}
+\label{eq:cost_elements}
+r_c = \frac{\frac{C_{pr}}{n} + C_{pn} + C_f + C_{ro}}{C_{pe}}
+\end{equation}
+
+where $n$ is the average lifetime number of flights for a reusable first stage. The cost elements of the reusable first stage are: $C_{pr}$, the production cost of the reusable components; $C_{pn}$, the production cost of the new (non-reusable) components; $C_f$, the refurbishment cost; and $C_{ro}$, the recovery operations cost. The expendable stage production cost is $C_{pe}$. Note that this cost model does not capture development costs. Also, $r_c$ only includes those costs directly relevant to the first stage, and excludes other factors which contribute to the launch service cost (upper stage, facilities, and insurance, etc.).
+
+Actual costs vary with booster size scale, are difficult to estimate for new vehicle proposals \cite{Sforza2015}, and are often not publicly available. Instead, it is more helpful to write the cost factor in terms of dimensionless ratios which can be more readily estimated. I define the following ratios:
+\begin{itemize}
+	\item The recovered cost ratio, $z$, which is the ratio of the cost of the recovered hardware to the total production cost of the recoverable stage
+    \begin{equation}
+    z = \frac{C_{pr}}{C_{pr} + C_{pn}}
+    \end{equation}
+    By definition, $z \in [0, 1]$. For full-recovery strategies, $z=1$. For strategies which recover only the engines and other high-value components, $z \approx 0.5$ \cite{Ragab2015} (TODO more general engine cost as fraction of stage cost. I think Atlas V has a unusually expensive engine).
+    
+    \item The recovery and refurbishment cost ratio, $q$, which is the cost of recovery and refurbishment divided by production cost of the reusable hardware.
+    \begin{equation}
+    q = \frac{C_{f} + C_{ro}}{C_{pr}}
+    \end{equation}
+    By definition, $q > 0$. Inefficient recovery strategies can have $q > 1$ (e.g. SRB citation needed), in which case recovery cannot lead to cost savings and is probably not worthwhile. In some extreme proposals, the only recovery/refurbishment operation would be to reload the stage with propellant \cite{Musk2017}. In this case, propellant costs give a lower limit of $q \approx 0.01$ for hydrocarbon/oxygen stages \cite{Ragab2015}. A more moderate estimate from \cite{Sforza2015} gives $q \approx 0.25$ (15\% for refurbishment and another 10\% for recovery operations). Refurbishment cost data for Falcon 9 is not publicly available, but SpaceX leadership has stated that the refurbishment cost of the first re-used stage was ``substantially less than half'' of the production cost ($q<0.5$) \cite{Foust2017}.
+   
+    \item The production cost ratio, $b$, which is the ratio of production costs for reusable and expendable stages.
+    \begin{equation}
+    b = \frac{C_{pr} + C_{pn}}{C_{pe}}
+    \end{equation}
+    We should expect that, all other factors being equal, reusable stages will be more expensive to produce, so $b>1$. Several factors increase the cost of reusable stages:
+    \begin{itemize}
+    	\item Extra hardware - Recovery devices (which are not required on an expendable version) add to the production cost. The magnitude of this effect is difficult to estimate in a general manner.
+    	\item More durable hardware - More expensive materials or designs may be employed to extend component life. The magnitude of this effect may increase weakly with $n$, but is  difficult to estimate in a general manner.
+    	\item Lower production rate - If a reusable and expendable fleet are to provide the same total number of launches \footnote{This may not be a good assumption - if a fleet has significantly lower launch costs, it may be able to capture a larger share of the launch market or increase the volume of the launch market}, the expendable fleet will require $n$ times more first stages. Due to experience curve effects, the average cost of producing a stage is expected to decline as the production volume increases. The average reusable stage production cost would therefore be higher, even if the first-unit costs are identical. If the experience curve is described by a power law with learning rate $s$, then
+    	\begin{equation}
+    	b = \frac{C_{pr}' n^{-\log_2(s)} + C_{pn}'}{C_{pe}'}
+    	\end{equation}
+    	where primes denote first-unit costs (as opposed to average costs).
+    \end{itemize}
+\end{itemize}
+
+Using these factors, Equation \ref{eq:cost_elements} can be re-written as
+
+\begin{equation}
+\label{eq:r_c_dimensionless}
+r_c = z b \left( \frac{1}{n} + \frac{1 - z}{z} + q \right)
+\end{equation}
+
+There is substantial uncertainty and project-to-project variation in the cost ratios $b$ and $q$, so we should not expect to predict a single, general value for $r_c$. However, we can establish some plausible bounds on $r_c$ for the full and partial reuse cases. In the limit of a ``perfectly reusable'' stage ($n\rightarrow\infty, b=1, q=0$), Equation \ref{eq:r_c_dimensionless} reduces to $r_c = 1 - z$. This puts a hard lower limit on the cost factor for partial reuse strategies:
+
+\begin{equation}
+\label{eq:r_c_low_limit}
+r_c > 1 - z
+\end{equation}
+
+
+
+\bibliography{first_stage_recovery}
+
+\end{document}
