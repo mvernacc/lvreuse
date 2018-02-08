@@ -17,14 +17,14 @@ def cost_ratio(n, z, b, q):
             (cost of recovering and refurbishing the recoverable components) /
             (production cost of the recoverable components). Probably < 1.
     """
-    r_c = z * b * (1/float(n) + 1 - z + q)
+    r_c = z * b * (1/float(n) + (1 - z)/z + q)
     return r_c
 
 
 def main():
-    n = 10
-    z = 1.0
-    b = np.linspace(1, 2)
+    n = 16
+    z = 0.5
+    b = np.linspace(1, 3)
     q = np.linspace(0, 1)
 
     b_grid, q_grid = np.meshgrid(b, q)
@@ -32,11 +32,12 @@ def main():
     r_c_grid = cost_ratio(n, z, b_grid, q_grid)
 
     # Find the minimum value of r_c
-    r_c_min = cost_ratio(n, y, 1, 0)
+    r_c_min = cost_ratio(n, z, 1, 0)
     print 'r_c min = {:.3f}'.format(r_c_min)
 
     # Find the r_c=1 "break-even" curve
-    q_be = 1/(z*b) - 1/float(n) + z - 1
+    q_be = 1/(z*b) - 1/float(n) - (1 - z) / z
+    q_be[q_be < 0] = 0
 
 
     plt.figure()
