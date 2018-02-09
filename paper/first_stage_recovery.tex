@@ -7,6 +7,8 @@
 \usepackage[version=4]{mhchem}
 \usepackage{siunitx}
 \usepackage{longtable,tabularx}
+\usepackage{footnote}
+\makesavenoteenv{tabular}
 \setlength\LTleft{0pt} 
 
 \title{Preparation of Papers for AIAA Technical Conferences}
@@ -28,6 +30,30 @@ These instructions give you guidelines for preparing papers for AIAA Technical P
 
 \section{Description of Recovery Strategies}
 TODO
+\begin{table}
+	\caption{\label{tab:vehicles} Some launch vehicles with reusable boosters. (* denotes boosters used in parallel staging)}
+	\centering
+	\begin{tabular}{p{4cm} l p{2cm}  p{2cm} p{2cm}}
+		\hline
+		Vehicle & Status & Portion of booster recovered & Deccel \& Manuever method & Recovery location \\
+		\hline
+		\hline
+		Falcon 9 & Operational & Full & Propulsive & Launch site or downrange \\
+		\hline
+		Space Shuttle* & Retired & Full & Parachute & Downrange \\
+		\hline
+		New Glenn & Proposed & Full & Propulsive & Downrange \\
+		Adeline (Ariane 6) & Proposed & Partial & Wing & Launch site \\
+		SMART (Vulcan) \cite{Ragab2015} & Proposed & Partial & Parachute & Downrange midair \\
+		\hline
+		Ares I \cite{Ares2009} & Canceled & Full & Parachute & Downrange \\
+		Reusable Booster System (RBS) \cite{NAP13534} & Canceled & Full & Propulsive \& Wing & Launch site\\
+		NASA Liquid Fly-Back Booster (LFBB)* \cite{Healy1998} & Canceled & Full & Propulsive \& Wing & Launch site\\
+		DRL Liquid Fly-Back Booster (LFBB)* \cite{Sippel2003} & Canceled & Full & Propulsive \& Wing & Launch site\\
+		\hline
+	\end{tabular}
+\end{table}
+
 
 \section{Performance Model}
 TODO
@@ -95,7 +121,7 @@ The cost model is further explored in Figure \ref{fig:cost_model}, which shows c
 	\caption{First stage re-use cost factor $r_c$ as a function of the recovery and refurbishment cost ratio $q$ and the production cost ratio $b$. Impractical regimes where re-use would not reduce cost ($r_c>1$) are shaded grey. The plots in the left column correspond to full recovery strategies ($z=1$), and the right to partial recovery ($z=0.5$). The top row corresponds to a conservative reusable component life ($n=4$ flights), the middle to a moderate life ($n=16$) and the bottom to an optimistic life ($n=64$).}
 \end{figure}
 
-To facilitate later comparisons of full vs partial recovery strategies, I compute their cost ratios in two scenarios: one making optimistic assumptions about the other variables in the reuse cost model, and one making more moderate assumptions. Table \ref{tab:cost_scenarios} shows that we can reasonably expect the cost factor to be between $0.05$ and $0.52$ for full recovery, and $0.78$ or more for partial recovery.
+To facilitate later comparisons of full vs partial recovery strategies, I compute their cost ratios in two scenarios: one making optimistic assumptions about the other variables in the reuse cost model, and one making more moderate assumptions. Table \ref{tab:cost_scenarios} shows that we can reasonably expect the cost factor to be between $0.05$ and $0.52$ for full recovery, and $0.78$ or more for partial recovery. The moderate-assumption case agrees with other assessments that a fully reusable first stage can reduce launch costs "by a factor of 2 to 3" \cite{Hampsten2010}.
 
 \begin{table}
 \caption{\label{tab:cost_scenarios} Cost factor $r_c$ in hypothetical reuse scenarios}
