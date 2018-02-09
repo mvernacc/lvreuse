@@ -28,10 +28,29 @@
 These instructions give you guidelines for preparing papers for AIAA Technical Papers using \LaTeX{}. Define all symbols used in the abstract. Do not cite references in the abstract. The footnote on the first page should list the Job Title and AIAA Member Grade for each author, if known Authors do not have to be AIAA members.
 \end{abstract}
 
+\section{intro/motivation}
+
 \section{Description of Recovery Strategies}
-TODO
+Although only two vehicles with recoverable stages have been operated, a wide variety of first stage recovery strategies have been proposed. This section seeks to develop a systematic classification of recovery strategies, which will be useful in comparing their relative merits.
+
+First stage recovery strategies can be characterized by three high-level choices:
+\begin{enumerate}
+	\item \textit{Portion of stage recovered} - Some strategies recover the entire first stage, while others propose to only recover a portion containing the higher-value components (e.g. main engines).
+	\item \textit{Deceleration and maneuvering method} - The first stage must have some means to control and slow its re-entry trajectory. The deceleration and maneuvering methods can be grouped into three categories: propulsive designs which use the main engines to maneuver and land vertically; winged designs which use aerodynamic surfaces to maneuver and land horizontally; and design which decelerate using parachutes. Note that these are not absolute distinctions: current propulsive-landing designs use small aerodynamic control surfaces, and some proposed winged designs have auxiliary propulsion to increase their range.
+	\item \textit{Recovery location} - The stage may be recovered downrange, or may fly itself back for recovery launch site. Most downrange recovery strategies land on a boat or in the ocean, although some call for the recovered components to be caught by an aircraft in midair \cite{Ragab2015}.
+\end{enumerate}
+
+Figure \ref{fig:recov_strat_diagram} illustrates the concept of operations for various strategies formed from the above choices. Strategies which have been carried out or proposed are listed in Table \ref{tab:vehicles}, and along the bottom of Figure \ref{fig:recov_strat_diagram}.
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=1\textwidth]{figures/recov_strat_diagram}
+	\label{fig:recov_strat_diagram}
+	\caption{Recovery strategies TODO better graphics}
+\end{figure}
+
 \begin{table}
-	\caption{\label{tab:vehicles} Some launch vehicles with reusable boosters. (* denotes boosters used in parallel staging)}
+	\caption{\label{tab:vehicles} Some launch vehicles with reusable first stages. (* denotes boosters used in parallel staging)}
 	\centering
 	\begin{tabular}{p{4cm} l p{2cm}  p{2cm} p{2cm}}
 		\hline
@@ -54,6 +73,13 @@ TODO
 	\end{tabular}
 \end{table}
 
+Despite their wide variety, all these strategies face the same fundamental tradeoff between performance and cost. On the performance side, all recovery strategies degraded the $\Delta v$ capability of the first stage during ascent, reducing the payload which can be carried to orbit. However, recovering and reusing some of the first stage has the potential to reduce launch costs by eliminating the need to re-build expensive hardware\footnote{A reduction in cost is by no means guaranteed. As the Space Shuttle program demonstrated, excessive refurbishment and operations costs can make a reusable system more expensive than expendable alternatives.}. We should expect that recovery strategies will differ in their performance penalty and potential for cost reduction. The fundamental question is which, if any, of the recovery strategies can offer a small enough payload reduction and a large enough cost reduction to be worthwhile?
+
+To make this question more concrete, this paper defines two figures of merit for recovery strategies: the payload factor $r_p$ and the cost factor $r_c$. These factors compare the payload capacity and cost of a vehicle with a reusable first stage to an equivalent\footnote{The `equivalent' expendable vehicle uses the same propulsion and structural technologies, and has the same gross liftoff mass $m_0$} vehicle with an expendable first stage. The payload factor is the payload capacity of the partially reusable vehicle divided by the payload capacity of the equivalent expendable vehicle. The cost factor is the average flight cost of the reusable first stage divided by the average flight cost of an expendable first stage.
+
+When comparing recovery strategies, we can largely neglect their internal complexities and consider each strategy to be represented by a tuple $\mathcal{R}: \{r_p, r_c\}$. We seek recovery strategies with high payload factor ($r_p \rightarrow 1$) and low cost factor ($r_c \rightarrow 0$).
+
+The following two sections attempt to provide quantitative, first-principles tools to estimate $r_p$ and $r_c$. The payload factor can be easily estimated with a fair degree of accuacy, but cost modeling involves more guesswork. The TODO nth section examines the trade-offs between different strategies. Because the willingness of a launch provider to trade payload for cost is uncertain, this comparison is framed to yield a set of recovery strategies which is Pareto-optimal in $(r_p, r_c)$.
 
 \section{Performance Model}
 TODO
@@ -140,6 +166,8 @@ Partial recovery $z=0.5$ & 0.78 & 1.3 \\
 
 \section{Cost \& Performance Tradeoffs/Comparison}
 TODO
+The trade a launch operator is willing to make depends on many complicated, context specific factors (cost structure, payload discretization, etc.). Therefore, it is not possible to specify a single strategy as being `best'. Rather, this section seeks to identify the set of Pareto-optimal strategies, each of which offers the greatest payload for a certain level of cost reduction.
+
 Pareto set of best strategies.
 
 
