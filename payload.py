@@ -34,11 +34,14 @@ def payload_fixed_stages(c_1, c_2, e_1, e_2, y, dv_mission):
 
 def main():
     # Stage exahust velocities [units: meter second**-1].
-    c_1 = 290 * 9.8
-    c_2 = 320 * 9.8
+    g_0 = 9.81
+    c_1 = 290 * g_0
+    c_2 = 350 * g_0
 
     E = 0.08 # Stage inert mass fraction
     y = 0.10 # Stage mass ratio
+
+    e_1_max = 0.25
 
     dv_mission = 9.5e3    # Mission delta-v [units: meter second**-1].
 
@@ -49,7 +52,7 @@ def main():
     plt.figure(figsize=(6, 9))
     for dv_mission in [9.5e3, 12e3]:
         pi_star_expend = payload_fixed_stages(c_1, c_2, E, E, y, dv_mission)
-        e_1 = np.linspace(E, 0.20)
+        e_1 = np.linspace(E, e_1_max)
         pi_star = np.zeros(e_1.shape)
         for i in range(len(e_1)):
             pi_star[i] = payload_fixed_stages(c_1, c_2, e_1[i], E, y, dv_mission)
@@ -65,22 +68,27 @@ def main():
             dv_mission * 1e-3))
 
     plt.subplot(2, 1, 1)
-    plt.xlabel("1st stage unavail. mass fraction $\\epsilon_1'$")
-    plt.ylabel('Payload fraction $\\pi_*$')
+    plt.xlabel("1st stage unavail. mass fraction $\\epsilon_1'$ [-]")
+    plt.ylabel('Payload fraction $\\pi_*^{\\mathrm{recov}}$ [-]')
     plt.grid(True)
     plt.title("Effect of $\\epsilon_1'$ on payload capacity\n"
-              + 'for $y = {:.2f}$ '.format(y)
-              + 'and $c_1$={:.0f} m/s, $c_2$={:.0f} m/s $E$={:.2f}'.format(c_1, c_2, E))
+              + 'for $y = {:.2f}$, '.format(y)
+              + '$c_1/g_0$={:.0f} s, $c_2/g_0$={:.0f} s, $E_1=E_2$={:.2f}'.format(
+                c_1 / g_0, c_2 / g_0, E))
     plt.legend()
+    plt.xlim(E, e_1_max)
 
     plt.subplot(2, 1, 2)
-    plt.xlabel("1st stage unavail. mass fraction $\\epsilon_1'$")
-    plt.ylabel('Recov. / Expend payload ratio $r_p$')
+    plt.xlabel("1st stage unavail. mass fraction $\\epsilon_1'$ [-]")
+    plt.ylabel('Payload factor $r_p = \\pi_*^{\\mathrm{recov}}/\\pi_*^{\\mathrm{expend}}$ [-]')
     plt.grid(True)
     plt.legend()
+    plt.xlim(E, e_1_max)
     plt.ylim([0,1])
 
     plt.tight_layout()
+
+    plt.savefig('payload.png')
 
     plt.show()
 
