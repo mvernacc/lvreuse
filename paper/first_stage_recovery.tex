@@ -8,6 +8,7 @@
 \usepackage{siunitx}
 \usepackage{longtable,tabularx}
 \usepackage{footnote}
+\usepackage{mhchem}
 \makesavenoteenv{tabular}
 \setlength\LTleft{0pt} 
 
@@ -73,16 +74,89 @@ Figure \ref{fig:recov_strat_diagram} illustrates the concept of operations for v
 	\end{tabular}
 \end{table}
 
-Despite their wide variety, all these strategies face the same fundamental tradeoff between performance and cost. On the performance side, all recovery strategies degraded the $\Delta v$ capability of the first stage during ascent, reducing the payload which can be carried to orbit. However, recovering and reusing some of the first stage has the potential to reduce launch costs by eliminating the need to re-build expensive hardware\footnote{A reduction in cost is by no means guaranteed. As the Space Shuttle program demonstrated, excessive refurbishment and operations costs can make a reusable system more expensive than expendable alternatives.}. We should expect that recovery strategies will differ in their performance penalty and potential for cost reduction. The fundamental question is which, if any, of the recovery strategies can offer a small enough payload reduction and a large enough cost reduction to be worthwhile?
+Despite their wide variety, all these strategies face the same fundamental tradeoff between performance and cost. On the performance side, all recovery strategies require the first stage to carry extra mass during ascent, reducing the payload which can be lifted to orbit. However, recovering and reusing some of the first stage has the potential to reduce launch costs by eliminating the need to re-build expensive hardware\footnote{A reduction in cost is by no means guaranteed. As the Space Shuttle program demonstrated, excessive refurbishment and operations costs can make a reusable system more expensive than expendable alternatives.}. We should expect that recovery strategies will differ in their performance penalty and potential for cost reduction. The fundamental question is which, if any, of the recovery strategies can offer a small enough payload reduction and a large enough cost reduction to be worthwhile?
 
-To make this question more concrete, this paper defines two figures of merit for recovery strategies: the payload factor $r_p$ and the cost factor $r_c$. These factors compare the payload capacity and cost of a vehicle with a reusable first stage to an equivalent\footnote{The `equivalent' expendable vehicle uses the same propulsion and structural technologies, and has the same gross liftoff mass $m_0$} vehicle with an expendable first stage. The payload factor is the payload capacity of the partially reusable vehicle divided by the payload capacity of the equivalent expendable vehicle. The cost factor is the average flight cost of the reusable first stage divided by the average flight cost of an expendable first stage.
+To make this question more concrete, this paper defines two figures of merit for recovery strategies: the payload factor $r_p$ and the cost factor $r_c$. These factors compare the payload capacity and cost of a vehicle with a reusable first stage to an equivalent\footnote{The `equivalent' expendable vehicle uses the same propulsion and structural technologies, and has the same gross liftoff mass $m_{0,1}$} vehicle with an expendable first stage. The payload factor is the payload capacity of the partially reusable vehicle divided by the payload capacity of the equivalent expendable vehicle. The cost factor is the average flight cost of the reusable first stage divided by the average flight cost of an expendable first stage.
 
 When comparing recovery strategies, we can largely neglect their internal complexities and consider each strategy to be represented by a tuple $\mathcal{R}: \{r_p, r_c\}$. We seek recovery strategies with high payload factor ($r_p \rightarrow 1$) and low cost factor ($r_c \rightarrow 0$).
 
 The following two sections attempt to provide quantitative, first-principles tools to estimate $r_p$ and $r_c$. The payload factor can be easily estimated with a fair degree of accuacy, but cost modeling involves more guesswork. The TODO nth section examines the trade-offs between different strategies. Because the willingness of a launch provider to trade payload for cost is uncertain, this comparison is framed to yield a set of recovery strategies which is Pareto-optimal in $(r_p, r_c)$.
 
+
+
+
 \section{Performance Model}
 TODO
+This section provides a general, first-principles framework for estimating the payload reduction factor $r_p$ of a recovery strategy. The fundamental cause of payload reduction is that a recoverable stage must carry extra mass, as recovery hardware or propellant reserved for recovery maneuvers. This extra mass reduces the fraction of the stage's mass which is expelled during ascent. To still deliver the required $\Delta v$ to the payload, the payload mass fraction must then be reduced.
+
+\subsection{Payload factor and first stage unavailable mass}
+This subsection establishes a relationship between the payload factor $r_p$ and the extra mass carried on the first stage for recovery.
+The reduction in payload can be seen from the Tsiolkovsky rocket equation. For a two-stage, sequentially stage rocket, the equation is \cite{Wiesel2010}:
+
+\begin{equation}
+\Delta v_* =  \sum_{i=1}^{2} - c_i \ln\left( \epsilon_i + (1 - \epsilon_i) \pi_i \right)
+\end{equation} 
+
+$\Delta v_*$ is the `mission $\Delta v$' required to lift the payload to its desired orbit. $c_i$ is the effective exhaust velocity ($c = I_{sp} g_0$) of stage $i$, averaged over the ambient pressures at which the stage operates. The log-mass term is written in terms of the dimensionless parameters $\epsilon_i$ and $\pi_i$. $\epsilon_i$ is the inert mass fraction of stage $i$; it depends only on the design of the stage.
+
+\begin{equation}
+\epsilon_i = \frac{m_{s,i}}{m_{s,i} + m_{p,i}}
+\end{equation}
+
+$\pi_i$ is the mass of the stage's payload (including all higher stages) divided by the gross mass at stage ignition:
+
+\begin{equation}
+\pi_1 = \frac{m_{0,2}}{m_{0,1}}, \quad \pi_2 = \frac{m_*}{m_{0,2}}
+\end{equation}
+
+The overall payload ratio of the launch vehicle, $\pi_*$ is the product of the stage payload ratios:
+
+\begin{equation}
+\label{eq:pi_star}
+\pi_* = \frac{m_*}{m_{0,1}} = \pi_1 \pi_2
+\end{equation} 
+
+Modifying the rocket for first stage recovery effectively increases the inert mass fraction of the first stage to some new value $\epsilon_1'$. I will call $\epsilon_1'$ the `unavailable mass fraction', as it is the fraction of the first stage's mass which is unavailable for expulsion to propel the ascent. It includes the mass of the first stage structure ($m_{s,1}$) , the mass of recovery hardware ($m_{rh,1}$), and the mass of propellant reserved for recovery maneuvers ($m_{pr,1}$). The unavailable mass fraction can also be thought of as the first stage mass at stage separation divided by the first stage mass at liftoff.
+
+\begin{equation}
+\epsilon_1' = \frac{m_{s,1} + m_{rh,1} + m_{pr,1}}{m_{s,1} + m_{rh,1} + m_{p,1}}
+\end{equation}
+
+Then, the rocket equation for ascent is
+\begin{equation}
+\label{eq:recov_rocket}
+\Delta v_* =  - c_1 \ln\left( \epsilon_1' + (1 - \epsilon_1') \pi_1 \right) - c_2 \ln\left( \epsilon_2 + (1 - \epsilon_2) \pi_2 \right)
+\end{equation}
+
+Our goal is to use Equation \ref{eq:recov_rocket} to determine how changes to $\epsilon_1'$ affect $\pi_*$. To do this, we need to introduce a few additional constraints. First, we assume that the stage 2 / stage 1 mass ratio has a some value $y$.
+
+\begin{equation}
+y = \frac{m_{s,2} + m_{p,2}}{m_{s,1} + m_{rh,1} + m_{p,1}}
+\end{equation}
+
+It can be shown that
+
+\begin{equation}
+\label{eq:ypi}
+\pi_2 = (y + 1) - \frac{y}{\pi_1}
+\end{equation}
+
+Second, we define a `technology choice', $\mathcal{T}$, which influences the mass ratios and exhaust velocities. This choice encompasses technological factors such as the propellant (e.g. \ce{O2(l)}/kerosene vs. \ce{O2(l)}/\ce{H2(l)}), the tank construction technology (e.g. aluminum alloy vs. composite), and the engine cycle (e.g. gas generator vs. staged combustion). For the purposes of this model, the technology choice is fully described by the tuple $\mathcal{T} : \{ c_1, c_2, E_1, E_2 \}$, where $E$ is the technological lower limit on the structural mass fraction of an expendable stage. For expendable stages, $\epsilon_i = E_i$. For recoverable stages, $\epsilon_1' > E_1$.
+
+If we know $\Delta v_*$ (set by the mission), the technology choice $\mathcal{T}$, and the stage mass ratio $y$, we can find $\pi_*(\epsilon_1`)$ from Equations \ref{eq:pi_star}, \ref{eq:recov_rocket}, and \ref{eq:ypi}.
+
+The payload capacity of a recoverable rocket is more
+
+\begin{equation}
+content...
+\end{equation}
+
+
+\subsection{Determining the unavailable mass from recovery hardware and maneuvers}
+
+
+
+
 
 \section{Cost Model}
 Next, we attempt to quantify the cost savings from reusing the first stage. The cost savings are quantified by the cost factor $r_c$, which is the ratio of the average cost of one flight of a reusable first stage to the average cost of an expendable first stage. For $r_c < 1$, the reusable system has lower recurring costs. Write $r_c$ in terms of some of the cost elements identified in \cite{Sforza2015}:
