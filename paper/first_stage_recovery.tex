@@ -143,13 +143,26 @@ It can be shown that
 
 Second, we define a `technology choice', $\mathcal{T}$, which influences the mass ratios and exhaust velocities. This choice encompasses technological factors such as the propellant (e.g. \ce{O2(l)}/kerosene vs. \ce{O2(l)}/\ce{H2(l)}), the tank construction technology (e.g. aluminum alloy vs. composite), and the engine cycle (e.g. gas generator vs. staged combustion). For the purposes of this model, the technology choice is fully described by the tuple $\mathcal{T} : \{ c_1, c_2, E_1, E_2 \}$, where $E$ is the technological lower limit on the structural mass fraction of an expendable stage. For expendable stages, $\epsilon_i = E_i$. For recoverable stages, $\epsilon_1' > E_1$.
 
-If we know $\Delta v_*$ (set by the mission), the technology choice $\mathcal{T}$, and the stage mass ratio $y$, we can find $\pi_*(\epsilon_1`)$ from Equations \ref{eq:pi_star}, \ref{eq:recov_rocket}, and \ref{eq:ypi}.
-
-The payload capacity of a recoverable rocket is more
+If we know $\Delta v_*$ (set by the mission), the technology choice $\mathcal{T}$, and the stage mass ratio $y$, we can find $\pi_*(\epsilon_1`)$ from Equations \ref{eq:pi_star}, \ref{eq:recov_rocket}, and \ref{eq:ypi}. Then, we can compare the payload capacity of the recoverable rocket to that of an equivalent expendable rocket to find the payload factor $r_p$. First, we will make our definition of `equivalent expendable rocket' more rigorous: the `equivalent' rocket uses the same technology choice, the same stage mass ratio, and has the same gross liftoff mass. We also assume that the mission $\Delta v_*$ is the same for both rockets \footnote{We might expect this assumption to be incorrect if the recovery strategy changes the $\Delta v$ losses during ascent (e.g. increased drag due to wings). However, an analysis by DRL finds that ``The impact of the different RLV-types [reusable launch vehicle] on the ascent flight profile is found small and, similar to the ELV [expendable launch vehicle] ascent flight performance losses, these are more dependent on the particular configuration with its T/W [thrust to weight] ratio than on the landing and return modes.'' \cite{Stappert2017}.}
 
 \begin{equation}
-content...
+\mathcal{T}^{\mathrm{expend}} = \mathcal{T}^{\mathrm{recov}}, \quad y^{\mathrm{expend}} = y^{\mathrm{recov}}, \quad m_{0,1}^{\mathrm{expend}} = m_{0,1}^{\mathrm{recov}}, \quad \Delta v_*^{\mathrm{expend}} = \Delta v_*^{\mathrm{recov}}
 \end{equation}
+
+Finally, the payload factor is
+
+\begin{equation}
+r_p = \frac{m_*^{\mathrm{recov}}}{m_*^{\mathrm{expend}}} = \frac{\pi_*^{\mathrm{recov}}}{\pi_*^{\mathrm{expend}}}
+\end{equation}
+
+The relation of $r_p$ to $\epsilon_1`$ is shown in Figure \ref{fig:payload} two typical launch missions (Low Earth Orbit $\Delta v_* = \SI{9.5}{\kilo\meter\per\second}$ and Geostationary Transfer Orbit $\Delta v_* = \SI{12.0}{\kilo\meter\per\second}$). As expected, the payload capacity declines with increasing first stage unavailable mass. Also, note that the decline is more severe for higher $\Delta v_*$ missions. Thus, a particular recovery strategy (with some $\epsilon_1'$) will have a smaller payload factor for GTO missions than for LEO missions ($r_p^{\mathrm{LEO}} > r_p^\mathrm{GTO}$). Higher $\Delta v_*$ missions put a bigger penalty on first stage recovery. 
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=0.5\textwidth]{../payload}
+	\label{fig:payload}
+	\caption{Impact of first stage unavailable mass fraction $\epsilon_1'$ on payload capability. Note that the payload factor $r_p$ declines with increasing unavailable mass, and the decline is more severe for higher $\Delta v_*$ missions. The technology choice values are typical for \ce{O2(l)}/kerosene and aluminum tanks.}
+\end{figure}
 
 
 \subsection{Determining the unavailable mass from recovery hardware and maneuvers}
