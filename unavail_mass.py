@@ -23,18 +23,20 @@ def unavail_mass(chi_r, dv_r, E, c_1):
 
 
 def main():
-    chi_r = np.arange(0, 0.33, 1e-2)
+    chi_r = np.arange(0, 0.5, 1e-2)
     dv_r = np.arange(0, 2000, 10)
     chi_r_grid, dv_r_grid = np.meshgrid(chi_r, dv_r)
 
+    # Stage exahust velocities [units: meter second**-1].
+    g_0 = 9.81
+    c_1 = 290 * g_0
+    c_2 = 350 * g_0
+
     E = 0.08
-    c_1 = 3000.
-
-    e_grid = unavail_mass(chi_r_grid, dv_r_grid, E, c_1)
-
-    c_2 = 3200.   # Stage 2 exhaust velocity [units: meter second**-1].
     y = 0.10    # Stage mass ratio.
     dv_mission = 12e3    # Mission delta-v [units: meter second**-1].
+
+    e_grid = unavail_mass(chi_r_grid, dv_r_grid, E, c_1)
 
     # Payload mass fraction for expendable rocket
     pi_star_expend = payload.payload_fixed_stages(c_1, c_2, E, E, y, dv_mission)
@@ -50,21 +52,22 @@ def main():
 
     # Plot results
     plt.figure()
-    cs = plt.contour(chi_r_grid, dv_r_grid, e_grid)
+    cs = plt.contour(chi_r_grid, dv_r_grid, e_grid, 10)
     plt.clabel(cs, inline=1, fontsize=10)
-    plt.xlabel('Recov. h/w mass ratio $\\chi_r = m_{r1}/m_{s1}$ [-]')
+    plt.xlabel('Recov. h/w mass ratio $\\chi_r = m_{rh,1}/m_{s,1}$ [-]')
     plt.ylabel('Recov. $\\Delta v_r$ [m/s]')
     plt.title("Unavailable mass ratio $\\epsilon_1'$\n" +
-              'for $c_1$={:.0f} m/s, $E$={:.2f}'.format(c_1, E))
+              'for $c_1/g_0$={:.0f} s, $E$={:.2f}'.format(c_1/g_0, E))
+    plt.savefig('unavail_mass.png')
 
     plt.figure()
     cs = plt.contour(chi_r_grid, dv_r_grid, r_p_grid)
     plt.clabel(cs, inline=1, fontsize=10)
-    plt.xlabel('Recov. h/w mass ratio $\\chi_r = m_{r1}/m_{s1}$ [-]')
+    plt.xlabel('Recov. h/w mass ratio $\\chi_r = m_{rh,1}/m_{s,1}$ [-]')
     plt.ylabel('Recov. $\\Delta v_r$ [m/s]')
     plt.title("Recov. / Expend payload ratio $r_p$\n" +
-              'for $c_1$={:.0f} m/s, $c_2$={:.0f} m/s $E$={:.2f}, $\\Delta v_*$={:.0f} m/s'.format(
-                c_1, c_2, E, dv_mission))
+              'for $c_1/g_0$={:.0f} s, $c_2/g_0$={:.0f} s $E_1=E_2$={:.2f}, $\\Delta v_*$={:.0f} m/s'.format(
+                c_1/g_0, c_2/g_0, E, dv_mission))
     plt.show()
 
 
