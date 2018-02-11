@@ -143,7 +143,7 @@ It can be shown that
 
 Second, we define a `technology choice', $\mathcal{T}$, which influences the mass ratios and exhaust velocities. This choice encompasses technological factors such as the propellant (e.g. \ce{O2(l)}/kerosene vs. \ce{O2(l)}/\ce{H2(l)}), the tank construction technology (e.g. aluminum alloy vs. composite), and the engine cycle (e.g. gas generator vs. staged combustion). For the purposes of this model, the technology choice is fully described by the tuple $\mathcal{T} : \{ c_1, c_2, E_1, E_2 \}$, where $E$ is the technological lower limit on the structural mass fraction of an expendable stage. For expendable stages, $\epsilon_i = E_i$. For recoverable stages, $\epsilon_1' > E_1$.
 
-If we know $\Delta v_*$ (set by the mission), the technology choice $\mathcal{T}$, and the stage mass ratio $y$, we can find $\pi_*(\epsilon_1`)$ from Equations \ref{eq:pi_star}, \ref{eq:recov_rocket}, and \ref{eq:ypi}. Then, we can compare the payload capacity of the recoverable rocket to that of an equivalent expendable rocket to find the payload factor $r_p$. First, we will make our definition of `equivalent expendable rocket' more rigorous: the `equivalent' rocket uses the same technology choice, the same stage mass ratio, and has the same gross liftoff mass. We also assume that the mission $\Delta v_*$ is the same for both rockets \footnote{We might expect this assumption to be incorrect if the recovery strategy changes the $\Delta v$ losses during ascent (e.g. increased drag due to wings). However, an analysis by DRL finds that ``The impact of the different RLV-types [reusable launch vehicle] on the ascent flight profile is found small and, similar to the ELV [expendable launch vehicle] ascent flight performance losses, these are more dependent on the particular configuration with its T/W [thrust to weight] ratio than on the landing and return modes.'' \cite{Stappert2017}.}
+If we know $\Delta v_*$ (set by the mission), the technology choice $\mathcal{T}$, and the stage mass ratio $y$, we can find $\pi_*(\epsilon_1')$ from Equations \ref{eq:pi_star}, \ref{eq:recov_rocket}, and \ref{eq:ypi}. Then, we can compare the payload capacity of the recoverable rocket to that of an equivalent expendable rocket to find the payload factor $r_p$. First, we will make our definition of `equivalent expendable rocket' more rigorous: the `equivalent' rocket uses the same technology choice, the same stage mass ratio, and has the same gross liftoff mass. We also assume that the mission $\Delta v_*$ is the same for both rockets \footnote{We might expect this assumption to be incorrect if the recovery strategy changes the $\Delta v$ losses during ascent (e.g. increased drag due to wings). However, an analysis by DRL finds that ``The impact of the different RLV-types [reusable launch vehicle] on the ascent flight profile is found small and, similar to the ELV [expendable launch vehicle] ascent flight performance losses, these are more dependent on the particular configuration with its T/W [thrust to weight] ratio than on the landing and return modes.'' \cite{Stappert2017}.}
 
 \begin{equation}
 \mathcal{T}^{\mathrm{expend}} = \mathcal{T}^{\mathrm{recov}}, \quad y^{\mathrm{expend}} = y^{\mathrm{recov}}, \quad m_{0,1}^{\mathrm{expend}} = m_{0,1}^{\mathrm{recov}}, \quad \Delta v_*^{\mathrm{expend}} = \Delta v_*^{\mathrm{recov}}
@@ -166,6 +166,97 @@ The relation of $r_p$ to $\epsilon_1`$ is shown in Figure \ref{fig:payload} two 
 
 
 \subsection{Determining the unavailable mass from recovery hardware and maneuvers}
+This subsection provides techniques for estimating the unavailable mass fraction $\epsilon_1'$ from the hardware and maneuvers needed to recover the stage. First, consider the effects of added recovery hardware. Let $m_{s,1}$ be the minimum feasible mass of an expendable first stage which carries the first stage propellant load $m_{p,1}$. By definition,
+
+\begin{equation}
+m_{s,1} = m_{p,1} \frac{E_1}{1 - E_1}
+\end{equation}
+
+where $E_1$ is the minimum feasible inert mass fraction for the given technology choice $\mathcal{T}$. To enable recovery, this stage must have some hardware added to it, with mass $m_{rh,1}$. This includes, for example, the mass of wings, control surfaces, heat shields and landing gear added to the stage. It also includes any increase in mass (e.g. of the structure or engines), incurred by design requirements for re-usability or recovery loads. Define $\chi_r$ as the ratio of this additional mass to the minimum feasible mass of an expendable stage.
+
+\begin{equation}
+\chi_r = \frac{m_{rh,1}}{m_{s,1}}
+\end{equation}
+
+Then, the structural mass fraction of the reusable first stage will be
+
+\begin{equation}
+\epsilon_1 = \frac{\chi_r + 1}{\left(\frac{1 - E_1}{E_1} \right) + \chi_r + 1}
+\end{equation}
+
+For recovery strategies using rocket propulsion, the first stage must also carry some mass of propellant $m_{pr,1}$ for recovery maneuvers. The rocket equation for the recovery maneuver is
+
+\begin{equation}
+\label{eq:recov_rocket_eqn}
+\frac{m_1^{\mathrm{separation}}}{m_1^{\mathrm{touchdown}}} = \frac{m_{s,1} + m_{rh,1} + m_{pr,1}}{m_{s,1} + m_{rh,1}} = \exp\left( \frac{\Delta v_r}{c_1} \right)
+\end{equation}
+
+where $\Delta v_r$ is the $\Delta v$ of the recovery maneuver. Note this equation assumes that the full stage is recovered. However this is a minor limitation as no partial recovery strategies have been proposed using rocket propulsion. Rearranging terms, we find that
+
+\begin{equation}
+\label{eq:eps_chi_dv}
+\epsilon_1' = \epsilon_1 \exp\left( \frac{\Delta v_r}{c_1} \right) = \left( \frac{\chi_r + 1}{\left(\frac{1 - E_1}{E_1} \right) + \chi_r + 1} \right) \exp\left( \frac{\Delta v_r}{c_1} \right)
+\end{equation}
+
+This provides a fundamental relation between the design of a stage ($\chi_r$), its recovery trajectory ($\Delta v_r$), and its unavailable mass fraction.
+
+We now have the tools to estimate the payload factor $r_p$ for almost any recovery strategy. First, we can make reasonable estimates of $\chi_r$ and $\Delta v_r$ from physical first principles and analogies to similar systems. Then, we can use Equation \ref{eq:eps_chi_dv} to find $\epsilon_1'$, and the analysis of the preceding section to find $r_p$ from $\epsilon_1'$. The following subsection will perform this estimation for example recovery strategies.
+
+We should first observe some general properties of Equation \ref{eq:eps_chi_dv}. Figure \ref{fig:unavail_mass} shows contours of $\epsilon_1'$ vs. $(\chi_r, \Delta v_r)$. As should be expected, the unavailable mass increases with both recovery hardware mass and recovery $\Delta v$. Note that any recovery strategies with the same $\epsilon_1'$ will have the same payload factor, even if they have different $(\chi_r, \Delta v_r)$. Under the technology assumptions of Figure \ref{fig:unavail_mass}, a winged recovery strategy with $(\chi_r=0.35, \Delta v_r=0)$ and a propulsive landing strategy with $(\chi_r=0.05, \Delta v_r=\SI{640}{\meter\per\second})$ lie on the same $\epsilon_1'$ contour, and would thus  yield the same reduction in payload capacity.
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{../unavail_mass}
+	\label{fig:unavail_mass}
+	\caption{Impact of recovery hardware mass $\chi_r$ and recovery $\Delta v$ on the first stage unavailable mass ratio $\epsilon_1'$. The technology choice values are typical for \ce{O2(l)}/kerosene and aluminum tanks.}
+\end{figure}
+
+
+\subsection{Performance estimates for some recovery strategies}
+TODO
+
+\subsubsection{Propulsive landing}
+TODO
+Up to three components: "rocket-back" (optional), "entry" (optional), and landing (required)
+
+First, we will estimate the landing burn $\Delta v_{\mathrm{land}}$. When entering the atmosphere at a steep angle, a low density object such as an almost-empty stage will soon reach a quasi-equilibrium state, falling at its terminal velocity \cite{Wiesel2010}. The landing burn must cancel whatever terminal velocity $v_t$ the stage has when the landing burn begins. The landing burn will also incur some gravity loss. If the landing burn is performed vertically at a constant acceleration $a$, the gravity loss will be $v_t g_0 / a$.
+
+\begin{equation}
+\Delta v_{\mathrm{land}} = v_t + \Delta v_{g} = v_t + t_b g_0 = v_t(1 + \frac{g_0}{a})
+\end{equation}
+
+The terminal velocity is given by \cite{Wiesel2010}:
+\begin{equation}
+\label{eq:terminal_velocity}
+v_t = \sqrt{\frac{2 m_{\mathrm{ign}} g_0}{C_D(v_t) A \rho_{0}}} \exp\left( \frac{H_\mathrm{ign}}{2H} \right)
+\end{equation}
+
+where $m_{\mathrm{ign}}$ is the stage mass at landing burn ignition, $C_D$ is the stage's drag coefficient, $A$ is its frontal area, $\rho_0, H_0$ are the base density and scale height of the atmosphere, and $H_\mathrm{ign}$ is the altitude at landing burn ignition. Unfortunately, $v_t$ may be transonic, so $C_D$ varies significantly with $v_t$. Also, $H_\mathrm{ign} = v_t^2 / (2 a)$.  Thus, Equation \ref{eq:terminal_velocity} must be solved iteratively.
+
+We can make a first guess at $v_t$ using an empirical $C_D(M)$ relation for blunt cylinders from \cite{Hoerner1965}. The resulting terminal velocity is plotted against the stage mass to frontal area ratio in Figure \ref{fig:landing_dv}. The $m_{\mathrm{ign}}/A$ ratio should increase with vehicle size due to cube/square effect. It will likely be \SIrange{1500}{4000}{\kilogram\per\meter\square} for EELV-class stages (TODO data from CBC, CCB and F9 wikipedia pages), and \SIrange{400}{800}{\kilogram\per\meter\square} for small satellite launchers.
+
+Recovery designers have several tools to reduce $\Delta v_{\mathrm{land}}$. High acceleration is favorable for landing burns because it (1) reduces gravity losses and (2) allows the burn to begin deeper in the atmosphere, where the terminal velocity is lower. The terminal velocity can also be decreased by adding deployable drag devices, or by `flying' the stage at a nonzero angle of attack.
+
+Small vehicles have significantly lower landing $\Delta v$ because of their smaller mass/area ratio, however this also causes higher drag losses during ascent.
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{../landing_dv}
+	\label{fig:landing_dv}
+	\caption{Variation of landing $\Delta v$ with stage mass / area ratio and landing burn acceleration. TODO draw \& label EELV-class and small sat ranges}
+\end{figure}
+
+
+\subsubsection{Winged stages}
+TODO
+
+For recovery strategies in which a lifting-body flies back using air-breathing propulsion, the mass of fuel for the air-breathing engine should be calculated from the Berguet range equation and counted in $m_{rh,1}$. $\Delta v_r$ should be set to zero.
+
+
+\subsubsection{Parachutes}
+TODO
+
+
 
 
 
@@ -193,7 +284,7 @@ Actual costs vary with booster size scale, are difficult to estimate for new veh
     \begin{equation}
     q = \frac{C_{f} + C_{ro}}{C_{pr}}
     \end{equation}
-    By definition, $q > 0$. Inefficient recovery strategies can have $q > 1$ (e.g. SRB citation needed), in which case recovery cannot lead to cost savings and is probably not worthwhile. In some extreme proposals, the only recovery/refurbishment operation would be to reload the stage with propellant \cite{Musk2017}. In this case, propellant costs give a lower limit of $q \approx 0.01$ for hydrocarbon/oxygen stages \cite{Ragab2015}. A more moderate estimate from \cite{Sforza2015} gives $q \approx 0.25$ (15\% for refurbishment and another 10\% for recovery operations). Refurbishment cost data for Falcon 9 is not publicly available, but SpaceX leadership has stated that the refurbishment cost of the first re-used stage was ``substantially less than half'' of the production cost ($q<0.5$) \cite{Foust2017}.
+    By definition, $q > 0$. Inefficient recovery strategies can have $q > 1$, in which case recovery cannot lead to cost savings and is probably not worthwhile. In some extreme proposals, the only recovery/refurbishment operation would be to reload the stage with propellant \cite{Musk2017}. In this case, propellant costs give a lower limit of $q \approx 0.01$ for hydrocarbon/oxygen stages \cite{Ragab2015}. A more moderate estimate from \cite{Sforza2015} gives $q \approx 0.25$ (15\% for refurbishment and another 10\% for recovery operations). It should be expected that downrange recovery strategies will incur higher $q$ than launch site recovery, due to the added cost of shipping back the stage. Further, landing directly in the ocean likely increases $q$ due to salt water damage. Practical data on first stage recovery and refurbishment costs is limited. In the Space Shuttle program, SRB recovery and refurbishment almost exceeded production costs ($q \approx 1$) [TODO citation needed]. Refurbishment cost data for Falcon 9 is not publicly available, but SpaceX leadership has stated that the refurbishment cost of the first Falcon 9 booster to be re-used was ``substantially less than half'' of the production cost ($q<0.5$) \cite{Foust2017}.
    
     \item The production cost ratio, $b$, which is the ratio of production costs for reusable and expendable stages.
     \begin{equation}
