@@ -38,7 +38,7 @@ First stage recovery strategies can be characterized by three high-level choices
 \begin{enumerate}
 	\item \textit{Portion of stage recovered} - Some strategies recover the entire first stage, while others propose to only recover a portion containing the higher-value components (e.g. main engines).
 	\item \textit{Deceleration and maneuvering method} - The first stage must have some means to control and slow its re-entry trajectory. The deceleration and maneuvering methods can be grouped into three categories: propulsive designs which use the main engines to maneuver and land vertically; winged designs which use aerodynamic surfaces to maneuver and land horizontally; and design which decelerate using parachutes. Note that these are not absolute distinctions: current propulsive-landing designs use small aerodynamic control surfaces, and some proposed winged designs have auxiliary propulsion to increase their range.
-	\item \textit{Recovery location} - The stage may be recovered downrange, or may fly itself back for recovery launch site. Most downrange recovery strategies land on a boat or in the ocean, although some call for the recovered components to be caught by an aircraft in midair \cite{Ragab2015}.
+	\item \textit{Recovery location} - The stage may be recovered downrange, or may fly itself back for recovery at the launch site. Most downrange recovery strategies land on a boat or in the ocean, although some call for the recovered components to be caught by an aircraft in midair \cite{Ragab2015}.
 \end{enumerate}
 
 Figure \ref{fig:recov_strat_diagram} illustrates the concept of operations for various strategies formed from the above choices. Strategies which have been carried out or proposed are listed in Table \ref{tab:vehicles}, and along the bottom of Figure \ref{fig:recov_strat_diagram}.
@@ -155,7 +155,7 @@ Finally, the payload factor is
 r_p = \frac{m_*^{\mathrm{recov}}}{m_*^{\mathrm{expend}}} = \frac{\pi_*^{\mathrm{recov}}}{\pi_*^{\mathrm{expend}}}
 \end{equation}
 
-The relation of $r_p$ to $\epsilon_1`$ is shown in Figure \ref{fig:payload} two typical launch missions (Low Earth Orbit $\Delta v_* = \SI{9.5}{\kilo\meter\per\second}$ and Geostationary Transfer Orbit $\Delta v_* = \SI{12.0}{\kilo\meter\per\second}$). As expected, the payload capacity declines with increasing first stage unavailable mass. Also, note that the decline is more severe for higher $\Delta v_*$ missions. Thus, a particular recovery strategy (with some $\epsilon_1'$) will have a smaller payload factor for GTO missions than for LEO missions ($r_p^{\mathrm{LEO}} > r_p^\mathrm{GTO}$). Higher $\Delta v_*$ missions put a bigger penalty on first stage recovery. 
+The relation of $r_p$ to $\epsilon_1'$ is shown in Figure \ref{fig:payload} for two typical launch missions (Low Earth Orbit $\Delta v_* = \SI{9.5}{\kilo\meter\per\second}$ and Geostationary Transfer Orbit $\Delta v_* = \SI{12.0}{\kilo\meter\per\second}$). As expected, the payload capacity declines with increasing first stage unavailable mass. Also, note that the decline is more severe for higher $\Delta v_*$ missions. Thus, a particular recovery strategy (with some $\epsilon_1'$) will have a smaller payload factor for GTO missions than for LEO missions ($r_p^{\mathrm{LEO}} > r_p^\mathrm{GTO}$). Higher $\Delta v_*$ missions put a bigger penalty on first stage recovery. 
 
 \begin{figure}[hbt!]
 	\centering
@@ -172,7 +172,7 @@ This subsection provides techniques for estimating the unavailable mass fraction
 m_{s,1} = m_{p,1} \frac{E_1}{1 - E_1}
 \end{equation}
 
-where $E_1$ is the minimum feasible inert mass fraction for the given technology choice $\mathcal{T}$. To enable recovery, this stage must have some hardware added to it, with mass $m_{rh,1}$. This includes, for example, the mass of wings, control surfaces, heat shields and landing gear added to the stage. It also includes any increase in mass (e.g. of the structure or engines), incurred by design requirements for re-usability or recovery loads. Define $\chi_r$ as the ratio of this additional mass to the minimum feasible mass of an expendable stage.
+where $E_1$ is the minimum feasible inert mass fraction for the given technology choice $\mathcal{T}$. To enable recovery, this stage must have some hardware added to it, with mass $m_{rh,1}$. This includes, for example, the mass of wings, control surfaces, heat shields and landing gear added to the stage. It also includes any increase in mass (e.g. of the structure or engines) incurred by design requirements for re-usability or recovery loads. Define $\chi_r$ as the ratio of this additional mass to the minimum feasible mass of an expendable stage.
 
 \begin{equation}
 \chi_r = \frac{m_{rh,1}}{m_{s,1}}
@@ -246,6 +246,16 @@ Small vehicles have significantly lower landing $\Delta v$ because of their smal
 	\caption{Variation of landing $\Delta v$ with stage mass / area ratio and landing burn acceleration. TODO draw \& label EELV-class and small sat ranges}
 \end{figure}
 
+
+The rocket-back and entry maneuver $\Delta v$s both depend on the magnitude of velocity at stage separation. This will be
+
+\begin{equation}
+v_{ss} = - c_1 \ln\left( \epsilon_1' + (1 - \epsilon_1') \pi_1 \right) - \Delta v_{1,loss}
+\end{equation}
+
+where $\Delta v_{1,loss}$ is the gravity and drag losses suffered during ascent up to stage separation (typically \SIrange{300}{1000}{\meter\per\second}). Notice that $v_{ss}$ depends on $\epsilon_1'$, which in turn depends on $\Delta v_r$; thus some iteration may be required to find a consistent solution.
+
+More detailed ascent simulations from \cite{Stappert2017} predict that the separation velocity for a variety of recovery strategies will be \SIrange{2000}{3300}{\meter\per\second}. For Falcon 9, publicly available data from recent launches shows $v_{ss} = \SIrange{1600}{2100}{\meter\per\second}$ [TODO cite CRS-13 and Iridium 4 webcasts].
 
 \subsubsection{Winged stages}
 TODO

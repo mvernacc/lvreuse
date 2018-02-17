@@ -16,7 +16,7 @@ H_0 = 8500.
 
 # Atmosphere sea level density [units: kilogram meter**-3].
 # At 290 K
-rho_0 = 1.22
+rho_0 = 1.20
 
 
 def drag(M):
@@ -58,6 +58,26 @@ def terminal_velocity(m_A, H):
     return v_t
 
 
+def landing_dv(m_A, accel):
+    """Landing dv.
+
+    Arguments:
+        m_A (scalar): mass/area ratio [units: kilogram meter**-2].
+        accel (scalar): landing acceleartion [units: meter second**-2].
+
+    Returns:
+        Terminal velocity [units: meter second**-1].
+    """
+    def root_fun(v):
+        M = v / a
+        t_b = v / accel
+        H = 0.5 * accel * t_b**2
+        v_t = (2 * m_A * g_0 / (drag(M) * rho_0))**0.5 * np.exp(H / (2 * H_0))
+        return v - v_t
+    v_t = fsolve(root_fun, 300.)[0]
+    return v_t * (1 + g_0 / accel)
+
+
 def main():
     # Plot the drag model
     M = np.linspace(0, 4)
@@ -68,22 +88,25 @@ def main():
     plt.ylabel('$C_D$')
 
     # Range of mass/area ratios to consider
-    m_A = np.linspace(1e3, 10e3)
-
-    # Compute terminal velocities
-    v_t = np.array([terminal_velocity(m_A_, 0) for m_A_ in m_A])
+    m_A = np.linspace(300, 6000)
 
     # Compute and plot delta-v for landing
     plt.figure()
-    for accel in [2*g_0, 3*g_0, 4*g_0]:
-        dv_land = v_t * (1 + g_0 / accel)
+    accels = [2*g_0, 3*g_0, 4*g_0]
+    colors = ['C0', 'C1', 'C2']
+    for accel, color in zip(accels, colors):
+        dv_land = np.array([landing_dv(m_A_, accel) for m_A_ in m_A])
+        v_t = dv_land / (1 + g_0 / accel)
         plt.plot(m_A, dv_land,
-                 label='$\Delta v_{{land}}, a={:.0f} g_0$'.format(accel / g_0))
+                 label='$\Delta v_{{land}}, a={:.0f} g_0$'.format(accel / g_0),
+                 color=color, linestyle='-')
+        plt.plot(m_A, v_t,
+                 label='$v_t, a={:.0f} g_0$'.format(accel / g_0),
+                 color=color, linestyle='--')
     
-    plt.plot(m_A, v_t, color='black', label='$v_t$')
     plt.axhline(y=a, color='grey', label='sonic')
     plt.xlabel('Mass / frontal area ratio [kg/m^2]')
-    plt.ylabel('Terminal velocity [m/s]')
+    plt.ylabel('Velocity [m/s]')
     plt.legend()
     plt.savefig('landing_dv.png')
 
