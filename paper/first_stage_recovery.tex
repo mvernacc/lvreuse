@@ -9,6 +9,7 @@
 \usepackage{longtable,tabularx}
 \usepackage{footnote}
 \usepackage{mhchem}
+\usepackage{physics}
 \makesavenoteenv{tabular}
 \setlength\LTleft{0pt} 
 
@@ -202,7 +203,7 @@ This provides a fundamental relation between the design of a stage ($\chi_r$), i
 
 We now have the tools to estimate the payload factor $r_p$ for almost any recovery strategy. First, we can make reasonable estimates of $\chi_r$ and $\Delta v_r$ from physical first principles and analogies to similar systems. Then, we can use Equation \ref{eq:eps_chi_dv} to find $\epsilon_1'$, and the analysis of the preceding section to find $r_p$ from $\epsilon_1'$. The following subsection will perform this estimation for example recovery strategies.
 
-We should first observe some general properties of Equation \ref{eq:eps_chi_dv}. Figure \ref{fig:unavail_mass} shows contours of $\epsilon_1'$ vs. $(\chi_r, \Delta v_r)$. As should be expected, the unavailable mass increases with both recovery hardware mass and recovery $\Delta v$. Note that any recovery strategies with the same $\epsilon_1'$ will have the same payload factor, even if they have different $(\chi_r, \Delta v_r)$. Under the technology assumptions of Figure \ref{fig:unavail_mass}, a winged recovery strategy with $(\chi_r=0.35, \Delta v_r=0)$ and a propulsive landing strategy with $(\chi_r=0.05, \Delta v_r=\SI{640}{\meter\per\second})$ lie on the same $\epsilon_1'$ contour, and would thus  yield the same reduction in payload capacity.
+We should first observe some general properties of Equation \ref{eq:eps_chi_dv}. Figure \ref{fig:unavail_mass} shows contours of $\epsilon_1'$ vs. $(\chi_r, \Delta v_r)$. As should be expected, the unavailable mass increases with both recovery hardware mass and recovery $\Delta v$. Note that any recovery strategies with the same $\epsilon_1'$ will have the same payload factor, even if they have different $(\chi_r, \Delta v_r)$. Under the technology assumptions of Figure \ref{fig:unavail_mass}, a winged recovery strategy with $(\chi_r=0.35, \Delta v_r=0)$ and a propulsive landing strategy with $(\chi_r=0.05, \Delta v_r=\SI{640}{\meter\per\second})$ lie on the same $\epsilon_1'$ contour, and would thus yield the same reduction in payload capacity.
 
 \begin{figure}[hbt!]
 	\centering
@@ -210,6 +211,14 @@ We should first observe some general properties of Equation \ref{eq:eps_chi_dv}.
 	\label{fig:unavail_mass}
 	\caption{Impact of recovery hardware mass $\chi_r$ and recovery $\Delta v$ on the first stage unavailable mass ratio $\epsilon_1'$. The technology choice values are typical for \ce{O2(l)}/kerosene and aluminum tanks.}
 \end{figure}
+
+Within a vehicle program designers may face small trade-offs between $\chi_r$ and $\Delta v_r$, i.e. when some adding some hardware to the vehicle could enable modifications to the return maneuver. For example, consider a propulsive landing vehicle which must make an entry deceleration maneuver to survive reentry. Suppose that by adding some heat shields to the vehicle it could be made to survive faster entry, and the required entry maneuver $\Delta v$ could be reduced. Is the additional mass worth the reduction in $\Delta v_r$? These questions can be addressed by computing the trade-off ratio for $\Delta v_r$ versus $\chi_r$ at constant $\epsilon_1'$:
+
+\begin{equation}
+\left. \pdv{\Delta v_r}{\chi_r} \right|_{\epsilon_1'} = - c_1 \frac{1 - E_1}{(\chi_r + 1)(E_1 \chi_r + 1)}
+\end{equation}
+
+For small $\chi_r$ this is approximately $c_1 (E_1 - 1)$. For a typical \ce{O2(l)}/kerosene stage, a design change which increases the dry mass by 1\% will need to reduce the recovery $\Delta v$ by \SI{26}{\meter\per\second} or more for the change to increase payload capacity (i.e. decrease $\epsilon_1'$).
 
 
 \subsection{Performance estimates for some recovery strategies}
@@ -256,6 +265,8 @@ v_{ss} = - c_1 \ln\left( \epsilon_1' + (1 - \epsilon_1') \pi_1 \right) - \Delta 
 where $\Delta v_{1,loss}$ is the gravity and drag losses suffered during ascent up to stage separation (typically \SIrange{300}{1000}{\meter\per\second}). Notice that $v_{ss}$ depends on $\epsilon_1'$, which in turn depends on $\Delta v_r$; thus some iteration may be required to find a consistent solution.
 
 More detailed ascent simulations from \cite{Stappert2017} predict that the separation velocity for a variety of recovery strategies will be \SIrange{2000}{3300}{\meter\per\second}. For Falcon 9, publicly available data from recent launches shows $v_{ss} = \SIrange{1600}{2100}{\meter\per\second}$ [TODO cite CRS-13 and Iridium 4 webcasts].
+
+The entry maneuver $\Delta v$ will be a fraction of $v_ss$; the value depending on the heating and dynamic pressure which the vehicle can tolerate. Here designers face a trade-off: to reduce the required $\Delta v_e$ the vehicle could be made more robust (e.g. add heat shields or structural reinforcement), or could be provided with small wings to fly a shallow
 
 \subsubsection{Winged stages}
 TODO
