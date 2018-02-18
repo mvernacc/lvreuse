@@ -23,6 +23,8 @@ def payload_fixed_stages(c_1, c_2, e_1, e_2, y, dv_mission):
         """Delta-v capability error as a function of 1st stage paylaod fraction."""
         pi_2 = (y + 1) - y / pi_1
         dv = - c_1 * np.log(e_1 + (1 - e_1) * pi_1) - c_2 * np.log(e_2 + (1 - e_2) * pi_2)
+        if np.isnan(dv):
+            return dv_mission
         return dv_mission - dv
     x, infodict, ier, mesg = fsolve(root_fun, y, full_output=True)
     if ier != 1:
@@ -33,20 +35,20 @@ def payload_fixed_stages(c_1, c_2, e_1, e_2, y, dv_mission):
 
 
 def main():
-    # Stage exahust velocities [units: meter second**-1].
+    
     g_0 = 9.81
+    # Stage exahust velocities [units: meter second**-1].
+    # O2/kerosene
     c_1 = 290 * g_0
     c_2 = 350 * g_0
+    # O2/H2
+    # c_1 = 400 * g_0
+    # c_2 = 460 * g_0
 
     E = 0.08 # Stage inert mass fraction
-    y = 0.10 # Stage mass ratio
+    y = 0.15 # Stage mass ratio
 
     e_1_max = 0.25
-
-    dv_mission = 9.5e3    # Mission delta-v [units: meter second**-1].
-
-    pi_star = payload_fixed_stages(c_1, c_2, E, E, y, dv_mission)
-    print pi_star
 
     # Plot payload capacity vs 1st stage unavail mass
     plt.figure(figsize=(6, 9))
