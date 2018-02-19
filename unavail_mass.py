@@ -24,7 +24,7 @@ def unavail_mass(chi_r, dv_r, E, c_1):
 
 def main():
     chi_r = np.arange(0, 0.5, 1e-2)
-    dv_r = np.arange(0, 2000, 10)
+    dv_r = np.arange(0, 3500, 10)
     chi_r_grid, dv_r_grid = np.meshgrid(chi_r, dv_r)
 
     # Stage exahust velocities [units: meter second**-1].
@@ -51,8 +51,8 @@ def main():
             r_p_grid[j, i] = pi_star / pi_star_expend
 
     # Plot results
-    plt.figure()
-    cs = plt.contour(chi_r_grid, dv_r_grid, e_grid, 10)
+    plt.figure(figsize=(6,6))
+    cs = plt.contour(chi_r_grid, dv_r_grid, e_grid, 15)
     plt.clabel(cs, inline=1, fontsize=10)
     plt.xlabel('Recov. h/w mass ratio $\\chi_r = m_{rh,1}/m_{s,1}$ [-]')
     plt.ylabel('Recov. $\\Delta v_r$ [m/s]')
@@ -60,7 +60,7 @@ def main():
               'for $c_1/g_0$={:.0f} s, $E$={:.2f}'.format(c_1/g_0, E))
     plt.savefig('unavail_mass.png')
 
-    plt.figure()
+    plt.figure(figsize=(6,6))
     cs = plt.contour(chi_r_grid, dv_r_grid, r_p_grid)
     plt.clabel(cs, inline=1, fontsize=10)
     plt.xlabel('Recov. h/w mass ratio $\\chi_r = m_{rh,1}/m_{s,1}$ [-]')
