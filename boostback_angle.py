@@ -6,13 +6,13 @@ import pint
 ureg = pint.UnitRegistry() 
 
 
-dz = 30 * ureg.km    # Boostback traj altitude loss
-dx = 60 * ureg.km     # Boostback trajectory horizontal distance
+dz = 74 * ureg.km    # Boostback traj altitude loss
+dx = 110 * ureg.km     # Boostback trajectory horizontal distance
 
 g = 9.8 * ureg.m * ureg.s**-2   # gravity
 
 # Conditions at stage separation
-phi_ss = np.deg2rad(30)   # Flight path angle
+phi_ss = np.deg2rad(22)   # Flight path angle
 v_ss = 1600 * ureg.m * ureg.s**-1   # Velocity magnitude
 
 phi_bb = np.linspace(0, np.pi / 2 - 0.1)

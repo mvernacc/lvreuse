@@ -33,7 +33,16 @@ def main():
     phi_rb = np.deg2rad(60)
     dx = 110e3
     dz = 74e3
-    print rocketback_dv(v_ss, phi_ss, phi_rb, dx, dz)
+
+    print 'LEO min = {:.0f} m/s'.format(
+        rocketback_dv(v_ss=1500, phi_ss=phi_ss, phi_rb=phi_rb, dx=80e3, dz=100e3))
+    print 'LEO max = {:.0f} m/s'.format(
+        rocketback_dv(v_ss=2000, phi_ss=phi_ss, phi_rb=phi_rb, dx=130e3, dz=50e3))
+
+    print 'GTO min = {:.0f} m/s'.format(
+        rocketback_dv(v_ss=2100, phi_ss=phi_ss, phi_rb=phi_rb, dx=100e3, dz=100e3))
+    print 'GTO max = {:.0f} m/s'.format(
+        rocketback_dv(v_ss=3300, phi_ss=phi_ss, phi_rb=phi_rb, dx=200e3, dz=50e3))
 
 
 if __name__ == '__main__':

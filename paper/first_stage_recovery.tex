@@ -215,6 +215,7 @@ We should first observe some general properties of Equation \ref{eq:eps_chi_dv}.
 Within a vehicle program designers may face small trade-offs between $\chi_r$ and $\Delta v_r$, i.e. when some adding some hardware to the vehicle could enable modifications to the return maneuver. For example, consider a propulsive landing vehicle which must make an entry deceleration maneuver to survive reentry. Suppose that by adding some heat shields to the vehicle it could be made to survive faster entry, and the required entry maneuver $\Delta v$ could be reduced. Is the additional mass worth the reduction in $\Delta v_r$? These questions can be addressed by computing the trade-off ratio for $\Delta v_r$ versus $\chi_r$ at constant $\epsilon_1'$:
 
 \begin{equation}
+\label{eq:tradeoff_ratio}
 \left. \pdv{\Delta v_r}{\chi_r} \right|_{\epsilon_1'} = - c_1 \frac{1 - E_1}{(\chi_r + 1)(E_1 \chi_r + 1)}
 \end{equation}
 
@@ -228,6 +229,7 @@ TODO
 TODO
 Up to three components: "rocket-back" (optional), "entry" (optional), and landing (required)
 
+%%% Landing %%%
 First, we will estimate the landing burn $\Delta v_{\mathrm{land}}$. When entering the atmosphere at a steep angle, a low density object such as an almost-empty stage will soon reach a quasi-equilibrium state, falling at its terminal velocity \cite{Wiesel2010}. The landing burn must cancel whatever terminal velocity $v_t$ the stage has when the landing burn begins. The landing burn will also incur some gravity loss. If the landing burn is performed vertically at a constant acceleration $a$, the gravity loss will be $v_t g_0 / a$.
 
 \begin{equation}
@@ -255,7 +257,7 @@ Small vehicles have significantly lower landing $\Delta v$ because of their smal
 	\caption{Variation of landing $\Delta v$ with stage mass / area ratio and landing burn acceleration. TODO draw \& label EELV-class and small sat ranges}
 \end{figure}
 
-
+%%% Rocketback %%%
 The rocket-back and entry maneuver $\Delta v$s both depend on the magnitude of velocity at stage separation. This will be
 
 \begin{equation}
@@ -264,9 +266,61 @@ v_{ss} = - c_1 \ln\left( \epsilon_1' + (1 - \epsilon_1') \pi_1 \right) - \Delta 
 
 where $\Delta v_{1,loss}$ is the gravity and drag losses suffered during ascent up to stage separation (typically \SIrange{300}{1000}{\meter\per\second}). Notice that $v_{ss}$ depends on $\epsilon_1'$, which in turn depends on $\Delta v_r$; thus some iteration may be required to find a consistent solution.
 
-More detailed ascent simulations from \cite{Stappert2017} predict that the separation velocity for a variety of recovery strategies will be \SIrange{2000}{3300}{\meter\per\second}. For Falcon 9, publicly available data from recent launches shows $v_{ss} = \SIrange{1600}{2100}{\meter\per\second}$ [TODO cite CRS-13 and Iridium 4 webcasts].
+Ascent simulations from \cite{Stappert2017} predict that the separation velocity for a variety of recovery strategies will be \SIrange{2100}{3300}{\meter\per\second} (GTO mission, \ce{H2} or hydrocarbon fuels). For Falcon 9, publicly available data from recent launches shows $v_{ss} =$ \SI{1600}{\meter\per\second} (LEO) to \SI{2300}{\meter\per\second} (GTO) \cite{SpaceXWebcast}.
 
-The entry maneuver $\Delta v$ will be a fraction of $v_ss$; the value depending on the heating and dynamic pressure which the vehicle can tolerate. Here designers face a trade-off: to reduce the required $\Delta v_e$ the vehicle could be made more robust (e.g. add heat shields or structural reinforcement), or could be provided with small wings to fly a shallow
+The rocket-back maneuver occurs almost immediately after stage separation. It halts the first stage's downrange motion, and puts the stage onto a nearly ballistic exo-atmospheric trajectory which arcs back toward the launch site. The first stage then enters the sensible atmosphere near the launch site and lands. Because the rocket-back maneuver must halt the horizontal (downrange) component of the first stage velocity, a hard lower limit on $\Delta v_{rb}$ is:
+
+\begin{equation}
+\Delta v_{rb} > v_{ss} \cos(\phi_{ss})
+\end{equation}
+
+where $\phi_{ss}$ is the flight path angle at stage separation, and might be \SIrange{20}{30}{\degree} \cite{McKinney1986}. The rocket-back maneuver is quite expensive - $\Delta v_{rb}$ will almost certainly be greater than \SI{1300}{\meter\per\second}.
+
+We can learn more about $\Delta v_{rb}$ by considering the near-ballistic return trajectory. After rocket-back shutoff, the stage will have some velocity $v_{rb}$, altitude $z_{rb}$ and flight-path angle $\phi_{rb}$. Assume that the stage must cover a horizontal distance $\Delta x$ back towards the launch site before entering the sensible atmosphere at an altitude $z_e$. The initial velocity magnitude of the ballistic trajectory must be:
+
+\begin{equation}
+\label{eq:rocketback_velocity}
+v_{rb} = \sqrt{\frac{g_0 \Delta x^2}{\cos[2](\phi_{rb})(z_{rb} - z_{e} + \Delta x \tan(\phi_{rb}))} }
+\end{equation}
+
+If the rocket-back burn is performed impulsively, the required $\Delta v$ is:
+
+\begin{equation}
+\label{eq:rocketback_dv}
+\Delta v_{rb}^2 = v_{rb}^2 + v_{ss}^2 - 2 v_{rb} v_{ss} \cos(\pi - \phi_{rb} - \phi_{ss})
+\end{equation}
+
+Under this model, some general trends for $\Delta v_{rb}$ can be observed:
+\begin{itemize}
+	\item $\Delta v_{rb}$ is reduced for lower $v_{ss}$. If $v_{ss}$ is low, more of the ascent $\Delta v$ must be provided by the second stage. Vehicles with higher $c_2$ (relative to $c_1$) or more mass allocated to the second stage (i.e. higher $y$) will have lower $v_{ss}$ and lower $\Delta v_{rb}$.
+	\item $\Delta v_{rb}$ is reduced for steeper ascent trajectories, where $\phi_{ss}$ and $z_{rb}$ are higher and $\Delta x$ is lower.
+\end{itemize}
+
+Some estimates of $\Delta v_{rb}$ made with this model are presented in Table \ref{tab:rocketback}. Note that $\Delta v_{rb}$ is very high for GTO launches. Falcon 9 has yet to perform a rocket-back maneuver on a GTO mission, and \cite{Dumont2017} suggests the maneuver may be infeasible even for high-$I_{sp}$ \ce{O2(l)}/\ce{H2(l)} stages.
+
+\begin{table}
+	\caption{\label{tab:rocketback} Estimates of rocketback maneuver $\Delta v$ using Eqns. \ref{eq:rocketback_velocity}-\ref{eq:rocketback_dv}. All assume $\phi_{ss}=\ang{25}, \phi_{rb}=\ang{60}$. Range of $\Delta x$, $\Delta z$ for LEO is based on \cite{McKinney1986}}.
+	\centering
+	\begin{tabular}{l c c}
+		Mission & LEO & GTO \\
+		\hline
+		& $v_{ss} = $\SIrange{1500}{2000}{\meter\per\second} & $v_{ss} = $\SIrange{2100}{3300}{\meter\per\second} \\
+		Assumptions & $\Delta x = $ \SIrange{80}{130}{\kilo\meter} & $\Delta x = $ \SIrange{100}{200}{\kilo\meter} \\
+		& $\Delta z = $ \SIrange{50}{100}{\kilo\meter} & $\Delta z = $ \SIrange{50}{100}{\kilo\meter} \\
+		\hline
+		$\Delta v_{rb}$ & \SIrange{1890}{2640}{\meter\per\second} & \SIrange{2500}{4000}{\meter\per\second}
+		
+	\end{tabular}
+\end{table}
+
+The design of the rocket-back trajectory is coupled to the design of the ascent trajectory and possibly to the allocation of mass between the the vehicle stages. An excellent example of optimizing the ascent and rocket-back trajectories can be found in \cite{McKinney1986}. Both the trends predicted from the simple model above are born out in the optimization results: optimal rocket-back vehicles have a steeper ascent trajectory ($\phi_{ss} = $\SIrange{20}{30}{\degree} vs. \ang{10}) and heavier second stages ($y=0.46$ vs $0.20$) than expendable vehicles. A cost-optimal design may also wish to reduce the mass of expended hardware on the second stage, instead of simply maximizing $\pi_*$. Reducing $y$ compared to the designs in \cite{McKinney1986} would tend to increase $\Delta v_{rb}$.
+
+For vehicles with two \ce{O2(l)}/\ce{H2(l)} stages launching to LEO, \cite{McKinney1986} predicts $\Delta v_{rb} =$ \SIrange{2150}{2370}{\meter\per\second}. This agrees with the estimates in Table \ref{tab:rocketback}. McKinney also suggests that a vehicle with a storable propellant booster and a large \ce{O2(l)}/\ce{H2(l)} upper stage would have low $v_{ss}$ and $\Delta v_{rb} \approx$ \SI{1430}{\meter\per\second}.
+
+The entry maneuver $\Delta v$ depends on the heating and dynamic pressure which the vehicle can tolerate. Here designers face a trade-off: to reduce the required $\Delta v_e$ the vehicle could be made more robust (e.g. add heat shields or structural reinforcement), or could be fitted with small wings to fly a shallower, more gentle entry trajectory (e.g. the New Glenn proposal \cite{NewGlenn}). The entry $\Delta v$ for Falcon 9 appears to be $~\SI{800}{\meter\per\second}$ (including $~\SI{200}{\meter\per\second}$ gravity losses; NROL-76 LEO mission after rocket-back) \cite{Dumont2017}\cite{SpaceXWebcast}. The $\Delta v_r/\chi_r$ trade-off ratio (Eq. \ref{eq:tradeoff_ratio}) suggests that we should be willing to increase the dry weight of the stage by up to ~30\% to forgo this $\Delta v$. For comparison, the mass of wings and thermal protection on the Space Shuttle Orbiter was 17\% of the vehicle mass \cite{Sforza2015}; almost certainly more than would be needed to survive suborbital entry. Thus, it appears payload capacity can be increased by solving the entry problem with additional hardware, not propulsion. Considerations must also be made for how the reentry environment affects component life and refurbishment costs.
+
+Propulsive landing stages must also carry landing gear. On typical aircraft the landing gear makes up ~5\% of the vehicle weight \cite{Sforza2015}. Although the design of the landing gear is quite different, this is a decent first guess.
+
 
 \subsubsection{Winged stages}
 TODO
@@ -279,7 +333,7 @@ TODO
 
 
 
-
+TODO propulsive strategy gives more operational flexibility between recover and expend modes. Easy to reallocate recovery propellant to ascent to use the vehicle in a higher-payload expendable mode.  Harder to remove wings.
 
 
 
