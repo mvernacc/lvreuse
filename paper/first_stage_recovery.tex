@@ -120,6 +120,7 @@ The overall payload ratio of the launch vehicle, $\pi_*$ is the product of the s
 Modifying the rocket for first stage recovery effectively increases the inert mass fraction of the first stage to some new value $\epsilon_1'$. I will call $\epsilon_1'$ the `unavailable mass fraction', as it is the fraction of the first stage's mass which is unavailable for expulsion to propel the ascent. It includes the mass of the first stage structure ($m_{s,1}$) , the mass of recovery hardware ($m_{rh,1}$), and the mass of propellant reserved for recovery maneuvers ($m_{pr,1}$). The unavailable mass fraction can also be thought of as the first stage mass at stage separation divided by the first stage mass at liftoff.
 
 \begin{equation}
+\label{eq:epsilon_1_prime}
 \epsilon_1' = \frac{m_{s,1} + m_{rh,1} + m_{pr,1}}{m_{s,1} + m_{rh,1} + m_{p,1}}
 \end{equation}
 
@@ -167,59 +168,148 @@ The relation of $r_p$ to $\epsilon_1'$ is shown in Figure \ref{fig:payload} for 
 
 
 \subsection{Determining the unavailable mass from recovery hardware and maneuvers}
-This subsection provides techniques for estimating the unavailable mass fraction $\epsilon_1'$ from the hardware and maneuvers needed to recover the stage. First, consider the effects of added recovery hardware. Let $m_{s,1}$ be the minimum feasible mass of an expendable first stage which carries the first stage propellant load $m_{p,1}$. By definition,
+This subsection provides techniques for estimating the unavailable mass fraction $\epsilon_1'$ from the hardware and maneuvers needed to recover the stage. The mathematics are best approached by imagining that we start with an expendable first stage, and then modify the stage so that it can be recovered (also, this is an actual development strategy, e.g. Falcon 9 and SMART). Suppose our baseline expendable stage has a dry mass $m_{s,1}$ and a can carry a propellant load $m_{p,1}$ \footnote{Assume the propellant load does not change when the stage is modified for recovery}. The baseline stage contains some high-value hardware which we wish to recover, with mass $m_{hv}$. Let $z_m$ be the fraction of the baseline stage hardware which we wish to recover:
 
 \begin{equation}
-m_{s,1} = m_{p,1} \frac{E_1}{1 - E_1}
+z_m \equiv \frac{m_{hv,1}}{m_{s,1}}
 \end{equation}
 
-where $E_1$ is the minimum feasible inert mass fraction for the given technology choice $\mathcal{T}$. To enable recovery, this stage must have some hardware added to it, with mass $m_{rh,1}$. This includes, for example, the mass of wings, control surfaces, heat shields and landing gear added to the stage. It also includes any increase in mass (e.g. of the structure or engines) incurred by design requirements for re-usability or recovery loads. Define $\chi_r$ as the ratio of this additional mass to the minimum feasible mass of an expendable stage.
+In full recovery strategies, we wish to recover the entire first stage, so $m_{hv,1} = m_{s,1}$ and $z_m=1$. For partial recovery strategies, we only wish to recover part of the first stage (e.g. the engines), so $m_{hv,1} < m_{s,1}$ and $z_m \in (0, 1)$. Some unwanted hardware with mass $m_{s,1}(1 - z_m)$ is discarded shortly after stage separation.
+
+To enable recovery, we will likely have to add some hardware to the stage, with mass $m_{rh,1}$. This includes, for example, the mass of wings, control surfaces, heat shields and landing gear added to the stage. It also includes any increase in mass (e.g. of the structure or engines) incurred by design requirements for re-usability or recovery loads. Let `recovery vehicle' denote the set of first stage components which are recovered at the end of the mission. For full recovery, the recovery vehicle is the entire first stage; for partial recovery it is perhaps a small pod containing the engines. The recovery vehicle has a touchdown (dry) mass of $m_{rh,1} + m_{hv,1}$.
+
+Next, consider how efficiently we are able to make use of mass on the recovery vehicle. Let us define $a$ to be the fraction of the recovery vehicle dry mass which is added recovery hardware.
 
 \begin{equation}
-\chi_r = \frac{m_{rh,1}}{m_{s,1}}
+a \equiv \frac{m_{rh,1}}{m_{rh,1} + m_{hv,1}}
 \end{equation}
 
-Then, the structural mass fraction of the reusable first stage will be
+A fraction $1-a$ of the recovery vehicle mass is the mass of the high value components which we set out to recover. By definition $a \in [0, 1]$. The extreme $a=0$ represents the (rather miraculous) situation in which we could recover the high value hardware in its bare expendable configuration, without any additional recovery equipment. The extreme $a \rightarrow 1$ represents the situation in which our recovery vehicle construction is very poor, and many tons of wings, parachutes, etc. are needed to recover a few kilograms of high-value hardware.
+
+The recovery vehicle may need some propellant to perform maneuvers during the recovery process. Let the mass of this propellant be $m_{pr,1}$. The recovery propellant mass is related to the recovery vehicle dry mass by:
 
 \begin{equation}
-\epsilon_1 = \frac{\chi_r + 1}{\left(\frac{1 - E_1}{E_1} \right) + \chi_r + 1}
+m_{pr,1} = (m_{rh,1} + m_{hv,1}) \left( e^P - 1 \right)
 \end{equation}
 
-For recovery strategies using rocket propulsion, the first stage must also carry some mass of propellant $m_{pr,1}$ for recovery maneuvers. The rocket equation for the recovery maneuver is
+The exponent $P$ depends on the type of maneuvers performed. If the recovery maneuvers use rocket propulsion, then $P$ is found from the Tsiolkovsky equation:
 
 \begin{equation}
-\label{eq:recov_rocket_eqn}
-\frac{m_1^{\mathrm{separation}}}{m_1^{\mathrm{touchdown}}} = \frac{m_{s,1} + m_{rh,1} + m_{pr,1}}{m_{s,1} + m_{rh,1}} = \exp\left( \frac{\Delta v_r}{c_1} \right)
+P = \frac{\Delta v_r}{c_1}
 \end{equation}
 
-where $\Delta v_r$ is the $\Delta v$ of the recovery maneuver. Note this equation assumes that the full stage is recovered. However this is a minor limitation as no partial recovery strategies have been proposed using rocket propulsion. Rearranging terms, we find that
+where $\Delta v_r$ is the $\Delta v$ of the recovery maneuvers. If instead the recovery vehicle flies back and uses air-breathing propulsion to maintain steady level flight, then $P$ is found from the Berguet range equation:
 
 \begin{equation}
-\label{eq:eps_chi_dv}
-\epsilon_1' = \epsilon_1 \exp\left( \frac{\Delta v_r}{c_1} \right) = \left( \frac{\chi_r + 1}{\left(\frac{1 - E_1}{E_1} \right) + \chi_r + 1} \right) \exp\left( \frac{\Delta v_r}{c_1} \right)
+P =  \frac{R_{\mathrm{cruise}}}{v_{\mathrm{cruise}} (L/D) I_{sp}^{ab}}
 \end{equation}
 
-This provides a fundamental relation between the design of a stage ($\chi_r$), its recovery trajectory ($\Delta v_r$), and its unavailable mass fraction.
+where $R_{\mathrm{cruise}}$ is the cruise range, $v_{\mathrm{cruise}}$ is the cruise speed, $(L/D)$ is the cruise lift to drag ratio and $I_{sp}^{ab}$ is the specific impulse of the air breathing engine. If no (mass-expelling) propulsion is used during recovery, $P = 0$ and $m_{pr,1} = 0$.
 
-We now have the tools to estimate the payload factor $r_p$ for almost any recovery strategy. First, we can make reasonable estimates of $\chi_r$ and $\Delta v_r$ from physical first principles and analogies to similar systems. Then, we can use Equation \ref{eq:eps_chi_dv} to find $\epsilon_1'$, and the analysis of the preceding section to find $r_p$ from $\epsilon_1'$. The following subsection will perform this estimation for example recovery strategies.
-
-We should first observe some general properties of Equation \ref{eq:eps_chi_dv}. Figure \ref{fig:unavail_mass} shows contours of $\epsilon_1'$ vs. $(\chi_r, \Delta v_r)$. As should be expected, the unavailable mass increases with both recovery hardware mass and recovery $\Delta v$. Note that any recovery strategies with the same $\epsilon_1'$ will have the same payload factor, even if they have different $(\chi_r, \Delta v_r)$. Under the technology assumptions of Figure \ref{fig:unavail_mass}, a winged recovery strategy with $(\chi_r=0.35, \Delta v_r=0)$ and a propulsive landing strategy with $(\chi_r=0.05, \Delta v_r=\SI{640}{\meter\per\second})$ lie on the same $\epsilon_1'$ contour, and would thus yield the same reduction in payload capacity.
+To summarize the above discussion, Figure \ref{fig:recov_mass_flow} tracks the mass of the first stage through the mission. At liftoff, the first stage has a hardware mass $m_{s,1} + m_{rh,1}$ and carries a propellant mass $m_{p,1}$. During ascent, the first stage burns a mass $m_{p,1} - m_{pr,1}$ of propellant. Shortly after stage separation, a mass $m_{s,1} - m_{hv,1}$ of unwanted hardware may be discarded (if the recovery strategy is partial). The remainder of the stage  (recovery vehicle) then maneuvers to the recovery location. If this maneuver uses propulsion, the remaining propellant mass $m_{pr,1}$ is burned during the maneuver. Finally, at the time of recovery, the remaining mass of hardware is $m_{rh,1} + m_{hv,1}$ and no propellant is left \footnote{Propellant residuals/reserves are counted in $m_{rh,1}$}.
 
 \begin{figure}[hbt!]
 	\centering
-	\includegraphics[width=0.7\textwidth]{../unavail_mass}
-	\label{fig:unavail_mass}
-	\caption{Impact of recovery hardware mass $\chi_r$ and recovery $\Delta v$ on the first stage unavailable mass ratio $\epsilon_1'$. The technology choice values are typical for \ce{O2(l)}/kerosene and aluminum tanks.}
+	\includegraphics[width=0.8\textwidth]{figures/recov_mass_flow}
+	\caption{\label{fig:recov_mass_flow} Changes in mass of the first stage/recovery vehicle during the mission.}
 \end{figure}
 
-Within a vehicle program designers may face small trade-offs between $\chi_r$ and $\Delta v_r$, i.e. when some adding some hardware to the vehicle could enable modifications to the return maneuver. For example, consider a propulsive landing vehicle which must make an entry deceleration maneuver to survive reentry. Suppose that by adding some heat shields to the vehicle it could be made to survive faster entry, and the required entry maneuver $\Delta v$ could be reduced. Is the additional mass worth the reduction in $\Delta v_r$? These questions can be addressed by computing the trade-off ratio for $\Delta v_r$ versus $\chi_r$ at constant $\epsilon_1'$:
+Now we are equipped to find an expression for the first stage unavailable mass fraction $\epsilon_1'$. Start from Equation \ref{eq:epsilon_1_prime} and divide the numerator and denominator by $m_{s,1}$.
 
 \begin{equation}
-\label{eq:tradeoff_ratio}
-\left. \pdv{\Delta v_r}{\chi_r} \right|_{\epsilon_1'} = - c_1 \frac{1 - E_1}{(\chi_r + 1)(E_1 \chi_r + 1)}
+\epsilon_1' = \frac{1 + \frac{m_{rh,1}}{m_{s,1}} + \frac{m_{pr,1}}{m_{s,1}} }{1 + \frac{m_{rh,1}}{m_{s,1}} + \frac{m_{p,1}}{m_{s,1}} }
 \end{equation}
 
-For small $\chi_r$ this is approximately $c_1 (E_1 - 1)$. For a typical \ce{O2(l)}/kerosene stage, a design change which increases the dry mass by 1\% will need to reduce the recovery $\Delta v$ by \SI{26}{\meter\per\second} or more for the change to increase payload capacity (i.e. decrease $\epsilon_1'$).
+From the above definitions, it can be shown that:
+
+\begin{equation}
+\frac{m_{rh,1}}{m_{s,1}} = \frac{a z_m}{1 - a}
+\end{equation}
+
+\begin{equation}
+\frac{m_{pr,1}}{m_{s,1}} = \frac{z_m}{1 - a} (e^P - 1)
+\end{equation}
+
+\begin{equation}
+\frac{m_{p,1}}{m_{s,1}} = \frac{1 - E_1}{E_1}
+\end{equation}
+
+Thus,
+\begin{equation}
+\label{eq:eps_a_p_z}
+\epsilon_1' = \frac{1 + \frac{a z_m}{1 - a} +  \frac{z_m}{1 - a} (e^P - 1) }{1 + \frac{a z_m}{1 - a} + \frac{1 - E_1}{E_1} }
+\end{equation}
+
+For full recovery ($z_m = 1$) this simplifies to:
+\begin{equation}
+\epsilon_1' = \frac{e^P}{1 + (1 - a) \left( \frac{1 - E_1}{E_1} \right)}
+\end{equation}
+
+These equations relate the first stage unavailable mass $\epsilon_1'$ to the mass of additional recovery hardware ($a$) and the amount of propulsion required in the recovery maneuver ($P$). We now have the tools to estimate the payload factor $r_p$ for almost any recovery strategy. The mass fraction $z_m$ is specified by the recovery strategy, and we can make reasonable estimates of $a$ and $P$ from physical first principles and analogies to similar systems. Then, we can use Equation \ref{eq:eps_a_p_z} to find $\epsilon_1'$, and the analysis of the preceding section to find $r_p$ from $\epsilon_1'$. The following subsection will perform this estimation for example recovery strategies.
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=\textwidth]{../unavail_mass}
+	\caption{\label{fig:unavail_mass} Impact of recovery hardware $a$ and recovery propulsion $P$ on the first stage unavailable mass ratio $\epsilon_1'$. The left subplot shows full recovery, the right partial recovery ($z_m=0.25$).}
+\end{figure}
+
+We should first observe some general properties of Equation \ref{eq:eps_a_p_z}. Figure \ref{fig:unavail_mass} shows contours of $\epsilon_1'$ vs. $(a, P)$. Strategies which require more recovery hardware are further right, while strategies requiring more propulsion are further up. At the origin of the graph, no recovery hardware or recovery propellant is carried on the stage, and $\epsilon_1' = E_1$. As should be expected, the unavailable mass increases with both recovery hardware mass and recovery propulsion. As $a \rightarrow 1$ or $P \rightarrow \infty$, the unavailable mass ratio increases and the recovery strategy becomes infeasible. For example, under the assumptions of Figure \ref{fig:payload}, the launch vehicle needs $\epsilon_1' < 0.2$ to support GTO missions. If $\epsilon_1' > 1$, the recovery maneuver requires more propellant than could fit in the stage, and could not be performed even if no propellant were used for ascent!
+
+Note that any recovery strategies with the same $\epsilon_1'$ will have the same payload factor, even if they have different $(a, P)$. For example, assuming $E_1=0.08, z_m=1$ as in Figure \ref{fig:unavail_mass}, a glider recovery strategy with $(a=0.35, P=0)$ and a propulsive landing strategy with $(a=0.05, P = \Delta v_r/c_1 = 0.34)$ lie on the same $\epsilon_1'$ contour, and would thus yield the same reduction in payload capacity.
+
+%This subsection provides techniques for estimating the unavailable mass fraction $\epsilon_1'$ from the hardware and maneuvers needed to recover the stage. First, consider the effects of added recovery hardware. Let $m_{s,1}$ be the minimum feasible mass of an expendable first stage which carries the first stage propellant load $m_{p,1}$. By definition,
+%
+%\begin{equation}
+%m_{s,1} = m_{p,1} \frac{E_1}{1 - E_1}
+%\end{equation}
+%
+%where $E_1$ is the minimum feasible inert mass fraction for the given technology choice $\mathcal{T}$. To enable recovery, this stage must have some hardware added to it, with mass $m_{rh,1}$. This includes, for example, the mass of wings, control surfaces, heat shields and landing gear added to the stage. It also includes any increase in mass (e.g. of the structure or engines) incurred by design requirements for re-usability or recovery loads. Define $\chi_r$ as the ratio of this additional mass to the minimum feasible mass of an expendable stage.
+%
+%\begin{equation}
+%\chi_r = \frac{m_{rh,1}}{m_{s,1}}
+%\end{equation}
+%
+%Then, the structural mass fraction of the reusable first stage will be
+%
+%\begin{equation}
+%\epsilon_1 = \frac{\chi_r + 1}{\left(\frac{1 - E_1}{E_1} \right) + \chi_r + 1}
+%\end{equation}
+%
+%For recovery strategies using rocket propulsion, the first stage must also carry some mass of propellant $m_{pr,1}$ for recovery maneuvers. The rocket equation for the recovery maneuver is
+%
+%\begin{equation}
+%\label{eq:recov_rocket_eqn}
+%\frac{m_1^{\mathrm{separation}}}{m_1^{\mathrm{touchdown}}} = \frac{m_{s,1} + m_{rh,1} + m_{pr,1}}{m_{s,1} + m_{rh,1}} = \exp\left( \frac{\Delta v_r}{c_1} \right)
+%\end{equation}
+%
+%where $\Delta v_r$ is the $\Delta v$ of the recovery maneuver. Note this equation assumes that the full stage is recovered. However this is a minor limitation as no partial recovery strategies have been proposed using rocket propulsion. Rearranging terms, we find that
+%
+%\begin{equation}
+%\label{eq:eps_chi_dv}
+%\epsilon_1' = \epsilon_1 \exp\left( \frac{\Delta v_r}{c_1} \right) = \left( \frac{\chi_r + 1}{\left(\frac{1 - E_1}{E_1} \right) + \chi_r + 1} \right) \exp\left( \frac{\Delta v_r}{c_1} \right)
+%\end{equation}
+%
+%This provides a fundamental relation between the design of a stage ($\chi_r$), its recovery trajectory ($\Delta v_r$), and its unavailable mass fraction.
+%
+%We now have the tools to estimate the payload factor $r_p$ for almost any recovery strategy. First, we can make reasonable estimates of $\chi_r$ and $\Delta v_r$ from physical first principles and analogies to similar systems. Then, we can use Equation \ref{eq:eps_chi_dv} to find $\epsilon_1'$, and the analysis of the preceding section to find $r_p$ from $\epsilon_1'$. The following subsection will perform this estimation for example recovery strategies.
+%
+%We should first observe some general properties of Equation \ref{eq:eps_chi_dv}. Figure \ref{fig:unavail_mass} shows contours of $\epsilon_1'$ vs. $(\chi_r, \Delta v_r)$. As should be expected, the unavailable mass increases with both recovery hardware mass and recovery $\Delta v$. Note that any recovery strategies with the same $\epsilon_1'$ will have the same payload factor, even if they have different $(\chi_r, \Delta v_r)$. Under the technology assumptions of Figure \ref{fig:unavail_mass}, a winged recovery strategy with $(\chi_r=0.35, \Delta v_r=0)$ and a propulsive landing strategy with $(\chi_r=0.05, \Delta v_r=\SI{640}{\meter\per\second})$ lie on the same $\epsilon_1'$ contour, and would thus yield the same reduction in payload capacity.
+%
+%\begin{figure}[hbt!]
+%	\centering
+%	\includegraphics[width=0.7\textwidth]{../unavail_mass}
+%	\label{fig:unavail_mass}
+%	\caption{Impact of recovery hardware mass $\chi_r$ and recovery $\Delta v$ on the first stage unavailable mass ratio $\epsilon_1'$. The technology choice values are typical for \ce{O2(l)}/kerosene and aluminum tanks.}
+%\end{figure}
+%
+%Within a vehicle program designers may face small trade-offs between $\chi_r$ and $\Delta v_r$, i.e. when some adding some hardware to the vehicle could enable modifications to the return maneuver. For example, consider a propulsive landing vehicle which must make an entry deceleration maneuver to survive reentry. Suppose that by adding some heat shields to the vehicle it could be made to survive faster entry, and the required entry maneuver $\Delta v$ could be reduced. Is the additional mass worth the reduction in $\Delta v_r$? These questions can be addressed by computing the trade-off ratio for $\Delta v_r$ versus $\chi_r$ at constant $\epsilon_1'$:
+%
+%\begin{equation}
+%\label{eq:tradeoff_ratio}
+%\left. \pdv{\Delta v_r}{\chi_r} \right|_{\epsilon_1'} = - c_1 \frac{1 - E_1}{(\chi_r + 1)(E_1 \chi_r + 1)}
+%\end{equation}
+%
+%For small $\chi_r$ this is approximately $c_1 (E_1 - 1)$. For a typical \ce{O2(l)}/kerosene stage, a design change which increases the dry mass by 1\% will need to reduce the recovery $\Delta v$ by \SI{26}{\meter\per\second} or more for the change to increase payload capacity (i.e. decrease $\epsilon_1'$).
 
 
 \subsection{Performance estimates for some recovery strategies}
@@ -365,7 +455,7 @@ Additional fuel must also be carried for the air-breathing engine. The mass of f
 \chi_r^{\mathrm{fueled}} = (1 + \chi_r) \exp\left( \frac{R_{\mathrm{cruise}}}{v_{\mathrm{cruise}} (L/D) I_{sp}^{\mathrm{a.b.}}} \right) - 1
 \end{equation}
 
-where $R_{\mathrm{cruise}}$ is the cruise range, $v_{\mathrm{cruise}}$ is the cruise speed, $(L/D)$ is the cruise lift to drag ratio and $I_{sp}^{\mathrm{a.b.}}}$ is the specific impulse of the air breathing engine. Reasonable assumptions are  $R_{\mathrm{cruise}} = \SI{400}{\kilo\meter}$ \cite{Healy1998}, $v_{\mathrm{cruise}} = \SI{150}{\meter\per\second}$ \cite{Healy1998}, $(L/D) = 5$, $I_{sp}^{\mathrm{a.b.}}} = \SI{3600}{\second}$ \cite{Hellman2005}.
+where $R_{\mathrm{cruise}}$ is the cruise range, $v_{\mathrm{cruise}}$ is the cruise speed, $(L/D)$ is the cruise lift to drag ratio and $I_{sp}^{\mathrm{a.b.}}$ is the specific impulse of the air breathing engine. Reasonable assumptions are  $R_{\mathrm{cruise}} = \SI{400}{\kilo\meter}$ \cite{Healy1998}, $v_{\mathrm{cruise}} = \SI{150}{\meter\per\second}$ \cite{Healy1998}, $(L/D) = 5$, $I_{sp}^{\mathrm{a.b.}} = \SI{3600}{\second}$ \cite{Hellman2005}.
 
 \subsubsection{Parachute recovery}
 TODO
