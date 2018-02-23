@@ -257,6 +257,20 @@ We should first observe some general properties of Equation \ref{eq:eps_a_p_z}. 
 
 Note that any recovery strategies with the same $\epsilon_1'$ will have the same payload factor, even if they have different $(a, P)$. For example, assuming $E_1=0.08, z_m=1$ as in Figure \ref{fig:unavail_mass}, a glider recovery strategy with $(a=0.35, P=0)$ and a propulsive landing strategy with $(a=0.05, P = \Delta v_r/c_1 = 0.34)$ lie on the same $\epsilon_1'$ contour, and would thus yield the same reduction in payload capacity.
 
+Within a vehicle program designers may face small trade-offs between $a$ and $P$, i.e. when some adding some hardware to the vehicle could enable modifications to the return maneuver. For example, consider a full recovery, propulsive landing vehicle which must make an entry deceleration maneuver to survive reentry. Suppose that by adding some heat shields to the vehicle it could be made to survive faster entry, and the required entry maneuver $\Delta v$ could be reduced. Is the additional mass worth the reduction in $\Delta v_r$? These questions can be addressed by computing the trade-off ratio for $P$ versus $a$ at constant $\epsilon_1'$:
+
+\begin{equation}
+\left. \pdv{P}{a} \right|_{\epsilon_1', z_m} = \frac{\epsilon_1' (\frac{1}{E_1} - z_m) - (1 - z_m)}{a \left( \epsilon_1' (\frac{1}{E_1} - z_m) - (1 - z_m) \right) - \frac{\epsilon_1'}{E_1} + (1 - z_m)}
+\end{equation}
+
+For full recovery $z_m=1$ this simplifies to
+
+\begin{equation}
+\left. \pdv{P}{a} \right|_{\epsilon_1'} = \frac{1 - E_1}{a(1 -E_1) - 1}
+\end{equation}
+
+In the example, assume that the landing gear and control surfaces make up 5\% of the recovery vehicle dry mass, so $a=0.05$ with no heat shields. Thus, $ \pdv{P}{a} = -0.96$. If we add 1\% of the return vehicle mass in heat shields, we must reduce $P$ by at least $\Delta P < \pdv{P}{a} \Delta a = -0.0096$. If the entry maneuver $I_{sp} = \SI{290}{\second}$, this corresponds to a $\Delta v_r$ reduction of \SI{27}{\meter\per\second}. If adding the heat shields allows $\Delta v_r$ to be reduced by \SI{27}{\meter\per\second} or more, the change would decrease $\epsilon_1'$ and increase the payload capacity.
+
 %This subsection provides techniques for estimating the unavailable mass fraction $\epsilon_1'$ from the hardware and maneuvers needed to recover the stage. First, consider the effects of added recovery hardware. Let $m_{s,1}$ be the minimum feasible mass of an expendable first stage which carries the first stage propellant load $m_{p,1}$. By definition,
 %
 %\begin{equation}
