@@ -13,6 +13,8 @@
 \makesavenoteenv{tabular}
 \setlength\LTleft{0pt} 
 
+\graphicspath{{figures/}}
+
 \title{Preparation of Papers for AIAA Technical Conferences}
 
 \author{First A. Author\footnote{Insert Job Title, Department Name, Address/Mail Stop, and AIAA Member Grade (if any) for first author.} and Second B. Author Jr.\footnote{Insert Job Title, Department Name, Address/Mail Stop, and AIAA Member Grade (if any) for second author.}}
@@ -260,6 +262,7 @@ Note that any recovery strategies with the same $\epsilon_1'$ will have the same
 Within a vehicle program designers may face small trade-offs between $a$ and $P$, i.e. when some adding some hardware to the vehicle could enable modifications to the return maneuver. For example, consider a full recovery, propulsive landing vehicle which must make an entry deceleration maneuver to survive reentry. Suppose that by adding some heat shields to the vehicle it could be made to survive faster entry, and the required entry maneuver $\Delta v$ could be reduced. Is the additional mass worth the reduction in $\Delta v_r$? These questions can be addressed by computing the trade-off ratio for $P$ versus $a$ at constant $\epsilon_1'$:
 
 \begin{equation}
+\label{eq:tradeoff_ratio}
 \left. \pdv{P}{a} \right|_{\epsilon_1', z_m} = \frac{\epsilon_1' (\frac{1}{E_1} - z_m) - (1 - z_m)}{a \left( \epsilon_1' (\frac{1}{E_1} - z_m) - (1 - z_m) \right) - \frac{\epsilon_1'}{E_1} + (1 - z_m)}
 \end{equation}
 
@@ -271,95 +274,34 @@ For full recovery $z_m=1$ this simplifies to
 
 In the example, assume that the landing gear and control surfaces make up 5\% of the recovery vehicle dry mass, so $a=0.05$ with no heat shields. Thus, $ \pdv{P}{a} = -0.96$. If we add 1\% of the return vehicle mass in heat shields, we must reduce $P$ by at least $\Delta P < \pdv{P}{a} \Delta a = -0.0096$. If the entry maneuver $I_{sp} = \SI{290}{\second}$, this corresponds to a $\Delta v_r$ reduction of \SI{27}{\meter\per\second}. If adding the heat shields allows $\Delta v_r$ to be reduced by \SI{27}{\meter\per\second} or more, the change would decrease $\epsilon_1'$ and increase the payload capacity.
 
-%This subsection provides techniques for estimating the unavailable mass fraction $\epsilon_1'$ from the hardware and maneuvers needed to recover the stage. First, consider the effects of added recovery hardware. Let $m_{s,1}$ be the minimum feasible mass of an expendable first stage which carries the first stage propellant load $m_{p,1}$. By definition,
-%
-%\begin{equation}
-%m_{s,1} = m_{p,1} \frac{E_1}{1 - E_1}
-%\end{equation}
-%
-%where $E_1$ is the minimum feasible inert mass fraction for the given technology choice $\mathcal{T}$. To enable recovery, this stage must have some hardware added to it, with mass $m_{rh,1}$. This includes, for example, the mass of wings, control surfaces, heat shields and landing gear added to the stage. It also includes any increase in mass (e.g. of the structure or engines) incurred by design requirements for re-usability or recovery loads. Define $\chi_r$ as the ratio of this additional mass to the minimum feasible mass of an expendable stage.
-%
-%\begin{equation}
-%\chi_r = \frac{m_{rh,1}}{m_{s,1}}
-%\end{equation}
-%
-%Then, the structural mass fraction of the reusable first stage will be
-%
-%\begin{equation}
-%\epsilon_1 = \frac{\chi_r + 1}{\left(\frac{1 - E_1}{E_1} \right) + \chi_r + 1}
-%\end{equation}
-%
-%For recovery strategies using rocket propulsion, the first stage must also carry some mass of propellant $m_{pr,1}$ for recovery maneuvers. The rocket equation for the recovery maneuver is
-%
-%\begin{equation}
-%\label{eq:recov_rocket_eqn}
-%\frac{m_1^{\mathrm{separation}}}{m_1^{\mathrm{touchdown}}} = \frac{m_{s,1} + m_{rh,1} + m_{pr,1}}{m_{s,1} + m_{rh,1}} = \exp\left( \frac{\Delta v_r}{c_1} \right)
-%\end{equation}
-%
-%where $\Delta v_r$ is the $\Delta v$ of the recovery maneuver. Note this equation assumes that the full stage is recovered. However this is a minor limitation as no partial recovery strategies have been proposed using rocket propulsion. Rearranging terms, we find that
-%
-%\begin{equation}
-%\label{eq:eps_chi_dv}
-%\epsilon_1' = \epsilon_1 \exp\left( \frac{\Delta v_r}{c_1} \right) = \left( \frac{\chi_r + 1}{\left(\frac{1 - E_1}{E_1} \right) + \chi_r + 1} \right) \exp\left( \frac{\Delta v_r}{c_1} \right)
-%\end{equation}
-%
-%This provides a fundamental relation between the design of a stage ($\chi_r$), its recovery trajectory ($\Delta v_r$), and its unavailable mass fraction.
-%
-%We now have the tools to estimate the payload factor $r_p$ for almost any recovery strategy. First, we can make reasonable estimates of $\chi_r$ and $\Delta v_r$ from physical first principles and analogies to similar systems. Then, we can use Equation \ref{eq:eps_chi_dv} to find $\epsilon_1'$, and the analysis of the preceding section to find $r_p$ from $\epsilon_1'$. The following subsection will perform this estimation for example recovery strategies.
-%
-%We should first observe some general properties of Equation \ref{eq:eps_chi_dv}. Figure \ref{fig:unavail_mass} shows contours of $\epsilon_1'$ vs. $(\chi_r, \Delta v_r)$. As should be expected, the unavailable mass increases with both recovery hardware mass and recovery $\Delta v$. Note that any recovery strategies with the same $\epsilon_1'$ will have the same payload factor, even if they have different $(\chi_r, \Delta v_r)$. Under the technology assumptions of Figure \ref{fig:unavail_mass}, a winged recovery strategy with $(\chi_r=0.35, \Delta v_r=0)$ and a propulsive landing strategy with $(\chi_r=0.05, \Delta v_r=\SI{640}{\meter\per\second})$ lie on the same $\epsilon_1'$ contour, and would thus yield the same reduction in payload capacity.
-%
-%\begin{figure}[hbt!]
-%	\centering
-%	\includegraphics[width=0.7\textwidth]{../unavail_mass}
-%	\label{fig:unavail_mass}
-%	\caption{Impact of recovery hardware mass $\chi_r$ and recovery $\Delta v$ on the first stage unavailable mass ratio $\epsilon_1'$. The technology choice values are typical for \ce{O2(l)}/kerosene and aluminum tanks.}
-%\end{figure}
-%
-%Within a vehicle program designers may face small trade-offs between $\chi_r$ and $\Delta v_r$, i.e. when some adding some hardware to the vehicle could enable modifications to the return maneuver. For example, consider a propulsive landing vehicle which must make an entry deceleration maneuver to survive reentry. Suppose that by adding some heat shields to the vehicle it could be made to survive faster entry, and the required entry maneuver $\Delta v$ could be reduced. Is the additional mass worth the reduction in $\Delta v_r$? These questions can be addressed by computing the trade-off ratio for $\Delta v_r$ versus $\chi_r$ at constant $\epsilon_1'$:
-%
-%\begin{equation}
-%\label{eq:tradeoff_ratio}
-%\left. \pdv{\Delta v_r}{\chi_r} \right|_{\epsilon_1'} = - c_1 \frac{1 - E_1}{(\chi_r + 1)(E_1 \chi_r + 1)}
-%\end{equation}
-%
-%For small $\chi_r$ this is approximately $c_1 (E_1 - 1)$. For a typical \ce{O2(l)}/kerosene stage, a design change which increases the dry mass by 1\% will need to reduce the recovery $\Delta v$ by \SI{26}{\meter\per\second} or more for the change to increase payload capacity (i.e. decrease $\epsilon_1'$).
-
 
 \subsection{Performance estimates for some recovery strategies}
 TODO
 
 \subsubsection{Propulsive landing}
-TODO
-Up to three components: "rocket-back" (optional), "entry" (optional), and landing (required)
+In propulsive landing strategies, the stage's main engines are used to land the stage vertically at the recovery site. The recovery may take place downrange, or the main engines may be used to toss the rocket back to land near the launch site. Propulsive landing has only been proposed for full recovery. Compared to horizontal landing strategies, propulsive landing requires less hardware mass but more propellant mass.
 
-%%% Landing %%%
-First, we will estimate the landing burn $\Delta v_{\mathrm{land}}$. When entering the atmosphere at a steep angle, a low density object such as an almost-empty stage will soon reach a quasi-equilibrium state, falling at its terminal velocity \cite{Wiesel2010}. The landing burn must cancel whatever terminal velocity $v_t$ the stage has when the landing burn begins. The landing burn will also incur some gravity loss. If the landing burn is performed vertically at a constant acceleration $a$, the gravity loss will be $v_t g_0 / a$.
+%%% Hardware %%%
+First, consider the recovery hardware required for propulsive landing. Propulsive landing stages typically include aerodynamic control surfaces \cite{NewGlenn, Falcon9, DCX, Musk2017}, which likely contribute ~2\% of the vehicle dry mass \cite{Sforza2015}. Propulsive landing stages must also carry landing gear \footnote{It may be possible to forgo landing gear by high-precision landing on a support structure \cite{Musk2017}, however this difficult technique has yet to be demonstrated.}. On typical aircraft the landing gear makes up ~5\% of the vehicle mass \cite{Sforza2015} - although the design of aircraft landing gear is quite different, this is a decent first guess. The vehicle may also include some heat shields or small lifting surfaces to aid in reentry survival.
 
-\begin{equation}
-\Delta v_{\mathrm{land}} = v_t + \Delta v_{g} = v_t + t_b g_0 = v_t(1 + \frac{g_0}{a})
-\end{equation}
-
-The terminal velocity is given by \cite{Wiesel2010}:
-\begin{equation}
-\label{eq:terminal_velocity}
-v_t = \sqrt{\frac{2 m_{\mathrm{ign}} g_0}{C_D(v_t) A \rho_{0}}} \exp\left( \frac{H_\mathrm{ign}}{2H} \right)
-\end{equation}
-
-where $m_{\mathrm{ign}}$ is the stage mass at landing burn ignition, $C_D$ is the stage's drag coefficient, $A$ is its frontal area, $\rho_0, H_0$ are the base density and scale height of the atmosphere, and $H_\mathrm{ign}$ is the altitude at landing burn ignition. Unfortunately, $v_t$ may be transonic, so $C_D$ varies significantly with $v_t$. Also, $H_\mathrm{ign} = v_t^2 / (2 a)$.  Thus, Equation \ref{eq:terminal_velocity} must be solved iteratively.
-
-We can make a first guess at $v_t$ using an empirical $C_D(M)$ relation for blunt cylinders from \cite{Hoerner1965}. The resulting terminal velocity is plotted against the stage mass to frontal area ratio in Figure \ref{fig:landing_dv}. The $m_{\mathrm{ign}}/A$ ratio should increase with vehicle size due to cube/square effect. It will likely be \SIrange{1500}{4000}{\kilogram\per\meter\square} for EELV-class stages (TODO data from CBC, CCB and F9 wikipedia pages), and \SIrange{400}{800}{\kilogram\per\meter\square} for small satellite launchers.
-
-Recovery designers have several tools to reduce $\Delta v_{\mathrm{land}}$. High acceleration is favorable for landing burns because it (1) reduces gravity losses and (2) allows the burn to begin deeper in the atmosphere, where the terminal velocity is lower. The terminal velocity can also be decreased by adding deployable drag devices, or by `flying' the stage at a nonzero angle of attack.
-
-Small vehicles have significantly lower landing $\Delta v$ because of their smaller mass/area ratio, however this also causes higher drag losses during ascent.
+%%% Propulsion %%%
+Next, consider the propulsion requirements of the recovery maneuver. This consists of one or more `burns' of the stage's rocket engines. Shortly after stage separation, the recovery vehicle may perform a `rocket-back' burn to reverse its downrange velocity and toss itself back towards the launch site \cite{McKinney1986, NAP13534}. This burn is not performed if the recovery location is downrange. Next, the recovery vehicle may perform an entry burn to reduce its velocity as it enters the sensible atmosphere, in order to reduce the aerodynamic loads and heating experienced during reentry \cite{Stappert2017}. Finally, the recovery vehicle must perform a landing burn to reduce its velocity to almost zero at touchdown. Figure \ref{fig:propulsive_landing} illustrates where these burns occur on trajectories for launch site recovery and down range recovery.
 
 \begin{figure}[hbt!]
 	\centering
-	\includegraphics[width=0.7\textwidth]{../landing_dv}
-	\label{fig:landing_dv}
-	\caption{Variation of landing $\Delta v$ with stage mass / area ratio and landing burn acceleration. TODO draw \& label EELV-class and small sat ranges}
+	\includegraphics[width=0.5\textwidth]{figures/propulsive_landing}
+	\caption{\label{fig:propulsive_landing} Propulsive landing: trajectory options for launch site and downrange recovery. Propulsive portions of the trajectory are shown as red solid lines.}
 \end{figure}
+
+The propulsion requirements of these burns is additive, i.e.
+
+\begin{equation}
+P = \frac{\Delta v_r}{c_1} = \frac{\Delta v_{rb}}{c_1} + \frac{\Delta v_{e}}{c_1} + \frac{\Delta v_{\mathrm{land}}}{c_1}
+\end{equation}
+
+where $\Delta v_{rb}$ is the rocket-back $\Delta v$, $\Delta v_{e}$ is the entry $\Delta v$, and $\Delta v_{\mathrm{land}}$ is the landing $\Delta v$ \footnote{Different values of $c_1$ may be used in each of the terms to account for variations of specific impulse at the different altitudes of the burns.}.
+
+
 
 %%% Rocketback %%%
 The rocket-back and entry maneuver $\Delta v$s both depend on the magnitude of velocity at stage separation. This will be
@@ -421,19 +363,48 @@ The design of the rocket-back trajectory is coupled to the design of the ascent 
 
 For vehicles with two \ce{O2(l)}/\ce{H2(l)} stages launching to LEO, \cite{McKinney1986} predicts $\Delta v_{rb} =$ \SIrange{2150}{2370}{\meter\per\second}. This agrees with the estimates in Table \ref{tab:rocketback}. McKinney also suggests that a vehicle with a storable propellant booster and a large \ce{O2(l)}/\ce{H2(l)} upper stage would have low $v_{ss}$ and $\Delta v_{rb} \approx$ \SI{1430}{\meter\per\second}.
 
-The entry maneuver $\Delta v$ depends on the heating and dynamic pressure which the vehicle can tolerate. Here designers face a trade-off: to reduce the required $\Delta v_e$ the vehicle could be made more robust (e.g. add heat shields or structural reinforcement), or could be fitted with small wings to fly a shallower, more gentle entry trajectory (e.g. the New Glenn proposal \cite{NewGlenn}). The entry $\Delta v$ for Falcon 9 appears to be $~\SI{800}{\meter\per\second}$ (including $~\SI{200}{\meter\per\second}$ gravity losses; NROL-76 LEO mission after rocket-back) \cite{Dumont2017}\cite{SpaceXWebcast}. The $\Delta v_r/\chi_r$ trade-off ratio (Eq. \ref{eq:tradeoff_ratio}) suggests that we should be willing to increase the dry weight of the stage by up to ~30\% to forgo this $\Delta v$. For comparison, the mass of wings and thermal protection on the Space Shuttle Orbiter was 17\% of the vehicle mass \cite{Sforza2015}; almost certainly more than would be needed to survive suborbital entry. Thus, it appears payload capacity can be increased by solving the entry problem with additional hardware, not propulsion. Considerations must also be made for how the reentry environment affects component life and refurbishment costs.
+The entry maneuver $\Delta v$ depends on the heating and dynamic pressure which the vehicle can tolerate. Here designers face a trade-off: to reduce the required $\Delta v_e$ the vehicle could be made more robust (e.g. add heat shields or structural reinforcement), or could be fitted with small wings to fly a shallower, more gentle entry trajectory (e.g. the New Glenn proposal \cite{NewGlenn}). The entry $\Delta v$ for Falcon 9 appears to be $~\SI{800}{\meter\per\second}$ (including $~\SI{200}{\meter\per\second}$ gravity losses; NROL-76 LEO mission after rocket-back) \cite{Dumont2017}\cite{SpaceXWebcast}. If the entry burn specific impulse is \SI{290}{\second}, this contributes 0.28 to $P$. The $\pdv{P}{a}$ trade-off ratio (Eq. \ref{eq:tradeoff_ratio}) suggests that we should be willing devote up to ~30\% of the recovery vehicle dry mass to recovery hardware to forgo this $\Delta v$. For comparison, the mass of wings and thermal protection on the Space Shuttle Orbiter was 17\% of the vehicle mass \cite{Sforza2015}; almost certainly more than would be needed to survive suborbital entry. Thus, it appears payload capacity can be increased by solving the entry problem with additional hardware, not propulsion. Considerations must also be made for how the reentry environment affects component life and refurbishment costs.
 
-Propulsive landing stages must also carry landing gear. On typical aircraft the landing gear makes up ~5\% of the vehicle weight \cite{Sforza2015}. Although the design of the landing gear is quite different, this is a decent first guess.
+%%% Landing %%%
+Finally, we will estimate the landing burn $\Delta v_{\mathrm{land}}$. When entering the atmosphere at a steep angle, a low density object such as an almost-empty stage will soon reach a quasi-equilibrium state, falling at its terminal velocity \cite{Wiesel2010}. The landing burn must cancel whatever terminal velocity $v_t$ the stage has when the landing burn begins. The landing burn will also incur some gravity loss. If the landing burn is performed vertically at a constant acceleration $a$, the gravity loss will be $v_t g_0 / a$.
+
+\begin{equation}
+\Delta v_{\mathrm{land}} = v_t + \Delta v_{g} = v_t + t_b g_0 = v_t(1 + \frac{g_0}{a})
+\end{equation}
+
+The terminal velocity is given by \cite{Wiesel2010}:
+\begin{equation}
+\label{eq:terminal_velocity}
+v_t = \sqrt{\frac{2 m_{\mathrm{ign}} g_0}{C_D(v_t) A \rho_{0}}} \exp\left( \frac{H_\mathrm{ign}}{2H} \right)
+\end{equation}
+
+where $m_{\mathrm{ign}}$ is the stage mass at landing burn ignition, $C_D$ is the stage's drag coefficient, $A$ is its frontal area, $\rho_0, H_0$ are the base density and scale height of the atmosphere, and $H_\mathrm{ign}$ is the altitude at landing burn ignition. Unfortunately, $v_t$ may be transonic, so $C_D$ varies significantly with $v_t$. Also, $H_\mathrm{ign} = v_t^2 / (2 a)$.  Thus, Equation \ref{eq:terminal_velocity} must be solved iteratively.
+
+We can make a first guess at $v_t$ using an empirical $C_D(M)$ relation for blunt cylinders from \cite{Hoerner1965}. The resulting terminal velocity is plotted against the stage mass to frontal area ratio in Figure \ref{fig:landing_dv}. The $m_{\mathrm{ign}}/A$ ratio should increase with vehicle size due to cube/square effect. It will likely be \SIrange{1500}{4000}{\kilogram\per\meter\square} for EELV-class stages (TODO data from CBC, CCB and F9 wikipedia pages), and \SIrange{400}{800}{\kilogram\per\meter\square} for small satellite launchers.
+
+Recovery designers have several tools to reduce $\Delta v_{\mathrm{land}}$. High acceleration is favorable for landing burns because it (1) reduces gravity losses and (2) allows the burn to begin deeper in the atmosphere, where the terminal velocity is lower. The terminal velocity can also be decreased by adding deployable drag devices, or by `flying' the stage at a nonzero angle of attack.
+
+Small vehicles have significantly lower landing $\Delta v$ because of their smaller mass/area ratio, however this also causes higher drag losses during ascent.
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{../landing_dv}
+	\label{fig:landing_dv}
+	\caption{Variation of landing $\Delta v$ with stage mass / area ratio and landing burn acceleration. TODO draw \& label EELV-class and small sat ranges}
+\end{figure}
+
+%%% Summary %%%
+In summary, Table \ref{tab:propulsive_strategies} lists the estimated $\Delta v_r$ and $a$ for some variants of the propulsive landing recovery strategy.
 
 \begin{table}
-	\caption{\label{tab:propulsive_strategies} Estimates of $\Delta v_r, \chi_r$ for some variants of the propulsive recovery strategy.}
+	\caption{\label{tab:propulsive_strategies} Estimates of recovery $\Delta v_r$ and recovery hardware mass $a$ for some variants of the propulsive recovery strategy.}
 	\centering
-	\begin{tabular}{p{6cm} c c}
-		Strategy & $\Delta v_r$ & $\chi_r$ \\
+	\begin{tabular}{p{3cm} p{3cm} p{2cm} c c}
+		Rocket-back burn? & Entry burn? & Landing burn? & $\Delta v_r$ & $a$ \\
 		\hline
-		Rocketback, propulsive entry and landing (LEO) & \SIrange{2700}{3940}{\meter\per\second} & 0.05\\
-		Downrange, propulsive entry and landing & \SIrange{800}{1300}{\meter\per\second} & 0.05 \\
-		Downrange, aero entry, propulsive landing & \SIrange{200}{500}{\meter\per\second} & \SIrange{0.05}{0.22}{}\\
+		Yes, assume launch to LEO & Yes & Yes & \SIrange{2700}{3940}{\meter\per\second} & \SIrange{0.05}{0.07}{}\\
+		No - Downrange landing & Yes & Yes & \SIrange{800}{1300}{\meter\per\second} & \SIrange{0.05}{0.07}{} \\
+		No - Downrange landing & No - extra aero/TPS hardware & Yes & \SIrange{200}{500}{\meter\per\second} & \SIrange{0.05}{0.22}{}\\
 		\hline
 	\end{tabular}
 \end{table}
