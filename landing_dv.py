@@ -88,7 +88,7 @@ def main():
     plt.ylabel('$C_D$')
 
     # Range of mass/area ratios to consider
-    m_A = np.linspace(300, 6000)
+    m_A = np.linspace(300, 4000)
 
     # Compute and plot delta-v for landing
     plt.figure()

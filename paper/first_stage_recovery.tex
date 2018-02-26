@@ -382,7 +382,7 @@ v_t = \sqrt{\frac{2 m_{\mathrm{ign}} g_0}{C_D(v_t) A \rho_{0}}} \exp\left( \frac
 
 where $m_{\mathrm{ign}}$ is the stage mass at landing burn ignition, $C_D$ is the stage's drag coefficient, $A$ is its frontal area, $\rho_0, H_0$ are the base density and scale height of the atmosphere, and $H_\mathrm{ign}$ is the altitude at landing burn ignition. Unfortunately, $v_t$ may be transonic, so $C_D$ varies significantly with $v_t$. Also, $H_\mathrm{ign} = v_t^2 / (2 a)$.  Thus, Equation \ref{eq:terminal_velocity} must be solved iteratively.
 
-We can make a first guess at $v_t$ using an empirical $C_D(M)$ relation for blunt cylinders from \cite{Hoerner1965}. The resulting terminal velocity is plotted against the stage mass to frontal area ratio in Figure \ref{fig:landing_dv}. The $m_{\mathrm{ign}}/A$ ratio should increase with vehicle size due to cube/square effect. It will likely be \SIrange{1500}{4000}{\kilogram\per\meter\square} for EELV-class stages (TODO data from CBC, CCB and F9 wikipedia pages), and \SIrange{400}{800}{\kilogram\per\meter\square} for small satellite launchers.
+We can make a first guess at $v_t$ using an empirical $C_D(M)$ relation for blunt cylinders from \cite{Hoerner1965}. The resulting terminal velocity is plotted against the stage mass to frontal area ratio in Figure \ref{fig:landing_dv}. The $m_{\mathrm{ign}}/A$ ratio should increase with vehicle size due to cube/square effect. It will likely be \SIrange{1500}{2500}{\kilogram\per\meter\square} for EELV-class stages (data from \cite{wade:atlas, braeunig:delta, wiki:Falcon9FullThrust}), and \SIrange{400}{800}{\kilogram\per\meter\square} for small satellite launchers (data from \cite{electron}). Thus, the landing $\Delta v$ will likely be \SIrange{150}{350}{\meter\per\second}.
 
 Recovery designers have several tools to reduce $\Delta v_{\mathrm{land}}$. High acceleration is favorable for landing burns because it (1) reduces gravity losses and (2) allows the burn to begin deeper in the atmosphere, where the terminal velocity is lower. The terminal velocity can also be decreased by adding deployable drag devices, or by `flying' the stage at a nonzero angle of attack.
 
@@ -404,9 +404,9 @@ In summary, Table \ref{tab:propulsive_strategies} lists the estimated $\Delta v_
 	\begin{tabular}{p{3cm} p{3cm} p{2cm} c c}
 		Rocket-back burn? & Entry burn? & Landing burn? & $\Delta v_r$ & $a$ \\
 		\hline
-		Yes, assume launch to LEO & Yes & Yes & \SIrange{2700}{3940}{\meter\per\second} & \SIrange{0.05}{0.07}{}\\
-		No - Downrange landing & Yes & Yes & \SIrange{800}{1300}{\meter\per\second} & \SIrange{0.05}{0.07}{} \\
-		No - Downrange landing & No - extra aero/TPS hardware & Yes & \SIrange{200}{500}{\meter\per\second} & \SIrange{0.05}{0.22}{}\\
+		Yes, assume launch to LEO & Yes & Yes & \SIrange{2700}{3800}{\meter\per\second} & \SIrange{0.05}{0.07}{}\\
+		No - Downrange landing & Yes & Yes & \SIrange{800}{1150}{\meter\per\second} & \SIrange{0.05}{0.07}{} \\
+		No - Downrange landing & No - extra aero/TPS hardware & Yes & \SIrange{150}{350}{\meter\per\second} & \SIrange{0.05}{0.22}{}\\
 		\hline
 	\end{tabular}
 \end{table}
