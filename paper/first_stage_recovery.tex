@@ -197,12 +197,14 @@ m_{pr,1} = (m_{rh,1} + m_{hv,1}) \left( e^P - 1 \right)
 The exponent $P$ depends on the type of maneuvers performed. If the recovery maneuvers use rocket propulsion, then $P$ is found from the Tsiolkovsky equation:
 
 \begin{equation}
+\label{eq:rocket_p}
 P = \frac{\Delta v_r}{c_1}
 \end{equation}
 
 where $\Delta v_r$ is the $\Delta v$ of the recovery maneuvers. If instead the recovery vehicle flies back and uses air-breathing propulsion to maintain steady level flight, then $P$ is found from the Berguet range equation:
 
 \begin{equation}
+\label{eq:berguet_p}
 P =  \frac{R_{\mathrm{cruise}}}{v_{\mathrm{cruise}} (L/D) I_{sp}^{ab}}
 \end{equation}
 
@@ -411,16 +413,29 @@ In summary, Table \ref{tab:propulsive_strategies} lists the estimated $\Delta v_
 
 
 \subsubsection{Winged, horizontal landing}
-TODO
-The main performance penalty for winged, horizontally landing stages is due to the additional inert mass required compared to an expendable system. This includes wings, control surfaces, thermal protection, and possibly an air-breathing propulsion system and its fuel.
+In horizontal landing strategies, the recovery vehicle is equipped with wings and landing gear, and lands horizontally like an airplane. The recovery can take place downrange, or the recovery vehicle can fly back to the launch site, although the latter probably requires the vehicle to be equipped with air-breathing engines as well. Horizontal landing strategies have been proposed for full and partial recovery. The main performance penalty for horizontal landing is due to the additional inert mass required compared to an expendable system.
 
-The mass of these components are best estimated by analogies to other winged vehicles. The Space Shuttle Orbiter will represent the extreme of fast, small-winged aircraft, while the C-141 will represent the extreme of slow, large-winged aircraft. The dry mass of both vehicles (~\SI{90}{\mega\gram}) is 2-4 times the dry mass of an EELV-class booster. These vehicles have aluminum structures; composite structures could result in lighter wings.
+The recovery hardware mass includes wings, control surfaces, thermal protection, and possibly an air-breathing propulsion system. The mass of these components are best estimated by analogies to other winged vehicles. The Space Shuttle Orbiter will represent the extreme of fast, small-winged aircraft, while the C-141 will represent the extreme of slow, large-winged aircraft. Table \ref{tab:winged_strategies} lists the estimated contributions to the recovery hardware mass. For a glider recovery vehicle, we should expect $a = \SIrange{0.18}{0.37}{}$. Including air-breathing propulsion for powered flyback will probably increase $a$ to \SIrange{0.28}{0.52}{}. In the NASA LFBB proposal, $a=0.52$ \footnote{assuming the baseline hardware to be recovered makes up $E_1=0.08$ of the gross liftoff mass, and using mass estimates from \cite{Healy1998}}.
 
-The Orbiter wings make up 6\% of its total mass, compared to 16\% for the C-141. The wing mass for a recoverable first stage will likely fall in this range, probably closer to the small-winged Orbiter.
+\begin{table}
+	\caption{\label{tab:winged_strategies} Estimates of recovery hardware mass $a$ for horizontal landing recovery strategies. Data from \cite{Sforza2015}.}
+	\centering
+	\begin{tabular}{l c}
+		Vehicle system/component  & Fraction of recov. vehicle dry mass ($a$) \\
+		\hline
+		Wing                      & \SIrange{0.061}{0.16}{} \\
+		Tail                      & \SIrange{0.012}{0.027}{}\\
+		Landing gear              & 0.05 \\
+		Surface controls          & \SIrange{0.01}{0.02}{} \\
+		Thermal protection        & \SIrange{0.05}{0.11}{} \\
+		Propulsion, air breathing & \SIrange{0.1}{0.15}{} \\
+		\hline
+		Glider total         & \SIrange{0.18}{0.37}{} \\
+		Powered flyback total        & \SIrange{0.28}{0.52}{} \\
+		\hline
+	\end{tabular}
+\end{table}
 
-The Orbiter thermal protection system makes up 11\% of the vehicle mass. A recoverable first stage experiences a less intense subortibal reentry, and thus will likely have lighter thermal protection system.
-
-Landing gear add about 5\% to the vehicle mass on both the Orbiter and the C-141. Surface controls contribute another 2\%.
 
 \begin{figure}[hbt!]
 	\centering
@@ -428,25 +443,19 @@ Landing gear add about 5\% to the vehicle mass on both the Orbiter and the C-141
 	\caption{\label{fig:flyback_trajectory} Horizontal landing: trajectory options for launch site and downrange recovery. Portions of the trajectory flown under rocket propulsion are shown as red solid lines; air-breathing propulsion is indicated with blue.}
 \end{figure}
 
-Next, the landing location must be considered, as it may drive the need for additional propulsion during the recovery flight. The booster may be able to return to the launch site by gliding, but this is only feasible for very low stage separation velocities (<\SI{1000}{\meter\per\second} \cite{Hellman2005} \cite{Healy1998}). Otherwise, the booster will either need to land downrange, or have propulsion during the recovery flight. If the risk of a launch over land can be tolerated, the booster can simply land at a downrange airport. However, safety concerns will typically require downrange recovery to occur in the ocean. There are several options for recovering a horizontal-landing stage over the ocean.
+Next, the landing location must be considered, as it may drive the need for additional propulsion during the recovery flight. The recovery vehicle may be able to return to the launch site by gliding, but this is only feasible for very low stage separation velocities (<\SI{1000}{\meter\per\second} \cite{Hellman2005} \cite{Healy1998}). Otherwise, the recovery vehicle will either need to land downrange, or have propulsion during the recovery flight. If the risk of a launch over land can be tolerated, the recovery vehicle can simply land at a downrange airport. However, safety concerns will typically require downrange recovery to occur in the ocean. There are several options for recovering a horizontal-landing vehicle over the ocean.
  
  \begin{itemize}
  	\item \emph{Landing directly in the ocean} - This risks damage to the stage by salt water intrusion and wave action, and will probably lead to high recovery and refurbishment costs.
  	\item \emph{Landing on a ship} - The practicality of this option depends on the size and stall speed of the vehicle. Aircraft with similar mass to an empty EELV booster (e.g. A-3 Skywarrior, \SI{37}{\mega\gram} \cite{DouglasA3}) have been operated from ships. However, a vehicle with small wings for reentry would likely have a high touchdown speed (e.g. \SI{100}{\meter\per\second} for the Orbiter \cite{ShuttleLanding} vs. \SI{65}{\meter\per\second} for typical carrier landings \cite{Shen2013}), increasing the difficulty of arresting the vehicle on a ship's deck. The vehicle may also need heavier landing gear and structural reinforcement to interface with the arrest system. On the whole, this approach seems plausible only for small rockets or partial recovery strategies.
- 	\item \emph{Mid-air capture} - The returning vehicle is hooked by a powered aircraft in mid-air, and is then towed back to near the launch facility. The vehicle then disconnects the tow line and lands as a glider (see \cite{Stappert2017}).
+ 	\item \emph{Mid-air capture} - The recovery vehicle is hooked by a powered aircraft in mid-air, and is then towed back to near the launch facility. The recovery vehicle then disconnects the tow line and lands as a glider (see \cite{Stappert2017}).
  \end{itemize}
 
-If none of the downrange recovery recovery options are acceptable, the stage must also carry an air-breathing propulsion system to power the return flight, incurring a significant mass and complexity penalty.
-The C-141 example suggests that air-breathing engines will add about 12\% to the vehicle mass. A flyback booster may be able to use smaller engines, as it only needs enough thrust for cruise, not takeoff. However, the booster will also need larger, perhaps moving, nacelles to protect the air-breathing engines during ascent and entry \cite{Healy1998}, which would add extra mass.
+If none of the downrange recovery recovery options are acceptable, the recovery vehicle must also carry an air-breathing propulsion system to power the return flight, incurring a significant mass and complexity penalty.
+The C-141 example suggests that air-breathing engines will add about 12\% to the vehicle mass. A recovery vehicle may be able to use smaller engines, as it only needs enough thrust for cruise, not takeoff. However, the recovery vehicle will also need larger, perhaps moving, nacelles to protect the air-breathing engines during ascent and entry \cite{Healy1998}, which would add extra mass.
 
+Additional fuel must also be carried for the air-breathing engine. The mass of fuel for the air-breathing engine is calculated from the Berguet range equation (Eq. \ref{eq:berguet_p}). We should expect the cruise range $R_{\mathrm{cruise}}$ to be \SIrange{370}{570}{\kilo\meter} \cite{Healy1998, Hellman2005} and $v_{\mathrm{cruise}} = \SI{150}{\meter\per\second}$ \cite{Healy1998}. The engine efficiency for a low-bypass turbofan should be about $I_{sp}^{\mathrm{a.b.}} = \SI{3600}{\second}$ \cite{Hellman2005}. The cruise $L/D$ would be around 4 for a vehicle with small delta wings \footnote{this could be increased by using high aspect ratio folding wings, as mentioned in \cite{Healy1998} and some Soviet proposals for reusable Energia II boosters. The folding mechanism would incur and additional mass penalty.}. Under these assumptions, $P$ will be between $0.17$ and $0.26$. In the NASA LFBB proposal, $P=0.20$ \cite{Healy1998}.
 
-Additional fuel must also be carried for the air-breathing engine. The mass of fuel for the air-breathing engine should be calculated from the Berguet range equation and counted in $m_{rh,1}$ (with $\Delta v_r$ set to zero). If the recovery equipment mass ratio is $\chi_r$ without the flyback fuel, then with the flyback fuel it will be:
-
-\begin{equation}
-\chi_r^{\mathrm{fueled}} = (1 + \chi_r) \exp\left( \frac{R_{\mathrm{cruise}}}{v_{\mathrm{cruise}} (L/D) I_{sp}^{\mathrm{a.b.}}} \right) - 1
-\end{equation}
-
-where $R_{\mathrm{cruise}}$ is the cruise range, $v_{\mathrm{cruise}}$ is the cruise speed, $(L/D)$ is the cruise lift to drag ratio and $I_{sp}^{\mathrm{a.b.}}$ is the specific impulse of the air breathing engine. Reasonable assumptions are  $R_{\mathrm{cruise}} = \SI{400}{\kilo\meter}$ \cite{Healy1998}, $v_{\mathrm{cruise}} = \SI{150}{\meter\per\second}$ \cite{Healy1998}, $(L/D) = 5$, $I_{sp}^{\mathrm{a.b.}} = \SI{3600}{\second}$ \cite{Hellman2005}.
 
 \subsubsection{Parachute recovery}
 TODO
