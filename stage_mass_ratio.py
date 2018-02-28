@@ -34,12 +34,14 @@ def main():
         if i > 0:
             plt.ylabel('')
 
-    plt.suptitle("Effect of $\\epsilon_1'$ on optimal stage mass ratio"
-        + ' for {:s} ($\Delta v_*$ = {:.1f} km/s)'.format(
+    plt.suptitle("Effect of $\\epsilon_1'$ and $y$ on payload capacity"
+        + ' to {:s} ($\Delta v_*$ = {:.1f} km/s)'.format(
             mission, get_dv_mission(mission) * 1e-3))
 
     plt.tight_layout()
     plt.subplots_adjust(wspace=0, top=0.85)
+
+    plt.savefig('stage_mass_ratio.png')
     plt.show()
 
 
@@ -95,7 +97,7 @@ def plot_lv(lv, mission, full_legend=True):
     if ('m_star_' + mission +'_DR') in lv.masses:
         # If there is a downrange recovery option
         pi_star_actual_recov = lv.payload_actual(mission, recov='DR')
-        plt.axhline(y=pi_star_actual_recov, color='black')
+        plt.axhline(y=pi_star_actual_recov, color='black', linestyle='--')
         plt.text(y_actual - 0.05, pi_star_actual_recov*1.03, lv.name + ' (D.R. recov.)')
 
     plt.legend()

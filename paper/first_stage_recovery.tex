@@ -141,7 +141,7 @@ Our goal is to use Equation \ref{eq:recov_rocket} to determine how changes to $\
 y = \frac{m_{s,2} + m_{p,2}}{m_{s,1} + m_{rh,1} + m_{p,1}}
 \end{equation}
 
-For current U.S. 2-stage launch vehicles, $y$ is 0.075 (Atlas V \cite{wade:atlas}) to 0.26 (Falcon 9 \cite{wiki:Falcon9FullThrust}). It can be shown that
+For current U.S. 2-stage launch vehicles, $y$ is 0.076 to 0.265 (see Table \ref{tab:tech_and_payload}). It can be shown that
 
 \begin{equation}
 \label{eq:ypi}
@@ -182,7 +182,22 @@ Second, we define a `technology choice', $\mathcal{T}$, which influences the mas
 	\end{tabular}
 \end{table}
 
-If we know $\Delta v_*$ (set by the mission), the technology choice $\mathcal{T}$, and the stage mass ratio $y$, we can find $\pi_*(\epsilon_1')$ from Equations \ref{eq:pi_star}, \ref{eq:recov_rocket}, and \ref{eq:ypi}. Then, we can compare the payload capacity of the recoverable rocket to that of an equivalent expendable rocket to find the payload factor $r_p$. First, we will make our definition of `equivalent expendable rocket' more rigorous: the `equivalent' rocket uses the same technology choice, the same stage mass ratio, and has the same gross liftoff mass. We also assume that the mission $\Delta v_*$ is the same for both rockets \footnote{We might expect this assumption to be incorrect if the recovery strategy changes the $\Delta v$ losses during ascent (e.g. increased drag due to wings). However, an analysis by DRL finds that ``The impact of the different RLV-types [reusable launch vehicle] on the ascent flight profile is found small and, similar to the ELV [expendable launch vehicle] ascent flight performance losses, these are more dependent on the particular configuration with its T/W [thrust to weight] ratio than on the landing and return modes.'' \cite{Stappert2017}.}
+If we know $\Delta v_*$ (set by the mission), the technology choice $\mathcal{T}$, and the stage mass ratio $y$, we can find $\pi_*(\epsilon_1')$ from Equations \ref{eq:pi_star}, \ref{eq:recov_rocket}, and \ref{eq:ypi}. This relation is explored in Figure \ref{fig:stage_mass_ratio}, which plots $\pi_*$ versus $y$ for various $\mathcal{T}$ and $\epsilon_1'$. Each subplot assumes a different technology choice; the technology choice values are taken from the U.S. EELV fleet (left: Delta IV, center: Atlas V, right: Falcon 9). The black curve shows $\pi_*$ versus $y$ for a vehicle with $\epsilon_1=E_1$. The solid black lines mark the actual stage mass ratio and (expendable mode) payload ratio for the vehicle on which the technology choice is based. If the model accurately describes the vehicle's payload capacity, the black curve should pass through the intersection of the black lines. In fact, the model slightly over-predicts $\pi_*$ (perhaps because it neglects the mass of the payload fairing).  
+Each colored curve shows $\pi_*$ versus $y$ for a different hypothetical values of $\epsilon_1'$. On each curve, the maximum payload point is marked with a dot.
+
+We can notice a few to-be-expected trends. First, the payload capacity decreases as the first stage unavailable mass increases. Second, for almost all combinations of $y$ and $\epsilon_1'$, the \ce{H2(l)} fuel technology choice (`Delta IV'-like, left) has a higher payload ratio than kerosene fuel (`Falcon 9'-like, right). The higher $I_{sp}$ of \ce{H2(l)} more than compensates for the heavier tanks required by its low density.
+
+The variation of the payload-optimal $y$ with $\epsilon_1'$ is more interesting. Intuitively, we might expect that as $\epsilon_1'$ increases, the first stage becomes `less efficient', so $y$ should be increased to shift more of the mission $\Delta v$ to the higher-performing second stage. This is true for the `Falcon 9'-like technology choice (right subplot), and also appears in McKinney's first stage recovery study \cite{McKinney1986}. However, for the other two technology examples, the payload-optimal $y$ is almost constant as $\epsilon_1'$ increases.
+
+It is also interesting to compare the actual $y$ values to the (predicted) payload-optimal $y$. The Atlas V stage mass ratio is far below the optimal value - for historical reasons, Atlas V uses the Centaur upper stage, which was originally designed for a smaller launch vehicle. In contrast, Falcon 9's second stage is bigger-than-optimal for expendable use ($\epsilon_1=0.06$), but is near the optimal $y$ if recovery provisions increase $\epsilon_1'$ to $~0.13$. The predicted payload capacity at $\epsilon_1' \approx 0.13$ matches the actual payload capacity of Falcon 9 with downrange recovery of the first stage (right subplot, black dashed line).
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=\textwidth]{../stage_mass_ratio}
+	\caption{\label{fig:stage_mass_ratio} Effect of first stage unavailable mass fraction $\epsilon_1'$ and stage mass ratio $y$ on payload capacity.}
+\end{figure}
+
+Next, we want to compare the payload capacity of the recoverable rocket to that of an equivalent expendable rocket to find the payload factor $r_p$. First, we will make our definition of `equivalent expendable rocket' more rigorous: the `equivalent' rocket uses the same technology choice, the same stage mass ratio, and has the same gross liftoff mass. We also assume that the mission $\Delta v_*$ is the same for both rockets \footnote{We might expect this assumption to be incorrect if the recovery strategy changes the $\Delta v$ losses during ascent (e.g. increased drag due to wings). However, an analysis by DRL finds that ``The impact of the different RLV-types [reusable launch vehicle] on the ascent flight profile is found small and, similar to the ELV [expendable launch vehicle] ascent flight performance losses, these are more dependent on the particular configuration with its T/W [thrust to weight] ratio than on the landing and return modes.'' \cite{Stappert2017}.}
 
 \begin{equation}
 \mathcal{T}^{\mathrm{expend}} = \mathcal{T}^{\mathrm{recov}}, \quad y^{\mathrm{expend}} = y^{\mathrm{recov}}, \quad m_{0,1}^{\mathrm{expend}} = m_{0,1}^{\mathrm{recov}}, \quad \Delta v_*^{\mathrm{expend}} = \Delta v_*^{\mathrm{recov}}
