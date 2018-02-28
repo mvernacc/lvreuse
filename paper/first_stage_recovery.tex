@@ -337,6 +337,21 @@ For full recovery $z_m=1$ this simplifies to
 
 In the example, assume that the landing gear and control surfaces make up 5\% of the recovery vehicle dry mass, so $a=0.05$ with no heat shields. Thus, $ \pdv{P}{a} = -0.96$. If we add 1\% of the return vehicle mass in heat shields, we must reduce $P$ by at least $\Delta P < \pdv{P}{a} \Delta a = -0.0096$. If the entry maneuver $I_{sp} = \SI{290}{\second}$, this corresponds to a $\Delta v_r$ reduction of \SI{27}{\meter\per\second}. If adding the heat shields allows $\Delta v_r$ to be reduced by \SI{27}{\meter\per\second} or more, the change would decrease $\epsilon_1'$ and increase the payload capacity.
 
+Next, we examine the sensitivity of the unavailable mass fraction $\epsilon_1'$ to the baseline structural mass fraction $E_1$. For an expendable vehicle, the sensitivity is 1:1: $\epsilon_1 = E_1$. However, for full recovery strategies with high $P$ or $a$,  the unavailable mass is much more sensitive to $E_1$. Mathematically,
+
+\begin{equation}
+\left. \pdv{\epsilon_1'}{E_1} \right|_{a, P} = \frac{e^P (1 - a)}{\left(a(E_1 - 1) + 1 \right)^2}
+\end{equation}
+
+Figure \ref{fig:effect_of_structure_mass} shows this relation for example recovery strategies (the values of $a$ and $P$ are derived in the next section). The sensitivity is higher for recoverable stages because the recovery hardware mass and recovery propellant mass scale with the baseline structure mass. For example, if we devise a way to remove \SI{1}{\kilogram} of engine hardware from an expendable stage, the unavailable mass decreases by \SI{1}{\kilogram}. However, if we remove \SI{1}{\kilogram} of engine hardware from a propulsive return-to-launch-site stage, $\sim \SI{2.5}{\kilogram}$ less propellant will be needed to recover the stage, so the unavailable mass decreases by $\sim \SI{3.5}{\kilogram}$. Thus, technological improvements which reduce $E_1$ are very beneficial for recoverable stages.
+
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=0.5\textwidth]{../effect_of_structure_mass}
+	\caption{\label{fig:effect_of_structure_mass} Sensitivity of the unavailable mass fraction $\epsilon_1'$ to the baseline structural mass fraction $E_1$).}
+\end{figure}
+
 
 \subsection{Performance estimates for some recovery strategies}
 TODO
