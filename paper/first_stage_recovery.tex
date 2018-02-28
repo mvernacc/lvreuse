@@ -33,6 +33,16 @@ TODO Abstract
 \end{abstract}
 
 \section{intro/motivation}
+TODO
+Reducing cost of access to space is important goal
+
+historically back to von braun reuse of launch vehicles was an proposal for reducing cost
+
+shuttle tried to reduce costs via reuse of whole vehicle and failed. Other whole reuse concepts (e.g. X-33, Delta Clipper) also failed.
+
+Recently, renewed interest in re-use, but focused only on first stage
+
+this paper will establish a common, first principles framework to evaluate the relative merit of proposed strategies to recover the first stage of a two-stage launch vehicle. 
 
 \section{Description of Recovery Strategies}
 Although only two vehicles with recoverable stages have been operated, a wide variety of first stage recovery strategies have been proposed. This section seeks to develop a systematic classification of recovery strategies, which will be useful in comparing their relative merits.
@@ -53,7 +63,7 @@ Figure \ref{fig:recov_strat_diagram} illustrates the concept of operations for v
 \end{figure}
 
 \begin{table}[hbt!]
-	\caption{\label{tab:vehicles} Some launch vehicles with reusable first stages. (* denotes boosters used in parallel staging)}
+	\caption{\label{tab:vehicles} Some launch vehicles with reusable first stages.}
 	\centering
 	\begin{tabular}{p{4cm} l p{2cm}  p{2cm} p{2cm}}
 		\hline
@@ -74,21 +84,26 @@ Figure \ref{fig:recov_strat_diagram} illustrates the concept of operations for v
 		DRL Liquid Fly-Back Booster (LFBB)* \cite{Sippel2003} & Canceled & Full & Propulsive \& Wing & Launch site\\
 		\hline
 	\end{tabular}
+    \\ * denotes boosters used in parallel staging.
 \end{table}
 
 Despite their wide variety, all these strategies face the same fundamental tradeoff between performance and cost. On the performance side, all recovery strategies require the first stage to carry extra mass during ascent, reducing the payload which can be lifted to orbit. However, recovering and reusing some of the first stage has the potential to reduce launch costs by eliminating the need to re-build expensive hardware\footnote{A reduction in cost is by no means guaranteed. As the Space Shuttle program demonstrated, excessive refurbishment and operations costs can make a reusable system more expensive than expendable alternatives.}. We should expect that recovery strategies will differ in their performance penalty and potential for cost reduction. The fundamental question is which, if any, of the recovery strategies can offer a small enough payload reduction and a large enough cost reduction to be worthwhile?
 
-To make this question more concrete, this paper defines two figures of merit for recovery strategies: the payload factor $r_p$ and the cost factor $r_c$. These factors compare the payload capacity and cost of a vehicle with a reusable first stage to an equivalent\footnote{The `equivalent' expendable vehicle uses the same propulsion and structural technologies, and has the same gross liftoff mass $m_{0,1}$} vehicle with an expendable first stage. The payload factor is the payload capacity of the partially reusable vehicle divided by the payload capacity of the equivalent expendable vehicle. The cost factor is the average flight cost of the reusable first stage divided by the average flight cost of an expendable first stage.
+To make this question more concrete, imagine two launch vehicles: one with recoverable first stage components, and one in which both stages are completely expendable. Let both launch vehicles have the same gross liftoff mass $m_{0,1}$ and use the same propulsion and structural technologies - in this sense, they are `equivalent'. The payload capacity (to some orbit) of the expendable vehicle is $m_*^{\mathrm{expend}}$; the payload capacity of the recoverable vehicle is the somewhat lower value $m_*^{\mathrm{recov}}$. Also, the cost of providing an expendable first stage is $C_1^{\mathrm{expend}}$, whereas the average cost of one flight of the recoverable first stage is $C_1^{\mathrm{recov}}$. This paper proposes two figures of merit for recovery strategies: the payload reduction factor $r_p$ and the cost reduction factor $r_c$. These characteristic ratios are defined as:
 
+\begin{equation}
+r_p \equiv \frac{m_*^{\mathrm{recov}}}{m_*^{\mathrm{expend}}}, \quad r_c \equiv \frac{C_1^{\mathrm{recov}}}{C_1^{\mathrm{expend}}}
+\end{equation}
+
+Later sections will show that adding recovery provisions always decreases performance, so inevitably $r_p \in (0, 1)$. Recovery and reuse should, but might not, reduce costs, so $r_c \in (0, \infty)$.
 When comparing recovery strategies, we can largely neglect their internal complexities and consider each strategy to be represented by a tuple $\mathcal{R}: \{r_p, r_c\}$. We seek recovery strategies with high payload factor ($r_p \rightarrow 1$) and low cost factor ($r_c \rightarrow 0$).
 
-The following two sections attempt to provide quantitative, first-principles tools to estimate $r_p$ and $r_c$. The payload factor can be easily estimated with a fair degree of accuacy, but cost modeling involves more guesswork. The TODO nth section examines the trade-offs between different strategies. Because the willingness of a launch provider to trade payload for cost is uncertain, this comparison is framed to yield a set of recovery strategies which is Pareto-optimal in $(r_p, r_c)$.
+The following two sections attempt quantitative, first-principles tools to estimate $r_p$ and $r_c$. The payload factor can be easily estimated with a fair degree of accuracy, but cost modeling involves more guesswork. The TODO nth section examines the trade-offs between different strategies. Because the willingness of a launch provider to trade payload for cost is uncertain, this comparison is framed to yield a set of recovery strategies which is Pareto-optimal in $(r_p, r_c)$.
 
 
 
 
 \section{Performance Model}
-TODO
 This section provides a general, first-principles framework for estimating the payload reduction factor $r_p$ of a recovery strategy. The fundamental cause of payload reduction is that a recoverable stage must carry extra mass, as recovery hardware or propellant reserved for recovery maneuvers. This extra mass reduces the fraction of the stage's mass which is expelled during ascent. To still deliver the required $\Delta v$ to the payload, the payload mass fraction must then be reduced.
 
 \subsection{Payload factor and first stage unavailable mass}
@@ -144,10 +159,10 @@ For current U.S. 2-stage launch vehicles, $y$ is 0.076 to 0.265 (see Table \ref{
 \pi_2 = (y + 1) - \frac{y}{\pi_1}
 \end{equation}
 
-Second, we define a `technology choice', $\mathcal{T}$, which influences the mass ratios and exhaust velocities. This choice encompasses technological factors such as the propellant (e.g. \ce{O2(l)}/kerosene vs. \ce{O2(l)}/\ce{H2(l)}), the tank construction technology (e.g. aluminum alloy vs. composite), and the engine cycle (e.g. gas generator vs. staged combustion). For the purposes of this model, the technology choice is fully described by the tuple $\mathcal{T} : \{ c_1, c_2, E_1, E_2 \}$, where $E$ is the technological lower limit on the structural mass fraction of an expendable stage. For expendable stages, $\epsilon_i = E_i$. For recoverable stages, $\epsilon_1' > E_1$. Table \ref{tab:tech_and_payload} lists example technology choices and payload ratios for some U.S. launch vehicles.
+Second, we define a `technology choice', $\mathcal{T}$, which influences the mass ratios and exhaust velocities. This choice encompasses technological factors such as the propellant (e.g. \ce{H2(l)}/\ce{O2(l)} vs. kerosene/\ce{O2(l)}), the tank construction technology (e.g. aluminum alloy vs. composite), and the engine cycle (e.g. gas generator vs. staged combustion). For the purposes of this model, the technology choice is fully described by the tuple $\mathcal{T} : \{ c_1, c_2, E_1, E_2 \}$, where $E$ is the technological lower limit on the structural mass fraction of an expendable stage. For expendable stages, $\epsilon_i = E_i$. For recoverable stages, $\epsilon_1' > E_1$. Table \ref{tab:tech_and_payload} lists example technology choices and payload ratios for some U.S. launch vehicles.
 
 \begin{table}
-	\caption{\label{tab:tech_and_payload} Technology choices and payload ratios for U.S. Evolved "Expendable" Launch Vehicles. ($c_1$ is mean of vacuum and sea level values. GTO at \ang{27} inclination, \SI{185 x 35788}{\kilo\meter}.)}
+	\caption{\label{tab:tech_and_payload} Technology choices and payload ratios for U.S. Evolved "Expendable" Launch Vehicles.}
 	\centering
 	\begin{tabular}{p{3cm} M{2.5cm} M{2.5cm} c c c}
 		Vehicle & \multicolumn{2}{c}{Technology choice $\mathcal{T}$} & Stage mass ratio $y$ & \multicolumn{2}{c}{Payload ratio $\pi_*$} \\
@@ -176,10 +191,11 @@ Second, we define a `technology choice', $\mathcal{T}$, which influences the mas
 		 
 		 \hline
 	\end{tabular}
+	\\$c_1$ is mean of vacuum and sea level values. GTO at \ang{27} inclination, \SI{185 x 35788}{\kilo\meter}.
 \end{table}
 
-If we know $\Delta v_*$ (set by the mission), the technology choice $\mathcal{T}$, and the stage mass ratio $y$, we can find $\pi_*(\epsilon_1')$ from Equations \ref{eq:pi_star}, \ref{eq:recov_rocket}, and \ref{eq:ypi}. This relation is explored in Figure \ref{fig:stage_mass_ratio}, which plots $\pi_*$ versus $y$ for various $\mathcal{T}$ and $\epsilon_1'$. Each subplot assumes a different technology choice; the technology choice values are taken from the U.S. EELV fleet (left: Delta IV, center: Atlas V, right: Falcon 9). The black curve shows $\pi_*$ versus $y$ for a vehicle with $\epsilon_1=E_1$. The solid black lines mark the actual stage mass ratio and (expendable mode) payload ratio for the vehicle on which the technology choice is based. If the model accurately describes the vehicle's payload capacity, the black curve should pass through the intersection of the black lines. In fact, the model slightly over-predicts $\pi_*$ (perhaps because it neglects the mass of the payload fairing).  
-Each colored curve shows $\pi_*$ versus $y$ for a different hypothetical values of $\epsilon_1'$. On each curve, the maximum payload point is marked with a dot.
+If we know $\Delta v_*$ (set by the mission), the technology choice $\mathcal{T}$, and the stage mass ratio $y$, we can find $\pi_*(\epsilon_1')$ from Equations \ref{eq:pi_star}, \ref{eq:recov_rocket}, and \ref{eq:ypi}. This relation is explored in Figure \ref{fig:stage_mass_ratio}, which plots $\pi_*$ versus $y$ for various $\mathcal{T}$ and $\epsilon_1'$. Each subplot assumes a different technology choice; the technology choice values are taken from the U.S. Evolved "Expendable" Launch Vehicle (EELV) fleet (left: Delta IV, center: Atlas V, right: Falcon 9). The black curve shows $\pi_*$ versus $y$ for a vehicle with $\epsilon_1=E_1$. The black crosses mark the actual stage mass ratio and (expendable mode) payload ratio for the vehicle on which the technology choice is based. If the model accurately describes the vehicle's payload capacity, the black curve should pass through the cross. In fact, the model slightly over-predicts $\pi_*$ (perhaps because it neglects the mass of the payload fairing).  
+Each colored curve shows $\pi_*$ versus $y$ for a different hypothetical values of $\epsilon_1'$. The maximum payload points of the curves are connected by a gray dotted line.
 
 We can notice a few to-be-expected trends. First, the payload capacity decreases as the first stage unavailable mass increases. Second, for almost all combinations of $y$ and $\epsilon_1'$, the \ce{H2(l)} fuel technology choice (`Delta IV'-like, left) has a higher payload ratio than kerosene fuel (`Falcon 9'-like, right). The higher $I_{sp}$ of \ce{H2(l)} more than compensates for the heavier tanks required by its low density.
 
@@ -193,7 +209,7 @@ It is also interesting to compare the actual $y$ values to the (predicted) paylo
 	\caption{\label{fig:stage_mass_ratio} Effect of first stage unavailable mass fraction $\epsilon_1'$ and stage mass ratio $y$ on payload capacity.}
 \end{figure}
 
-Next, we want to compare the payload capacity of the recoverable rocket to that of an equivalent expendable rocket to find the payload factor $r_p$. First, we will make our definition of `equivalent expendable rocket' more rigorous: the `equivalent' rocket uses the same technology choice, the same stage mass ratio, and has the same gross liftoff mass. We also assume that the mission $\Delta v_*$ is the same for both rockets \footnote{We might expect this assumption to be incorrect if the recovery strategy changes the $\Delta v$ losses during ascent (e.g. increased drag due to wings). However, an analysis by DRL finds that ``The impact of the different RLV-types [reusable launch vehicle] on the ascent flight profile is found small and, similar to the ELV [expendable launch vehicle] ascent flight performance losses, these are more dependent on the particular configuration with its T/W [thrust to weight] ratio than on the landing and return modes.'' \cite{Stappert2017}.}
+Next, we want to compare the payload capacity of the recoverable rocket to that of an equivalent expendable rocket to find the payload reduction factor $r_p$. First, we will make our definition of `equivalent expendable rocket' more rigorous: the `equivalent' rocket uses the same technology choice, the same stage mass ratio, and has the same gross liftoff mass. We also assume that the mission $\Delta v_*$ is the same for both rockets \footnote{We might expect this assumption to be incorrect if the recovery strategy changes the $\Delta v$ losses during ascent (e.g. increased drag due to wings). However, an analysis by DRL finds that ``The impact of the different RLV-types [reusable launch vehicle] on the ascent flight profile is found small and, similar to the ELV [expendable launch vehicle] ascent flight performance losses, these are more dependent on the particular configuration with its T/W [thrust to weight] ratio than on the landing and return modes.'' \cite{Stappert2017}.}
 
 \begin{equation}
 \mathcal{T}^{\mathrm{expend}} = \mathcal{T}^{\mathrm{recov}}, \quad y^{\mathrm{expend}} = y^{\mathrm{recov}}, \quad m_{0,1}^{\mathrm{expend}} = m_{0,1}^{\mathrm{recov}}, \quad \Delta v_*^{\mathrm{expend}} = \Delta v_*^{\mathrm{recov}}
@@ -210,8 +226,7 @@ The relation of $r_p$ to $\epsilon_1'$ is shown in Figure \ref{fig:payload} for 
 \begin{figure}[hbt!]
 	\centering
 	\includegraphics[width=\textwidth]{../payload}
-	\label{fig:payload}
-	\caption{Impact of first stage unavailable mass fraction $\epsilon_1'$ on payload capability. Note that the payload factor $r_p$ declines with increasing unavailable mass, and the decline is more severe for higher $\Delta v_*$ missions.}
+	\caption{\label{fig:payload} Effect of first stage unavailable mass fraction $\epsilon_1'$ on payload capability. Note that the payload factor $r_p$ declines with increasing unavailable mass, and the decline is more severe for higher $\Delta v_*$ missions.}
 \end{figure}
 
 

@@ -3,6 +3,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from itertools import cycle
+from scipy import interpolate
 
 import payload
 import launch_vehicles
@@ -55,6 +56,7 @@ def plot_lv(lv, mission, full_legend=True):
     # Stage inert mass fractions
     e_1_actual = lv.stage_inert_mass_fraction(1)
     e_1_steps = np.concatenate(([e_1_actual], np.linspace(0.10, 0.25, 4)))
+    e_1_steps.sort()
     e_2 = lv.stage_inert_mass_fraction(2)
 
     # Stage mass ratio [units: dimensionless].
@@ -65,7 +67,8 @@ def plot_lv(lv, mission, full_legend=True):
 
     #colors
     color_cycle = cycle(['C' + str(i) for i in range(len(e_1_steps))])
-
+    y_max = []
+    pi_max = []
     for e_1 in  e_1_steps:
         pi_star = np.zeros(y.shape)
         for i in range(len(y)):
@@ -83,24 +86,34 @@ def plot_lv(lv, mission, full_legend=True):
 
         plt.plot(y, pi_star, label=label, color=color)
 
-        # Mark the maxium, if there is one
+        # Record the maxium, if there is one
         i_max = np.nanargmax(pi_star)
         if (i_max != 0) and (i_max != len(y) - 1):
-            plt.scatter(y[i_max], pi_star[i_max], color=color)
+            y_max.append(y[i_max])
+            pi_max.append(pi_star[i_max])
+
+    # Mark the max-payload trend.
+    # Smooth
+    spline_tck, _ = interpolate.splprep([y_max, pi_max])
+    spline_out = interpolate.splev(np.linspace(0, 1), spline_tck)
+    # plot
+    plt.plot(spline_out[0], spline_out[1], color='grey', linestyle=':')
 
     # Mark actual values
     pi_star_actual = lv.payload_actual(mission)
     y_actual = lv.stage_mass_ratio()
-    plt.axhline(y=pi_star_actual, color='black')
-    plt.axvline(x=y_actual, color='black')
+    plt.scatter(y_actual, pi_star_actual, color='black', marker='+', s=128)
+    # plt.axhline(y=pi_star_actual, color='black')
+    # plt.axvline(x=y_actual, color='black')
     plt.text(y_actual - 0.05, pi_star_actual*1.03, lv.name + ' (Expd.)')
     if ('m_star_' + mission +'_DR') in lv.masses:
         # If there is a downrange recovery option
         pi_star_actual_recov = lv.payload_actual(mission, recov='DR')
-        plt.axhline(y=pi_star_actual_recov, color='black', linestyle='--')
+        plt.scatter(y_actual, pi_star_actual_recov, color='black', marker='+', s=128)
         plt.text(y_actual - 0.05, pi_star_actual_recov*1.03, lv.name + ' (D.R. recov.)')
 
     plt.legend()
+    # plt.grid(True)
     plt.xlabel("2nd/1st stage mass ratio $y$ [-]")
     plt.ylabel('Payload mass fraction $\\pi_*$ [-]')
     plt.title('$c_1/g_0$={:.0f} s, $c_2/g_0$={:.0f} s\n'.format(c_1 / g_0, c_2 / g_0)
