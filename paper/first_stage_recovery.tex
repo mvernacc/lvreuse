@@ -209,13 +209,13 @@ Finally, the payload factor is
 r_p = \frac{m_*^{\mathrm{recov}}}{m_*^{\mathrm{expend}}} = \frac{\pi_*^{\mathrm{recov}}}{\pi_*^{\mathrm{expend}}}
 \end{equation}
 
-The relation of $r_p$ to $\epsilon_1'$ is shown in Figure \ref{fig:payload} for two typical launch missions (Low Earth Orbit $\Delta v_* = \SI{9.5}{\kilo\meter\per\second}$ and Geostationary Transfer Orbit $\Delta v_* = \SI{12.0}{\kilo\meter\per\second}$). As expected, the payload capacity declines with increasing first stage unavailable mass. Also, note that the decline is more severe for higher $\Delta v_*$ missions. Thus, a particular recovery strategy (with some $\epsilon_1'$) will have a smaller payload factor for GTO missions than for LEO missions ($r_p^{\mathrm{LEO}} > r_p^\mathrm{GTO}$). Higher $\Delta v_*$ missions put a bigger penalty on first stage recovery. 
+The relation of $r_p$ to $\epsilon_1'$ is shown in Figure \ref{fig:payload} for two typical launch missions (Low Earth Orbit $\Delta v_* = \SI{9.5}{\kilo\meter\per\second}$, blue; and Geostationary Transfer Orbit $\Delta v_* = \SI{12.0}{\kilo\meter\per\second}$, orange) and two technology choices (`Delta IV'-like with \ce{H2(l)} fuel, left subplots; and `Falcon 9'-like with kerosene fuel, right subplots). As expected, the payload capacity declines with increasing first stage unavailable mass. Also, note that the decline is more severe for higher $\Delta v_*$ missions. Thus, a particular recovery strategy (with some $\epsilon_1'$) will have a smaller payload factor for GTO missions than for LEO missions ($r_p^{\mathrm{LEO}} > r_p^\mathrm{GTO}$). Higher $\Delta v_*$ missions put a bigger penalty on first stage recovery. Also notice that the payload reduction factors are similar for both technology choices - neither is inherently better suited for recovery. In either case, increasing $\epsilon_1'$ from $E_1$ to 0.23 halves the payload capacity to GTO.
 
 \begin{figure}[hbt!]
 	\centering
-	\includegraphics[width=0.5\textwidth]{../payload}
+	\includegraphics[width=\textwidth]{../payload}
 	\label{fig:payload}
-	\caption{Impact of first stage unavailable mass fraction $\epsilon_1'$ on payload capability. Note that the payload factor $r_p$ declines with increasing unavailable mass, and the decline is more severe for higher $\Delta v_*$ missions. The technology choice values are typical for \ce{O2(l)}/kerosene and aluminum tanks.}
+	\caption{Impact of first stage unavailable mass fraction $\epsilon_1'$ on payload capability. Note that the payload factor $r_p$ declines with increasing unavailable mass, and the decline is more severe for higher $\Delta v_*$ missions.}
 \end{figure}
 
 

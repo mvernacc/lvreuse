@@ -40,65 +40,85 @@ def payload_fixed_stages(c_1, c_2, e_1, e_2, y, dv_mission):
 
 
 def main():
-    
+    fig, axes = plt.subplots(ncols=2, nrows=2)
+    fig.set_size_inches(12, 9)
+    plot_payload('H2', axes, 0)
+    plot_payload('kerosene', axes, 1)
+    plt.suptitle("Effect of $\\epsilon_1'$ on payload capacity")
+    plt.tight_layout()
+    plt.subplots_adjust(top=0.90)
+    plt.savefig('payload.png')
+    plt.show()
+
+
+def plot_payload(technology, axes, which_column):
     g_0 = 9.81
-    # Stage exahust velocities [units: meter second**-1].
-    # O2/kerosene
-    c_1 = 290 * g_0
-    c_2 = 350 * g_0
-    # O2/H2
-    # c_1 = 400 * g_0
-    # c_2 = 460 * g_0
 
-    E = 0.08 # Stage inert mass fraction
-    y = 0.15 # Stage mass ratio
+    if technology == 'H2':
+        # Hydrogen-fuel technology, based on Delta IV
+        # Stage exahust velocities [units: meter second**-1].
+        c_1 = 386 * g_0
+        c_2 = 462 * g_0
 
-    e_1_max = 0.25
+        # Stage inert mass fraction [units: dimensionless].
+        E_1 = 0.120
+        E_2 = 0.120
+
+        # Stage mass ratio [units: dimensionless].
+        # Approx the payload-optimal value
+        y = 0.18
+    elif technology == 'kerosene':
+        # Kerosene-fuel technology, based on Falcon 9 Block 3
+        # Stage exahust velocities [units: meter second**-1].
+        c_1 = 297 * g_0
+        c_2 = 350 * g_0
+
+        # Stage inert mass fraction [units: dimensionless].
+        E_1 = 0.060
+        E_2 = 0.039
+
+        # Stage mass ratio [units: dimensionless].
+        # F9 value
+        y = 0.265
+
+    e_1_max = 0.35
 
     # Plot payload capacity vs 1st stage unavail mass
-    plt.figure(figsize=(6, 9))
     for dv_mission in [9.5e3, 12e3]:
-        pi_star_expend = payload_fixed_stages(c_1, c_2, E, E, y, dv_mission)
-        e_1 = np.linspace(E, e_1_max)
+        pi_star_expend = payload_fixed_stages(c_1, c_2, E_1, E_2, y, dv_mission)
+        e_1 = np.linspace(E_1, e_1_max)
         pi_star = np.zeros(e_1.shape)
         for i in range(len(e_1)):
-            pi_star[i] = payload_fixed_stages(c_1, c_2, e_1[i], E, y, dv_mission)
-            if pi_star[i] < 0:
-                pi_star[i] = np.nan
+            pi_star[i] = payload_fixed_stages(c_1, c_2, e_1[i], E_2, y, dv_mission)
 
-        plt.subplot(2, 1, 1)
+        plt.sca(axes[0, which_column])
         plt.plot(e_1, pi_star, label='$\\Delta v_* = {:.1f}$ km/s'.format(
             dv_mission * 1e-3))
-        plt.subplot(2, 1, 2)
+
+        plt.sca(axes[1, which_column])
         plt.plot(e_1, pi_star / pi_star_expend,
                  label='$\\Delta v_* = {:.1f}$ km/s'.format(
             dv_mission * 1e-3))
 
-    plt.subplot(2, 1, 1)
+    plt.sca(axes[0, which_column])
     plt.xlabel("1st stage unavail. mass fraction $\\epsilon_1'$ [-]")
     plt.ylabel('Payload fraction $\\pi_*^{\\mathrm{recov}}$ [-]')
     plt.grid(True)
-    plt.title("Effect of $\\epsilon_1'$ on payload capacity\n"
-              + 'for $y = {:.2f}$, '.format(y)
-              + '$c_1/g_0$={:.0f} s, $c_2/g_0$={:.0f} s, $E_1=E_2$={:.2f}'.format(
-                c_1 / g_0, c_2 / g_0, E))
+    plt.title('{:s} technology\n'.format(technology)
+              + '$y = {:.2f}$, '.format(y)
+              + '$c_1/g_0$={:.0f} s, $c_2/g_0$={:.0f} s, $E_1$={:.2f}, $E_2$={:.2f}'.format(
+                c_1 / g_0, c_2 / g_0, E_1, E_2))
     plt.legend()
-    plt.xlim(E, e_1_max)
+    plt.xlim(E_1, e_1_max)
+    plt.ylim([0, 0.05])
 
-    plt.subplot(2, 1, 2)
+    plt.sca(axes[1, which_column])
     plt.xlabel("1st stage unavail. mass fraction $\\epsilon_1'$ [-]")
     plt.ylabel('Payload factor $r_p = \\pi_*^{\\mathrm{recov}}/\\pi_*^{\\mathrm{expend}}$ [-]')
     plt.grid(True)
     plt.legend()
-    plt.xlim(E, e_1_max)
+    plt.xlim(E_1, e_1_max)
     plt.ylim([0,1])
-
-    plt.tight_layout()
-
-    plt.savefig('payload.png')
-
-    plt.show()
-
 
 
 if __name__ == '__main__':
