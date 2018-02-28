@@ -3,6 +3,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy.optimize import fsolve
 
+import launch_vehicles
+
 def payload_fixed_stages(c_1, c_2, e_1, e_2, y, dv_mission):
     """Get the payload capacity for a 2-stage launcher with fixed stagne mass ratio.
 
@@ -81,7 +83,7 @@ def plot_payload(technology, axes, which_column):
         # F9 value
         y = 0.265
 
-    e_1_max = 0.35
+    e_1_max = 0.40
 
     # Plot payload capacity vs 1st stage unavail mass
     for dv_mission in [9.5e3, 12e3]:
@@ -99,6 +101,19 @@ def plot_payload(technology, axes, which_column):
         plt.plot(e_1, pi_star / pi_star_expend,
                  label='$\\Delta v_* = {:.1f}$ km/s'.format(
             dv_mission * 1e-3))
+
+    if technology == 'kerosene':
+        # Plot actual r_p values for Falcon 9
+        r_p_acutal_gto_dr = (launch_vehicles.f9_b3_e.masses['m_star_GTO_DR']
+            / launch_vehicles.f9_b3_e.masses['m_star_GTO'])
+        r_p_acutal_leo_ls = (launch_vehicles.f9_b3_e.masses['m_star_LEO_LS']
+            / launch_vehicles.f9_b3_e.masses['m_star_LEO'])
+        plt.sca(axes[1, which_column])
+        plt.axhline(y=r_p_acutal_gto_dr, color='C1', linestyle='--')
+        plt.text(0.15, r_p_acutal_gto_dr + 0.02, 'F9 GTO downrange')
+        plt.axhline(y=r_p_acutal_leo_ls, color='C0', linestyle='--')
+        plt.text(0.15, r_p_acutal_leo_ls + 0.02, 'F9 LEO launch site')
+
 
     plt.sca(axes[0, which_column])
     plt.xlabel("1st stage unavail. mass fraction $\\epsilon_1'$ [-]")
