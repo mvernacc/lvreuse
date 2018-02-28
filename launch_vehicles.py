@@ -58,15 +58,17 @@ atlas_v_401 = LaunchVehicle(
     c_2=450 * g_0
     )
 
-f9_ft_e = LaunchVehicle(
-    name='Falcon 9 FT (Expendable)',
+# Data from http://www.spacelaunchreport.com/falcon9ft.html
+# Falcon 9 v1.2 (Block 3)
+f9_b3_e = LaunchVehicle(
+    name='Falcon 9 Block 3 (Expd.)',
     masses={
-        'm_s1': 22.2,
-        'm_p1': 433.1 - 22.2,
-        'm_s2': 4.0,
-        'm_p2': 111.5 - 4.0,
-        'm_star_LEO': 22.8,
-        'm_star_GTO': 8.30,
+        'm_s1': 27.2,
+        'm_p1': 411.,
+        'm_s2': 4.5,
+        'm_p2': 111.5,
+        'm_star_LEO': 17.4,
+        'm_star_GTO': 6.4,
     },
     c_1=297 * g_0,
     c_2=350 * g_0
@@ -90,7 +92,7 @@ delta_iv_m = LaunchVehicle(
 
 
 def main():
-    lvs = (atlas_v_401, delta_iv_m, f9_ft_e)
+    lvs = (atlas_v_401, delta_iv_m, f9_b3_e)
 
     for lv in lvs:
         e_1 = lv.stage_inert_mass_fraction(1)
