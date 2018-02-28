@@ -26,12 +26,17 @@ def payload_fixed_stages(c_1, c_2, e_1, e_2, y, dv_mission):
         if np.isnan(dv):
             return dv_mission
         return dv_mission - dv
+
     x, infodict, ier, mesg = fsolve(root_fun, y, full_output=True)
     if ier != 1:
         return np.nan
     pi_1 = x[0]
     pi_2 = (y + 1) - y / pi_1
-    return pi_1 * pi_2
+    pi_star = pi_1 * pi_2
+
+    if pi_star < 0:
+        return np.nan
+    return pi_star
 
 
 def main():
