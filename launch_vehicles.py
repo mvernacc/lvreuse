@@ -25,12 +25,16 @@ class LaunchVehicle(object):
             / (self.masses['m_s1'] + self.masses['m_p1']))
         return y
 
-    def payload_actual(self, which_orbit):
+    def payload_actual(self, mission, recov=''):
         """Get the launch vehicle's payload mass fraction."""
-        assert which_orbit == 'LEO' or which_orbit == 'GTO'
+        assert mission == 'LEO' or mission == 'GTO'
+        assert recov == '' or recov == 'DR' or recov == 'LS'
 
+        key = 'm_star_' + mission
+        if recov != '':
+            key += '_' + recov
         # Payload mass
-        m_star = self.masses['m_star_' + which_orbit]
+        m_star = self.masses[key]
 
         # Launch vehicle wet mass
         m_lv = (self.masses['m_s1'] + self.masses['m_p1']
@@ -60,8 +64,10 @@ atlas_v_401 = LaunchVehicle(
 
 # Data from http://www.spacelaunchreport.com/falcon9ft.html
 # Falcon 9 v1.2 (Block 3)
+# Payload capacity with recovery is max. demonstrated, actual capacity
+# may be somewhat higher.
 f9_b3_e = LaunchVehicle(
-    name='Falcon 9 Block 3 (Expd.)',
+    name='Falcon 9 Block 3',
     masses={
         'm_s1': 27.2,
         'm_p1': 411.,
@@ -69,6 +75,8 @@ f9_b3_e = LaunchVehicle(
         'm_p2': 111.5,
         'm_star_LEO': 17.4,
         'm_star_GTO': 6.4,
+        'm_star_GTO_DR': 5.282,  # With 1st stg. downrange recovery
+        'm_star_LEO_LS': 8.43,   # With 1st stg. launch site recovery
     },
     c_1=297 * g_0,
     c_2=350 * g_0

@@ -71,7 +71,7 @@ def plot_lv(lv, mission, full_legend=True):
                 c_1, c_2, e_1, e_2, y[i], dv_mission)
         if e_1 == e_1_actual:
             color='black'
-            label="$\\epsilon_1'=${:.2f} (actual)".format(e_1)
+            label="$\\epsilon_1=${:.2f} (actual)".format(e_1)
         elif full_legend:
             color = next(color_cycle)
             label="$\\epsilon_1'=${:.2f}".format(e_1)
@@ -91,7 +91,12 @@ def plot_lv(lv, mission, full_legend=True):
     y_actual = lv.stage_mass_ratio()
     plt.axhline(y=pi_star_actual, color='black')
     plt.axvline(x=y_actual, color='black')
-    plt.text(y_actual*1.02, pi_star_actual*1.02, lv.name)
+    plt.text(y_actual - 0.05, pi_star_actual*1.03, lv.name + ' (Expd.)')
+    if ('m_star_' + mission +'_DR') in lv.masses:
+        # If there is a downrange recovery option
+        pi_star_actual_recov = lv.payload_actual(mission, recov='DR')
+        plt.axhline(y=pi_star_actual_recov, color='black')
+        plt.text(y_actual - 0.05, pi_star_actual_recov*1.03, lv.name + ' (D.R. recov.)')
 
     plt.legend()
     plt.xlabel("2nd/1st stage mass ratio $y$ [-]")
