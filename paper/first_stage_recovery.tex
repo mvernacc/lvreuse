@@ -10,6 +10,9 @@
 \usepackage{footnote}
 \usepackage{mhchem}
 \usepackage{physics}
+\usepackage{array,makecell,booktabs}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+\usepackage[super]{nth}
 \makesavenoteenv{tabular}
 \setlength\LTleft{0pt} 
 
@@ -145,7 +148,39 @@ For current U.S. 2-stage launch vehicles, $y$ is 0.075 (Atlas V \cite{wade:atlas
 \pi_2 = (y + 1) - \frac{y}{\pi_1}
 \end{equation}
 
-Second, we define a `technology choice', $\mathcal{T}$, which influences the mass ratios and exhaust velocities. This choice encompasses technological factors such as the propellant (e.g. \ce{O2(l)}/kerosene vs. \ce{O2(l)}/\ce{H2(l)}), the tank construction technology (e.g. aluminum alloy vs. composite), and the engine cycle (e.g. gas generator vs. staged combustion). For the purposes of this model, the technology choice is fully described by the tuple $\mathcal{T} : \{ c_1, c_2, E_1, E_2 \}$, where $E$ is the technological lower limit on the structural mass fraction of an expendable stage. For expendable stages, $\epsilon_i = E_i$. For recoverable stages, $\epsilon_1' > E_1$.
+Second, we define a `technology choice', $\mathcal{T}$, which influences the mass ratios and exhaust velocities. This choice encompasses technological factors such as the propellant (e.g. \ce{O2(l)}/kerosene vs. \ce{O2(l)}/\ce{H2(l)}), the tank construction technology (e.g. aluminum alloy vs. composite), and the engine cycle (e.g. gas generator vs. staged combustion). For the purposes of this model, the technology choice is fully described by the tuple $\mathcal{T} : \{ c_1, c_2, E_1, E_2 \}$, where $E$ is the technological lower limit on the structural mass fraction of an expendable stage. For expendable stages, $\epsilon_i = E_i$. For recoverable stages, $\epsilon_1' > E_1$. Table \ref{tab:tech_and_payload} lists example technology choices and payload ratios for some U.S. launch vehicles.
+
+\begin{table}
+	\caption{\label{tab:tech_and_payload} Technology choices and payload ratios for U.S. Evolved "Expendable" Launch Vehicles. ($c_1$ is mean of vacuum and sea level values. GTO at \ang{27} inclination, \SI{185 x 35788}{\kilo\meter}.)}
+	\centering
+	\begin{tabular}{p{3cm} M{2.5cm} M{2.5cm} c c c}
+		Vehicle & \multicolumn{2}{c}{Technology choice $\mathcal{T}$} & Stage mass ratio $y$ & \multicolumn{2}{c}{Payload ratio $\pi_*$} \\
+		 & \nth{1} stage & \nth{2} stage & & LEO & GTO \\
+		 \hline
+		 \hline
+		 
+		 Delta IV Medium \newline \cite{Slazer2017, slr:delta_iv}
+		 & $c_1/g_0=\SI{386}{\second}$ \newline $E_1=0.121$ \newline \ce{H2(l)}/\ce{O2(l)} \newline Gas gen. cycle \newline \ce{Al} alloy tanks
+		 & $c_2/g_0=\SI{462}{\second}$ \newline $E_2=0.120$ \newline \ce{H2(l)}/\ce{O2(l)} \newline Expander cycle \newline \ce{Al} alloy tanks
+		 & 0.100 & 0.034 & 0.016 \\
+		 
+		 \hline
+		 
+		 Atlas V 401 \newline \cite{atlas_v_user_guide, slr:atlas_v}
+		 & $c_1/g_0=\SI{325}{\second}$ \newline $E_1=0.069$ \newline kerosene/\ce{O2(l)} \newline Staged cb. cycle \newline \ce{Al} alloy tanks
+		 & $c_2/g_0=\SI{450}{\second}$ \newline $E_2=0.100$ \newline \ce{H2(l)}/\ce{O2(l)} \newline Expander cycle \newline Steel tanks
+		 & 0.076 & 0.029 & 0.014 \\
+		 
+		 \hline
+		 
+		 Falcon 9 Block 3 \newline (expendable $\pi_*$) \cite{slr:falcon_9}
+		 & $c_1/g_0=\SI{297}{\second}$ \newline $E_1 \leq 0.062$ \newline kerosene/\ce{O2(l)} \newline Gas gen. cycle \newline \ce{Al-Li} alloy tanks
+		 & $c_2/g_0=\SI{350}{\second}$ \newline $E_2=0.039$ \newline kerosene/\ce{O2(l)} \newline Gas gen. cycle \newline \ce{Al-Li} alloy tanks
+		 & 0.265 & 0.030 & 0.011 \\
+		 
+		 \hline
+	\end{tabular}
+\end{table}
 
 If we know $\Delta v_*$ (set by the mission), the technology choice $\mathcal{T}$, and the stage mass ratio $y$, we can find $\pi_*(\epsilon_1')$ from Equations \ref{eq:pi_star}, \ref{eq:recov_rocket}, and \ref{eq:ypi}. Then, we can compare the payload capacity of the recoverable rocket to that of an equivalent expendable rocket to find the payload factor $r_p$. First, we will make our definition of `equivalent expendable rocket' more rigorous: the `equivalent' rocket uses the same technology choice, the same stage mass ratio, and has the same gross liftoff mass. We also assume that the mission $\Delta v_*$ is the same for both rockets \footnote{We might expect this assumption to be incorrect if the recovery strategy changes the $\Delta v$ losses during ascent (e.g. increased drag due to wings). However, an analysis by DRL finds that ``The impact of the different RLV-types [reusable launch vehicle] on the ascent flight profile is found small and, similar to the ELV [expendable launch vehicle] ascent flight performance losses, these are more dependent on the particular configuration with its T/W [thrust to weight] ratio than on the landing and return modes.'' \cite{Stappert2017}.}
 

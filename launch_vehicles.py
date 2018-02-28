@@ -76,6 +76,7 @@ f9_b3_e = LaunchVehicle(
         'm_star_LEO': 17.4,
         'm_star_GTO': 6.4,
         'm_star_GTO_DR': 5.282,  # With 1st stg. downrange recovery
+        'm_star_LEO_DR': 8.626,  # With 1st stg. downrange recovery
         'm_star_LEO_LS': 8.43,   # With 1st stg. launch site recovery
     },
     c_1=297 * g_0,
@@ -84,6 +85,8 @@ f9_b3_e = LaunchVehicle(
 
 # Data from http://www.spacelaunchreport.com/delta4.html
 # Delta 9040 with 4 meter second stage
+# Payload data from https://www.ulalaunch.com/docs/default-source/evolution/delta-iv-launch-vehicle-growth-options-to-support-nasas-space-exploration-vision.pdf
+# Figure 1
 delta_iv_m = LaunchVehicle(
     name='Delta IV Medium',
     masses={
@@ -91,8 +94,8 @@ delta_iv_m = LaunchVehicle(
         'm_p1': 204.,
         'm_s2': 2.78,
         'm_p2': 20.41,
-        'm_star_LEO': 8.8,
-        'm_star_GTO': 4.54,
+        'm_star_LEO': 9.11,
+        'm_star_GTO': 4.23,
     },
     c_1= 386 * g_0,
     c_2= 462 * g_0

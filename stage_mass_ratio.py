@@ -113,7 +113,7 @@ def plot_lv(lv, mission, full_legend=True):
     if mission == 'GTO':
         ax.set_ylim(ymax=0.02)
     elif mission == 'LEO':
-        ax.set_ylim(ymax=0.04)
+        ax.set_ylim(ymax=0.06)
 
 
 if __name__ == '__main__':
