@@ -43,8 +43,8 @@ Although only two vehicles with recoverable stages have been operated, a wide va
 First stage recovery strategies can be characterized by three high-level choices:
 \begin{enumerate}
 	\item \textit{Portion of stage recovered} - Some strategies recover the entire first stage, while others propose to only recover a portion containing the higher-value components (e.g. main engines).
-	\item \textit{Deceleration and maneuvering method} - The first stage must have some means to control and slow its re-entry trajectory. The deceleration and maneuvering methods can be grouped into three categories: propulsive designs which use the main engines to maneuver and land vertically; winged designs which use aerodynamic surfaces to maneuver and land horizontally; and design which decelerate using parachutes. Note that these are not absolute distinctions: current propulsive-landing designs use small aerodynamic control surfaces, and some proposed winged designs have auxiliary propulsion to increase their range.
-	\item \textit{Recovery location} - The stage may be recovered downrange, or may fly itself back for recovery at the launch site. Most downrange recovery strategies land on a boat or in the ocean, although some call for the recovered components to be caught by an aircraft in midair \cite{Ragab2015}.
+	\item \textit{Landing method} - The landing methods can be grouped into three categories: propulsive designs which use rocket engines to land vertically; winged designs which land horizontally like an airplane; and designs which land under parachutes.
+	\item \textit{Recovery location} - The stage may be recovered downrange, or may fly itself back for recovery at the launch site. Most downrange recovery strategies land on a boat or in the ocean, although some call for the recovered components to be caught by an aircraft in midair \cite{Ragab2015, Stappert2017}.
 \end{enumerate}
 
 Figure \ref{fig:recov_strat_diagram} illustrates the concept of operations for various strategies formed from the above choices. Strategies which have been carried out or proposed are listed in Table \ref{tab:vehicles}, and along the bottom of Figure \ref{fig:recov_strat_diagram}.
@@ -52,8 +52,7 @@ Figure \ref{fig:recov_strat_diagram} illustrates the concept of operations for v
 \begin{figure}[hbt!]
 	\centering
 	\includegraphics[width=1\textwidth]{figures/recov_strat_diagram}
-	\label{fig:recov_strat_diagram}
-	\caption{Recovery strategies TODO better graphics}
+	\caption{\label{fig:recov_strat_diagram} Recovery strategies TODO better graphics}
 \end{figure}
 
 \begin{table}
@@ -61,14 +60,14 @@ Figure \ref{fig:recov_strat_diagram} illustrates the concept of operations for v
 	\centering
 	\begin{tabular}{p{4cm} l p{2cm}  p{2cm} p{2cm}}
 		\hline
-		Vehicle & Status & Portion of booster recovered & Deccel \& Manuever method & Recovery location \\
+		Vehicle & Status & Portion of booster recovered & Landing method & Recovery location \\
 		\hline
 		\hline
-		Falcon 9 & Operational & Full & Propulsive & Launch site or downrange \\
+		Falcon 9 \cite{Falcon9} & Operational & Full & Propulsive & Launch site or downrange \\
 		\hline
 		Space Shuttle* & Retired & Full & Parachute & Downrange \\
 		\hline
-		New Glenn & Proposed & Full & Propulsive & Downrange \\
+		New Glenn \cite{NewGlenn} & Proposed & Full & Propulsive & Downrange \\
 		Adeline (Ariane 6) & Proposed & Partial & Wing & Launch site \\
 		SMART (Vulcan) \cite{Ragab2015} & Proposed & Partial & Parachute & Downrange midair \\
 		\hline
