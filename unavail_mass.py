@@ -69,28 +69,29 @@ def plot_contours_ap():
     P = np.linspace(0, 1.5)
     a_grid, P_grid = np.meshgrid(a, P)
 
-    E_1 = 0.08
-    z_m = [1, 0.25]
     g_0 = 9.81
-    c_1 = 297 * g_0
+
+    Case = namedtuple('Case', ['name', 'E_1', 'c_1', 'z_m'])
+    kerosene_full = Case('kerosene tech, full recovery', E_1=0.06, c_1=297*g_0, z_m=1.)
+    kerosene_partial = Case('kerosene tech, partial recovery', E_1=0.06, c_1=297*g_0, z_m=0.25)
+    hydrogen_full = Case('hydrogen tech, full recovery', E_1=0.12, c_1=386*g_0, z_m=1.)
+    hydrogen_partial = Case('hydrogen tech, partial recovery', E_1=0.12, c_1=386*g_0, z_m=0.25)
+    cases = (kerosene_full, kerosene_partial, hydrogen_full, hydrogen_partial)
 
     # Parameters for air-breathing powered flight return
     lift_drag = 4.    # Cruise lift/drag ratio
     Isp_ab = 3600.    # Air breathing engine specific impulse [units: second].
     v_cruise = 150.    # Cruise speed [units: meter second**-1].
 
-
-    gs = gridspec.GridSpec(1, len(z_m))
-
-
     # Plot results
-    plt.figure(figsize=(12,6))
 
-    for i in range(len(z_m)):
-        e_grid = unavail_mass(a_grid, P_grid, z_m[i], E_1)
+    for case in cases:
+
+        e_grid = unavail_mass(a_grid, P_grid, case.z_m, case.E_1)
 
         # Make contour plot
-        host_ax = plt.subplot(gs[0, i])
+        plt.figure(figsize=(8,6))        
+        host_ax = plt.subplot(111)
         cs = plt.contour(a_grid, P_grid, e_grid, np.logspace(-1, 0, 15))
         plt.clabel(cs, inline=1, fontsize=10)
         host_ax.set_ylim([0, max(P)])
@@ -98,18 +99,18 @@ def plot_contours_ap():
         host_ax.set_xlabel('Recov. h/w mass ratio $a = m_{rh,1}/(m_{rh,1} + m_{hv,1})$ [-]')
         host_ax.set_ylabel('Propulsion exponent $P$ [-]')
         plt.title("Unavailable mass ratio $\\epsilon_1'$\n"
-                  + 'for $E_1$={:.2f}, $z_m$={:.2f}'.format(E_1, z_m[i]))
+                  + 'for {:s} ($E_1$={:.2f}, $z_m$={:.2f})'.format(
+                      case.name, case.E_1, case.z_m))
 
         # Add secondary axis scales
         # Delta-v axis
         dv_ax = host_ax.twinx()
-        dv_ax.set_ylim(0, max(P) * c_1)
+        dv_ax.set_ylim(0, max(P) * case.c_1)
         dv_ax.spines['left'].set_position(('outward', 50))
         dv_ax.spines['left'].set_visible(True)
         dv_ax.yaxis.set_label_position('left')
         dv_ax.yaxis.set_ticks_position('left')
-        dv_ax.set_ylabel('Recov. $\Delta v$ (for $c_1/g_0$ = {:.0f} s) [m/s]'.format(
-            c_1 / g_0))
+        dv_ax.set_ylabel('Recov. $\Delta v$ [m/s]')
         # Air-breathing cruise range axis
         ab_ax = host_ax.twinx()
         ab_ax.set_ylim(0, max(P) * lift_drag * Isp_ab * v_cruise * 1e-3)
@@ -117,8 +118,9 @@ def plot_contours_ap():
         ab_ax.set_ylabel('Recov. range $R_{{cruise}}$ (for $L/D$ = {:.0f}, $v_{{cruise}}$ = {:.0f} m/s) [km]'.format(
             lift_drag, v_cruise))
 
-    plt.tight_layout()
-    plt.savefig('unavail_mass.png')
+        plt.tight_layout()
+        plt.savefig('unavail_mass_{:s}.png'.format(
+            case.name.replace(' ', '_').replace(',', '')))
 
     # plt.figure(figsize=(6,6))
     # cs = plt.contour(chi_r_grid, dv_r_grid, r_p_grid)
