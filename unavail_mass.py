@@ -71,6 +71,14 @@ def plot_contours_ap():
 
     E_1 = 0.08
     z_m = [1, 0.25]
+    g_0 = 9.81
+    c_1 = 297 * g_0
+
+    # Parameters for air-breathing powered flight return
+    lift_drag = 4.    # Cruise lift/drag ratio
+    Isp_ab = 3600.    # Air breathing engine specific impulse [units: second].
+    v_cruise = 150.    # Cruise speed [units: meter second**-1].
+
 
     gs = gridspec.GridSpec(1, len(z_m))
 
@@ -81,13 +89,33 @@ def plot_contours_ap():
     for i in range(len(z_m)):
         e_grid = unavail_mass(a_grid, P_grid, z_m[i], E_1)
 
-        plt.subplot(gs[0, i])
+        # Make contour plot
+        host_ax = plt.subplot(gs[0, i])
         cs = plt.contour(a_grid, P_grid, e_grid, np.logspace(-1, 0, 15))
         plt.clabel(cs, inline=1, fontsize=10)
-        plt.xlabel('Recov. h/w mass ratio $a = m_{rh,1}/(m_{rh,1} + m_{hv,1})$ [-]')
-        plt.ylabel('Propulsion exponent $P$ [-]')
+        host_ax.set_ylim([0, max(P)])
+
+        host_ax.set_xlabel('Recov. h/w mass ratio $a = m_{rh,1}/(m_{rh,1} + m_{hv,1})$ [-]')
+        host_ax.set_ylabel('Propulsion exponent $P$ [-]')
         plt.title("Unavailable mass ratio $\\epsilon_1'$\n"
                   + 'for $E_1$={:.2f}, $z_m$={:.2f}'.format(E_1, z_m[i]))
+
+        # Add secondary axis scales
+        # Delta-v axis
+        dv_ax = host_ax.twinx()
+        dv_ax.set_ylim(0, max(P) * c_1)
+        dv_ax.spines['left'].set_position(('outward', 50))
+        dv_ax.spines['left'].set_visible(True)
+        dv_ax.yaxis.set_label_position('left')
+        dv_ax.yaxis.set_ticks_position('left')
+        dv_ax.set_ylabel('Recov. $\Delta v$ (for $c_1/g_0$ = {:.0f} s) [m/s]'.format(
+            c_1 / g_0))
+        # Air-breathing cruise range axis
+        ab_ax = host_ax.twinx()
+        ab_ax.set_ylim(0, max(P) * lift_drag * Isp_ab * v_cruise * 1e-3)
+        # ab_ax.spines['right'].set_position(('outward', 50))
+        ab_ax.set_ylabel('Recov. range $R_{{cruise}}$ (for $L/D$ = {:.0f}, $v_{{cruise}}$ = {:.0f} m/s) [km]'.format(
+            lift_drag, v_cruise))
 
     plt.tight_layout()
     plt.savefig('unavail_mass.png')
