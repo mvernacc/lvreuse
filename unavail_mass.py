@@ -90,7 +90,7 @@ def plot_contours_ap():
         e_grid = unavail_mass(a_grid, P_grid, case.z_m, case.E_1)
 
         # Make contour plot
-        plt.figure(figsize=(8,6))        
+        plt.figure(figsize=(6,6))        
         host_ax = plt.subplot(111)
         cs = plt.contour(a_grid, P_grid, e_grid, np.logspace(-1, 0, 15))
         plt.clabel(cs, inline=1, fontsize=10)

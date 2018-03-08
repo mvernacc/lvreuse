@@ -314,8 +314,11 @@ These equations relate the first stage unavailable mass $\epsilon_1'$ to the mas
 
 \begin{figure}[hbt!]
 	\centering
-	\includegraphics[width=\textwidth]{../unavail_mass}
-	\caption{\label{fig:unavail_mass} Impact of recovery hardware $a$ and recovery propulsion $P$ on the first stage unavailable mass ratio $\epsilon_1'$. The left subplot shows full recovery, the right partial recovery ($z_m=0.25$).}
+	\includegraphics[width=0.45\textwidth]{../unavail_mass_hydrogen_tech_full_recovery}
+	\includegraphics[width=0.45\textwidth]{../unavail_mass_kerosene_tech_full_recovery}
+	\includegraphics[width=0.45\textwidth]{../unavail_mass_hydrogen_tech_partial_recovery}
+	\includegraphics[width=0.45\textwidth]{../unavail_mass_kerosene_tech_partial_recovery}
+	\caption{\label{fig:unavail_mass} Impact of recovery hardware $a$ and recovery propulsion $P$ on the first stage unavailable mass ratio $\epsilon_1'$. The top subplots shows full recovery of the first stage, the bottom subplots show partial recovery ($z_m=0.25$).}
 \end{figure}
 
 We should first observe some general properties of Equation \ref{eq:eps_a_p_z}. Figure \ref{fig:unavail_mass} shows contours of $\epsilon_1'$ vs. $(a, P)$. Strategies which require more recovery hardware are further right, while strategies requiring more propulsion are further up. At the origin of the graph, no recovery hardware or recovery propellant is carried on the stage, and $\epsilon_1' = E_1$. As should be expected, the unavailable mass increases with both recovery hardware mass and recovery propulsion. As $a \rightarrow 1$ or $P \rightarrow \infty$, the unavailable mass ratio increases and the recovery strategy becomes infeasible. For example, under the assumptions of Figure \ref{fig:payload}, the launch vehicle needs $\epsilon_1' < 0.2$ to support GTO missions. If $\epsilon_1' > 1$, the recovery maneuver requires more propellant than could fit in the stage, and could not be performed even if no propellant were used for ascent!
@@ -534,13 +537,13 @@ Additional fuel must also be carried for the air-breathing engine. The mass of f
 
 
 \subsubsection{Parachute recovery}
-In parachute recovery, the 
+In parachute recovery, the recovery vehicle enters the atmosphere ballistically and then deploys parachutes to further slow its descent. Recovery must take place downrange, either in the ocean or using mid-air capture. Full recovery via parachutes has been demonstrated, and partial recovery using parachutes has been proposed. The main performance penalty is the added inert mass of recovery hardware, but this is likely less than for winged systems. Little or no propulsion is used during recovery (perhaps some attitude control during coast and entry), so $P \approx 0$.
 
-SRB parachutes were 3.5\% of booster dry mass \cite{Wolf1996}. Guessing TPS another 2\% (\SI{500}{\kilogram\per\meter\cubed}, 0.25 inch thick)???
+The Space Shuttle Solid Rocket Boosters (SRBs) were the only operational example of parachute recovery of a full space launch vehicle stage. The recovery hardware mass ratio for the SRBs was around $a=$ \SIrange{0.05}{0.08}{}. The mass of the SRB parachutes were 3.5\% of booster dry mass \cite{Wolf1996}, and entry thermal protection added another few percent.
 
-Liquid stage parachute recovery attempts have failed, breakup during reentry \cite{
-Spencer2011}.
-TODO
+However, the SRB example is not indicative of parachute recovery for liquid boosters. Solid rocket boosters must contain a much higher internal pressure than pump-fed liquid stages, and are therefore have a stronger structure which is more robust to entry loads. Attempts to fully recover liquid stages via parachute have failed, with the stages breaking up during reentry \cite{Spencer2011}.
+
+Partial recovery via parachute may be more feasible for liquid boosters, as a compact engine pod could more easily survive entry loads. United Launch Alliance has proposed to recover the engines of Atlas V (or the next-generation Vulcan) via parachutes and mid-air capture \cite{Gravlee2008, Ragab2015}. This proposal also includes an inflatable heat shield (Hypersonic Inflatable Aerodynamic Decelerator, HIAD) which will protect and decelerate the recovery vehicle. The proposed \SI{10}{\meter} HIAD is estimated to have a mass of \SI{1.5}{\mega\gram} \cite{Bose2009}, about 13\% of the recovery vehicle mass. Including parachutes as well, the $a$ value for this strategy should be $\approx 0.17$. Recovery via mid-air capture should reduce recovery operations and refurbishment costs compared to recovery in the ocean.
 
 
 
