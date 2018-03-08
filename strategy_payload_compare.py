@@ -4,6 +4,7 @@ from collections import namedtuple
 
 import payload
 import unavail_mass
+import launch_vehicles
 
 g_0 = 9.81
 
@@ -134,9 +135,27 @@ def main():
                     strat_name += '\n(Partial)'
                 tick_labels.append(strat_name)
 
+                # Plot actual Falcon 9 data
+                if (tech.name == 'kerosene' and mission == 'GTO'
+                    and strats[i].landing_method == 'Propulsive'
+                    and strats[i].recov_location == 'Downrange'):
+                    r_p_acutal_gto_dr = (launch_vehicles.f9_b3_e.masses['m_star_GTO_DR']
+                        / launch_vehicles.f9_b3_e.masses['m_star_GTO'])
+                    plt.scatter(i, r_p_acutal_gto_dr, marker='+', color='black')
+                    plt.text(i, r_p_acutal_gto_dr-0.05, 'Falcon 9')
+                if (tech.name == 'kerosene' and mission == 'LEO'
+                    and strats[i].landing_method == 'Propulsive'
+                    and strats[i].recov_location == 'Launch Site'):
+                    r_p_acutal_leo_ls = (launch_vehicles.f9_b3_e.masses['m_star_LEO_LS']
+                        / launch_vehicles.f9_b3_e.masses['m_star_LEO'])
+                    plt.scatter(i, r_p_acutal_leo_ls, marker='+', color='black')
+                    plt.text(i, r_p_acutal_leo_ls-0.05, 'Falcon 9')
+
+
             plt.bar(range(len(strats)),
                 height=(r_p_hi - r_p_lo), bottom=r_p_lo,
-                color=colors, edgecolor=edgecolors, tick_label=tick_labels)
+                color=colors, edgecolor=edgecolors, tick_label=tick_labels,
+                zorder=1)
             plt.ylim([0, 1])
             plt.ylabel('Payload factor $r_p$ [-]')
             plt.title(
