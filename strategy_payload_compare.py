@@ -99,9 +99,21 @@ def main():
 
         for tech in [hydrogen_tech, kerosene_tech]:
             plt.figure()
+
+            # Launch site strategies
             prop_ls = Strategy(landing_method='Propulsive', recov_location='Launch Site',
                 z_m=1.0, technology=tech,
                 a=(0.05, 0.07), P= dv_prop_ls / tech.c_1)
+
+            flyback = Strategy(landing_method='Winged', recov_location='Launch Site',
+                z_m=1.0, technology=tech,
+                a=(0.28, 0.52), P=(0.17, 0.26))
+
+            partial_flyback = Strategy(landing_method='Winged', recov_location='Launch Site',
+                z_m=0.25, technology=tech,
+                a=(0.28, 0.52), P=(0.17, 0.26))
+
+            # Downrange strategies
             prop_dr = Strategy(landing_method='Propulsive', recov_location='Downrange',
                 z_m=1.0, technology=tech,
                 a=(0.05, 0.07), P=np.array([800, 1150]) / tech.c_1)
@@ -109,15 +121,12 @@ def main():
             glider = Strategy(landing_method='Winged', recov_location='Downrange',
                 z_m=1.0, technology=tech,
                 a=(0.18, 0.37), P=(0, 0))
-            flyback = Strategy(landing_method='Winged', recov_location='Launch Site',
-                z_m=1.0, technology=tech,
-                a=(0.28, 0.52), P=(0.17, 0.26))
 
             partial_parachute = Strategy(landing_method='Parachute', recov_location='Downrange',
                 z_m=0.25, technology=kerosene_tech,
                 a=(0.15, 0.19), P=(0, 0))
 
-            strats = [prop_ls, prop_dr, glider, flyback, partial_parachute]
+            strats = [prop_ls, flyback, partial_flyback, prop_dr, glider, partial_parachute]
             r_p_hi = np.zeros(len(strats))
             r_p_lo = np.zeros(len(strats))
             colors = []
