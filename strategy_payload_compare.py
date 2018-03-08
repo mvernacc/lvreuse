@@ -101,7 +101,7 @@ def main():
             dv_prop_ls = np.array([2930 + 800 + 150, 4360 + 800 + 350])
 
         for tech in [hydrogen_tech, kerosene_tech]:
-            plt.figure()
+            plt.figure(figsize=(6, 6))
 
             # Launch site strategies
             prop_ls = Strategy(landing_method='Propulsive', recov_location='Launch Site',
@@ -142,7 +142,7 @@ def main():
                 r_p_lo[i] = r_p[1]
                 colors.append(landing_colors[strats[i].landing_method])
                 edgecolors.append(location_colors[strats[i].recov_location])
-                strat_name = strats[i].landing_method + '\n' + strats[i].recov_location
+                strat_name = strats[i].landing_method
                 if strats[i].z_m < 1:
                     strat_name += '\n(Partial)'
                 tick_labels.append(strat_name)
@@ -166,13 +166,14 @@ def main():
 
             plt.bar(range(len(strats)),
                 height=(r_p_hi - r_p_lo), bottom=r_p_lo,
-                color=colors, edgecolor=edgecolors, tick_label=tick_labels,
+                color=colors, edgecolor=colors, tick_label=tick_labels,
                 zorder=1)
             plt.ylim([0, 1])
             plt.ylabel('Payload factor $r_p$ [-]')
             plt.axvline(x=2.5, color='grey')
             plt.text(2.4, 0.1, '$\\leftarrow$ Launch Site Recovery', horizontalalignment='right')
             plt.text(2.6, 0.1, 'Downrange Recovery $\\rightarrow$')
+            plt.xticks(rotation=45)
             plt.title(
             '{:s} mission, $\Delta v_* = ${:.1f} km/s\n'.format(mission, dv_mission * 1e-3)
               + '{:s} technology\n'.format(tech.name)

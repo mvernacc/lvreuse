@@ -547,6 +547,24 @@ However, the SRB example is not indicative of parachute recovery for liquid boos
 Partial recovery via parachute may be more feasible for liquid boosters, as a compact engine pod could more easily survive entry loads. United Launch Alliance has proposed to recover the engines of Atlas V (or the next-generation Vulcan) via parachutes and mid-air capture \cite{Gravlee2008, Ragab2015}. This proposal also includes an inflatable heat shield (Hypersonic Inflatable Aerodynamic Decelerator, HIAD) which will protect and decelerate the recovery vehicle. The proposed \SI{10}{\meter} HIAD is estimated to have a mass of \SI{1.5}{\mega\gram} \cite{Bose2009}, about 13\% of the recovery vehicle mass. Including parachutes as well, the $a$ value for this strategy should be $\approx 0.17$. Recovery via mid-air capture should reduce recovery operations and refurbishment costs compared to recovery in the ocean.
 
 
+\subsection{Performance Comparison of Recovery Strategies}
+
+TODO model range overestimates $r_p$ for Falcon 9. one, the falcon 9 data is for the largest payload flown to date, perhaps there is more capacity. two there may be some losses which the model does not capture
+
+TODO hydrogen $r_p$ lower than kerosene for most strategies. because $\epsilon_1'$ is very sensitive to $E_1$, and low-density hydrogen requires larger, heavier tanks. For rocketback, the heavier tanks outweigh the $I_{sp}$ increase. Also note that expendable $\pi_*$ is higher for hydrogen, so may have more expandable payload even if $r_p$ is lower.
+
+TODO for launch site recovery, rocketback very expensive, winged gives higher performance
+
+TODO
+
+\begin{figure}[hbt!]
+	\centering
+	\includegraphics[width=0.45\textwidth]{../strategy_compare_GTO_hydrogen}
+	\includegraphics[width=0.45\textwidth]{../strategy_compare_GTO_kerosene}
+	\includegraphics[width=0.45\textwidth]{../strategy_compare_LEO_hydrogen}
+	\includegraphics[width=0.45\textwidth]{../strategy_compare_LEO_kerosene}
+	\caption{\label{fig:strategy_compare_rp} Payload reduction factor $r_p$ for various recovery strategies.}
+\end{figure}
 
 TODO propulsive strategy gives more operational flexibility between recover and expend modes. Easy to reallocate recovery propellant to ascent to use the vehicle in a higher-payload expendable mode.  Harder to remove wings.
 
