@@ -88,46 +88,64 @@ def main():
     landing_colors = {'Propulsive': 'red', 'Winged':'blue', 'Parachute':'Green'}
     location_colors = {'Launch Site': 'green', 'Downrange':'blue'}
 
-    dv_mission = 9.5e3
+    for (mission, dv_mission) in zip(('LEO', 'GTO'), (9.5e3, 12e3)):
+        if mission == 'LEO':
+            # rocketback from LEO launch
+            dv_prop_ls = np.array([2700, 3800])
+        elif mission == 'GTO':
+            # rocketback from GTO launch
+            dv_prop_ls = np.array([2500, 4000])
 
-    prop_ls = Strategy(landing_method='Propulsive', recov_location='Launch Site',
-        z_m=1.0, technology=kerosene_tech,
-        a=(0.05, 0.07), P=np.array([2700, 3800+500]) / kerosene_tech.c_1)
-    prop_dr = Strategy(landing_method='Propulsive', recov_location='Downrange',
-        z_m=1.0, technology=kerosene_tech,
-        a=(0.05, 0.07), P=np.array([800, 1150]) / kerosene_tech.c_1)
+        for tech in [hydrogen_tech, kerosene_tech]:
+            plt.figure()
+            prop_ls = Strategy(landing_method='Propulsive', recov_location='Launch Site',
+                z_m=1.0, technology=tech,
+                a=(0.05, 0.07), P= dv_prop_ls / tech.c_1)
+            prop_dr = Strategy(landing_method='Propulsive', recov_location='Downrange',
+                z_m=1.0, technology=tech,
+                a=(0.05, 0.07), P=np.array([800, 1150]) / tech.c_1)
 
-    glider = Strategy(landing_method='Winged', recov_location='Downrange',
-        z_m=1.0, technology=kerosene_tech,
-        a=(0.18, 0.37), P=(0, 0))
-    flyback = Strategy(landing_method='Winged', recov_location='Launch Site',
-        z_m=1.0, technology=kerosene_tech,
-        a=(0.28, 0.52), P=(0.17, 0.26))
+            glider = Strategy(landing_method='Winged', recov_location='Downrange',
+                z_m=1.0, technology=tech,
+                a=(0.18, 0.37), P=(0, 0))
+            flyback = Strategy(landing_method='Winged', recov_location='Launch Site',
+                z_m=1.0, technology=tech,
+                a=(0.28, 0.52), P=(0.17, 0.26))
 
-    partial_parachute = Strategy(landing_method='Parachute', recov_location='Downrange',
-        z_m=0.25, technology=kerosene_tech,
-        a=(0.15, 0.19), P=(0, 0))
+            partial_parachute = Strategy(landing_method='Parachute', recov_location='Downrange',
+                z_m=0.25, technology=kerosene_tech,
+                a=(0.15, 0.19), P=(0, 0))
 
-    strats = [prop_ls, prop_dr, glider, flyback, partial_parachute]
-    r_p_hi = np.zeros(len(strats))
-    r_p_lo = np.zeros(len(strats))
-    colors = []
-    edgecolors = []
-    tick_labels = []
+            strats = [prop_ls, prop_dr, glider, flyback, partial_parachute]
+            r_p_hi = np.zeros(len(strats))
+            r_p_lo = np.zeros(len(strats))
+            colors = []
+            edgecolors = []
+            tick_labels = []
 
-    for i in range(len(strats)):
-        r_p = strats[i].get_payload_factor_range(dv_mission)
-        r_p_hi[i] = r_p[0]
-        r_p_lo[i] = r_p[1]
-        colors.append(landing_colors[strats[i].landing_method])
-        edgecolors.append(location_colors[strats[i].recov_location])
-        tick_labels.append(strats[i].landing_method + '\n' + strats[i].recov_location)
+            for i in range(len(strats)):
+                r_p = strats[i].get_payload_factor_range(dv_mission)
+                r_p_hi[i] = r_p[0]
+                r_p_lo[i] = r_p[1]
+                colors.append(landing_colors[strats[i].landing_method])
+                edgecolors.append(location_colors[strats[i].recov_location])
+                strat_name = strats[i].landing_method + '\n' + strats[i].recov_location
+                if strats[i].z_m < 1:
+                    strat_name += '\n(Partial)'
+                tick_labels.append(strat_name)
 
-    plt.bar(range(len(strats)),
-        height=(r_p_hi - r_p_lo), bottom=r_p_lo,
-        color=colors, edgecolor=edgecolors, tick_label=tick_labels)
-    plt.ylim([0, 1])
-    plt.ylabel('Payload factor $r_p$ [-]')
+            plt.bar(range(len(strats)),
+                height=(r_p_hi - r_p_lo), bottom=r_p_lo,
+                color=colors, edgecolor=edgecolors, tick_label=tick_labels)
+            plt.ylim([0, 1])
+            plt.ylabel('Payload factor $r_p$ [-]')
+            plt.title(
+            '{:s} mission, $\Delta v_* = ${:.1f} km/s\n'.format(mission, dv_mission * 1e-3)
+              + '{:s} technology\n'.format(tech.name)
+              + '$y = {:.2f}$, '.format(tech.y)
+              + '$c_1/g_0$={:.0f} s, $c_2/g_0$={:.0f} s, $E_1$={:.2f}, $E_2$={:.2f}'.format(
+                tech.c_1 / g_0, tech.c_2 / g_0, tech.E_1, tech.E_2))
+            plt.tight_layout()
     plt.show()
 
 if __name__ == '__main__':
