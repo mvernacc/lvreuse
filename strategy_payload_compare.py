@@ -167,6 +167,9 @@ def main():
                 zorder=1)
             plt.ylim([0, 1])
             plt.ylabel('Payload factor $r_p$ [-]')
+            plt.axvline(x=2.5, color='grey')
+            plt.text(2.4, 0.1, '$\\leftarrow$ Launch Site Recovery', horizontalalignment='right')
+            plt.text(2.6, 0.1, 'Downrange Recovery $\\rightarrow$')
             plt.title(
             '{:s} mission, $\Delta v_* = ${:.1f} km/s\n'.format(mission, dv_mission * 1e-3)
               + '{:s} technology\n'.format(tech.name)
