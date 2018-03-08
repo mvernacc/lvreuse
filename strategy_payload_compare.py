@@ -79,8 +79,11 @@ class Strategy(object):
         """Get the payload factor r_p for a recovery strategy."""
         pi_star_expend = self.get_payload_expend(dv_mission)
         pi_star_recov_hi = self.get_payload_recov(dv_mission, 0)
+        if np.isnan(pi_star_recov_hi):
+            pi_star_recov_hi = 0 
         pi_star_recov_lo = self.get_payload_recov(dv_mission, 1)
-
+        if np.isnan(pi_star_recov_lo):
+            pi_star_recov_lo = 0
         r_p = (pi_star_recov_hi / pi_star_expend, pi_star_recov_lo / pi_star_expend)
         return r_p
 
@@ -92,10 +95,10 @@ def main():
     for (mission, dv_mission) in zip(('LEO', 'GTO'), (9.5e3, 12e3)):
         if mission == 'LEO':
             # rocketback from LEO launch
-            dv_prop_ls = np.array([2700, 3800])
+            dv_prop_ls = np.array([3200, 4250])
         elif mission == 'GTO':
             # rocketback from GTO launch
-            dv_prop_ls = np.array([2500, 4000])
+            dv_prop_ls = np.array([2930 + 800 + 150, 4360 + 800 + 350])
 
         for tech in [hydrogen_tech, kerosene_tech]:
             plt.figure()
@@ -177,6 +180,7 @@ def main():
               + '$c_1/g_0$={:.0f} s, $c_2/g_0$={:.0f} s, $E_1$={:.2f}, $E_2$={:.2f}'.format(
                 tech.c_1 / g_0, tech.c_2 / g_0, tech.E_1, tech.E_2))
             plt.tight_layout()
+            plt.savefig('strategy_compare_{:s}_{:s}.png'.format(mission, tech.name))
     plt.show()
 
 if __name__ == '__main__':

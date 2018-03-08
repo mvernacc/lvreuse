@@ -34,15 +34,17 @@ def main():
     dx = 110e3
     dz = 74e3
 
+    # Min and max dx are from McKinney, figure 2.
     print 'LEO min = {:.0f} m/s'.format(
-        rocketback_dv(v_ss=1500, phi_ss=phi_ss, phi_rb=phi_rb, dx=80e3, dz=100e3))
+        rocketback_dv(v_ss=1500, phi_ss=phi_ss, phi_rb=phi_rb, dx=110e3, dz=100e3))
     print 'LEO max = {:.0f} m/s'.format(
-        rocketback_dv(v_ss=2000, phi_ss=phi_ss, phi_rb=phi_rb, dx=130e3, dz=50e3))
+        rocketback_dv(v_ss=2000, phi_ss=phi_ss, phi_rb=phi_rb, dx=190e3, dz=50e3))
 
+    # Min and max dx are guesses
     print 'GTO min = {:.0f} m/s'.format(
-        rocketback_dv(v_ss=2100, phi_ss=phi_ss, phi_rb=phi_rb, dx=100e3, dz=100e3))
+        rocketback_dv(v_ss=2100, phi_ss=phi_ss, phi_rb=phi_rb, dx=150e3, dz=100e3))
     print 'GTO max = {:.0f} m/s'.format(
-        rocketback_dv(v_ss=3300, phi_ss=phi_ss, phi_rb=phi_rb, dx=200e3, dz=50e3))
+        rocketback_dv(v_ss=3300, phi_ss=phi_ss, phi_rb=phi_rb, dx=250e3, dz=50e3))
 
 
 if __name__ == '__main__':
