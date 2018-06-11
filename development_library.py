@@ -1,7 +1,7 @@
 class SystemDevelopmentValues(object):
 
     def __init__(self, dev_a, dev_x):
-        """Create a propellant properties object. 
+        """Create a propellant properties object.
         
         Args:
             dev_a (positive saclar): development CER model coefficient [units: kg**(-dev_x)]
@@ -76,6 +76,7 @@ crewed_space_system = SystemDevelopmentValues(
     dev_x=0.383,
     )
 
-sys_dev_vals_list = [solid_motor, turbo_fed_engine, pressure_fed_engine, air_breathing_engine, large_solid_booster, 
-                        liquid_propulsion_module, expendable_ballastic_vehicle, reusable_ballistic_vehicle, winged_orbital_vehicle, 
-                        advanced_aircraft, VTO_flyback, crewed_ballistic_capsule, crewed_space_system]
+sys_dev_vals_list = [solid_motor, turbo_fed_engine, pressure_fed_engine, air_breathing_engine, 
+                        large_solid_booster, liquid_propulsion_module, expendable_ballastic_vehicle, 
+                        reusable_ballistic_vehicle, winged_orbital_vehicle, advanced_aircraft, 
+                        VTO_flyback, crewed_ballistic_capsule, crewed_space_system]
