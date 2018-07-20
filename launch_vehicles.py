@@ -112,10 +112,10 @@ def main():
         pi_star_leo = lv.payload_actual('LEO')
         pi_star_gto = lv.payload_actual('GTO')
 
-        print lv.name
-        print 'e_1 = {:.3f}, e_2 = {:.3f}, y = {:.3f}, pi_leo = {:.3f}, pi_gto = {:.3f}'.format(
-            e_1, e_2, y, pi_star_leo, pi_star_gto)
-        print '\n'
+        print(lv.name)
+        print('e_1 = {:.3f}, e_2 = {:.3f}, y = {:.3f}, pi_leo = {:.3f}, pi_gto = {:.3f}'.format(
+            e_1, e_2, y, pi_star_leo, pi_star_gto))
+        print('\n')
 
 
 if __name__ == '__main__':
