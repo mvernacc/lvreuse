@@ -1,4 +1,5 @@
 import pandas
+import numpy as np
 from matplotlib import pyplot as plt
 import seaborn as sns
 
@@ -55,4 +56,16 @@ sns.stripplot(data=booster_engines, x='Isp (vac)', y='Fuel', hue='Cycle',
 plt.title('Performance of Modern (Post-1975) Booster Engines')
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.tight_layout()
+
+# Compute the min, max, and mean vacuum Isp for each propellant and cycle
+print('Performance distributions, upper stage engines:')
+for fuel in ['H2', 'kero']:
+    for cycle in hue_order:
+        print('\tFuel = {:s}, cycle = {:s}'.format(fuel, cycle))
+        x = upper_engines.loc[(upper_engines['Fuel'] == fuel) & (upper_engines['Cycle'] == cycle)]['Isp (vac)']
+        if len(x) > 0:
+            print('\t\tIsp vac: min={:.1f}, max={:.1f}, mean={:.1f}'.format(min(x), max(x), np.mean(x)))
+        else:
+            print('\t\tNo data')
+
 plt.show()
