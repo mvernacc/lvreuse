@@ -13,7 +13,7 @@ LE-7A,Japan,Mitsubishi,Booster,H2,O2,5.9,440,338,1100000,870000,1800,11900000,54
 Merlin 1C,USA,SpaceX,Booster,kero,O2,,304,266,480000,423000,630,6770000,,GG,2008,Wikipedia
 Merlin 1C Vacuum,USA,SpaceX,Upper,kero,O2,,342,,411000,,,,,GG,2010,Wikipedia
 Merlin 1D,USA,SpaceX,Booster,kero,O2,,311,282,914000,845000,470,9700000,,GG,2013,"Wikipedia, spacex.com"
-Merlin 1D Vacuum,USA,SpaceX,Booster,kero,O2,,348,,934000,,,,165,GG,2013,"Wikipedia, spacex.com"
+Merlin 1D Vacuum,USA,SpaceX,Upper,kero,O2,,348,,934000,,,,165,GG,2013,"Wikipedia, spacex.com"
 NK-33,Soviet Union,Kuznetsov,Booster,kero,O2,,331,279,1680000,1500000,1242,14500000,27,SC,1969,"Sutton, Wikipedia"
 RD-0110,Soviet Union,KBKhA,Upper,kero,O2,2.2,326,,298000,,409,6800000,,GG,1965,Wikipedia
 RD-0120,Soviet Union,KBKhA,Booster,H2,O2,6,455,353,1960000,1530000,3450,21900000,85.7,SC,1987,Wikipedia
