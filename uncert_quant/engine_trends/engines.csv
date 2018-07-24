@@ -21,7 +21,7 @@ RD-0124,Russia,KBKhA,Upper,kero,O2,,359,,294000,,572,15700000,,SC,2006,Wikipedia
 RD-107,Soviet Union,Energomash,Booster,kero,O2,,313,256,1000000,814000,1190,5900000,,GG,1957,"Sutton, Wikipedia"
 RD-107A,Russia,Energomash,Booster,kero,O2,,320,263,1020000,839000,1190,6000000,,GG,2001,"Sutton, Wikipedia"
 RD-120,Soviet Union,Energomash,Upper,kero,O2,,350,,833000,,1125,16300000,,SC,1985,"Sutton, Wikipedia"
-RD-170,Soviet Union,Energomash,Booster,kero,O2,2.63,337,309,7900000000,7260000000,10750,24500000,,SC,1985,"Sutton, Wikipedia"
+RD-170,Soviet Union,Energomash,Booster,kero,O2,2.63,337,309,7900000,7260000,10750,24500000,,SC,1985,"Sutton, Wikipedia"
 RD-180,Russia,Energomash,Booster,kero,O2,,338,311,4150000,3830000,5480,26700000,36.87,SC,2000,Wikipedia
 RD-181,Russia,Energomash,Booster,kero,O2,2.63,339,312,2090000,1920000,2200,26300000,,SC,2016,"Wikipedia, spaceflight101"
 RD-56 (KDV-1),Soviet Union,KB KhimMash,Upper,H2,O2,,462,,69600,,282,5600000,,SC,2001,Wikipedia
