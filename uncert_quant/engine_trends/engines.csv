@@ -1,7 +1,7 @@
 Engine,Origin,Designer,Use,Fuel,Oxidizer,Mixture ratio,Isp (vac),Isp (sl),Thrust (vac),Thrust (sl),Mass,Chamber pressure,Nozzle area ratio,Cycle,Year of first flight,Reference
 F-1,USA,Rocketdyne,Booster,kero,O2,2.27,305,265,7780000,6770000,8444,6770000,16,GG,1967,Sutton
 J-2,USA,Rocketdyne,Upper,H2,O2,5.5,425,,1020000,,1567,4940000,27.5,GG,1966,Sutton
-CE-20,India,LPSC,Upper,H2,O2,5.05,443,,200000,,588,6000,100,GG,2017,Wikipedia
+CE-20,India,LPSC,Upper,H2,O2,5.05,443,,200000,,588,6.00E+06,100,GG,2017,Wikipedia
 CE-7.5,India,LPSC,Upper,H2,O2,,454,,82000,,435,5800000,,SC,2010,Wikipedia
 HM-7A,Europe,Snecma,Upper,H2,O2,4.5,421,,60000,,,,,GG,1979,Sutton
 HM-7B,Europe,Snecma,Upper,H2,O2,5,445,,62700,,165,3700000,83.1,GG,1986,Wikipedia
