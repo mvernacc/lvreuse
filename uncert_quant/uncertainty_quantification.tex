@@ -1,0 +1,87 @@
+\documentclass[conf]{../paper/new-aiaa}
+%\documentclass[journal]{new-aiaa} for journal papers
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage[version=4]{mhchem}
+\usepackage{siunitx}
+\usepackage{longtable,tabularx}
+\usepackage{footnote}
+\usepackage{mhchem}
+\usepackage{physics}
+\usepackage{array,makecell,booktabs}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+\newcommand{\head}[2]{\multicolumn{1}{>{\centering\arraybackslash}p{#1}}{#2}}
+\usepackage[super]{nth}
+\makesavenoteenv{tabular}
+\setlength\LTleft{0pt} 
+
+\graphicspath{{figures/}}
+
+\title{Strategies for Re-Use of Launch Vehicle First Stages: Uncertainty Quantification}
+
+\author{Matthew T. Vernacchia \footnote{Research Assistant, Department of Aeronautics and Astronautics, 77 Massachusetts Avenue, AIAA Student Member.}
+and Kelly J. Mathesius  \footnote{Research Assistant, Department of Aeronautics and Astronautics, 77 Massachusetts Avenue, AIAA Student Member.}}
+\affil{Massachusetts Institute of Technology, Cambridge, MA, 02139}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Performance-Related Uncertainties}
+
+\subsection{Technology Uncertainties}
+Uncertainties on the performance factors which we choose to group as the "technology choice": i.e. the specific impulse and inert mass fractions of each stage $c_1, c_2, E_1, E_2$.
+
+Note this is not uncertainty about what the technology choice is - we assume that is given. Rather, given a technology choice (e.g. kerosene fuel, gas generator engine cycle, and aluminum alloy tanks), what is the remaining uncertainty in Isp and inert mass fraction?
+
+\subsubsection{Specific Impulse}
+The specific impulse is largely determined by the choice of propellant and engine cycle. However, there are still variations in nominal specific impulse between different engines using the same propellant and cycle and variations away from the nominal specific impulse in the operation of a given engine. These variations contribute to uncertainty in the performance of a new launch vehicle design.
+
+We divide the sources of variation in specific impulse into two categories:
+\begin{itemize}
+    \item \emph{variation in nominal $I_{sp}$} -  This captures variations in nominal specific impulse between different engines using the same propellant and cycle. Contributing factors (which may be uncertain at the outset of an engine development project) include chamber pressure, mixture ratio, expansion ratio, and injector $c^*$ efficiency.
+    \item \emph{variation in operation} -  This captures variations away from the nominal specific impulse in the operation of a given engine. Contributing factors which may vary between missions include throttling, mixture ratio control, and ambient pressure on different possible trajectories.
+\end{itemize}
+
+Uncertainty in nominal $I_{sp}$ only exists if a new engine will be developed for the launch vehicle, or if the engine selection is yet to be made. For a particular launch vehicle, the nominal specific impulse is known once an engine is selected or developed. However, we wish our performance predictions to be representative of the population of engines using a particular technology, and thus include the variation in nominal specific impulse as an uncertainty in the model. TODO.
+
+We model the variation in nominal $I_{sp}$ by examining a sample of existing and historical launch vehicle engines (see Table \ref{tab:engine_historical_trends}; we believe that this is a comprehensive sample of all hydrogen and kerosene engines used for space launch). First, we must determine whether there are historical trends in the performance data. If there were a strong historical trend towards improving performance, then a sample of historical engines would not be representative of the performance in modern and near-future engines. However, liquid propulsion has been a mature field for some time \cite{hist_lpre}, and Figure \ref{fig:engine_historical_trends} shows no clear correlation between performance and year of first flight after 1975. Thus these engines are likely representative of the performance of contemporary and near-future engines.
+
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=1\textwidth]{engine_trends/engine_historical_trends}
+    \caption{\label{fig:engine_historical_trends} Historical trends in engine performance. After 1975, there is no clear correlation of performance with time, thus these engines are likely representative of the performance of contemporary and near-future engines.}
+\end{figure}
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=1\textwidth]{engine_trends/engine_isp_dist}
+    \caption{\label{fig:engine_isp_dist} Distribution of vacuum specific impulse of modern liquid propellant rocket engines, categorized by fuel and engine cycle. Unsurprisingly, hydrogen fuel and closed cycle (staged combustion or expander) engines have higher $I_{sp}$. The $I_{sp}$ spread within each category is \SIrange{6}{30}{\second}}
+\end{figure}
+
+\begin{table}
+    \caption{\label{tab:engine_historical_trends} Examples of liquid propellant rocket engines used for space launch.}
+    \centering
+    \small
+    \input{engine_trends/engine_historical_trends.tex}
+    \\
+    All listed engines use liquid \ce{O2} oxidizer. GG = gas generator, SC = staged combustion. Data from \cite{hist_lpre,wiki:OrbitalEngines, Falcon9}.
+\end{table}
+
+
+Our performance model needs distributions on $c_1$ and $c_2$, which represent the possible variation in those parameters for a given technology choice. We arbitrarily choose to use triangular distributions, which are commonly used as a rough guess description when limited sample data is available. We will choose the parameters of the distributions based on the historical engine data. We fit a different distribution for each choice of propellant and engine cycle.
+
+For upper stage engines, we set the maximum of the triangular distribution to the maximum of the historical data, 
+
+
+\section{Cost-Related Uncertainties}
+
+
+
+\bibliography{../paper/first_stage_recovery}
+
+\end{document}
