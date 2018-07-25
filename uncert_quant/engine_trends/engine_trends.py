@@ -3,9 +3,41 @@ import numpy as np
 from matplotlib import pyplot as plt
 import seaborn as sns
 
+# Load engines data from csv file
 engines = pandas.read_csv('engines.csv', index_col=0)
+engines.sort_values(by='Engine', inplace=True)
+
+# Compute thurst/weight for each engine [units: dimensionless]
 engines['Thrust/Weight'] = engines['Thrust (vac)'] / (engines['Mass'] * 9.81)
+
+# Convert chamber pressure from pascals to megapascals.
+engines['Chamber pressure'] = engines['Chamber pressure'] * 1e-6
+
 print(engines)
+
+# Save engines data as a latex table
+with open('engine_historical_trends.tex', 'w') as f:
+    tex = engines.to_latex(
+        columns=['Use', 'Fuel', 'Isp (vac)', 'Isp (sl)', 'Chamber pressure', 'Thrust/Weight', 'Year of first flight'],
+        formatters={
+            'Use': '{:s}'.format,
+            'Fuel': '{:s}'.format,
+            'Isp (vac)': '{:.0f}'.format,
+            'Isp (sl)': '{:.0f}'.format,
+            'Chamber pressure': '{:.1f}'.format,
+            'Thrust/Weight': '{:.0f}'.format,
+            'Year of first flight': '{:d}'.format,
+            }
+        )
+    tex = tex.replace('nan', '-')
+    # Fix up column titles
+    tex = tex.replace('Isp (vac)', '\\head{1.5cm}{$I_{sp}$, vacuum [s]}')
+    tex = tex.replace('Isp (sl)', '\\head{1.5cm}{$I_{sp}$, sea level [s]}')
+    tex = tex.replace('Chamber pressure', '\\head{1.5cm}{Chamber pressure [MPa]}')
+    tex = tex.replace('Thrust/Weight', '\\head{1.5cm}{Thrust \\slash Weight [-]}')
+    tex = tex.replace('Year of first flight', '\\head{1.5cm}{Year of first flight}')
+    f.write(tex)
+
 
 plt.figure(figsize=(10, 8))
 plt.subplot(2, 2, 1)
@@ -32,6 +64,7 @@ plt.ylabel('(Vacuum Thrust)/(Weight) [-]')
 plt.suptitle('Historical Trends in Liquid-Propellant Rocket Engine Performance')
 plt.tight_layout()
 plt.subplots_adjust(top=0.95)
+plt.savefig('engine_historical_trends.png')
 
 # Select "modern" engines, flown after 1975
 engines = engines.loc[engines['Year of first flight'] >= 1975]
@@ -58,7 +91,7 @@ plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.tight_layout()
 
 # Compute the min, max, and mean vacuum Isp for each propellant and cycle
-print('Performance distributions, upper stage engines:')
+print('Performance statistics, upper stage engines:')
 for fuel in ['H2', 'kero']:
     for cycle in hue_order:
         print('\tFuel = {:s}, cycle = {:s}'.format(fuel, cycle))
@@ -67,5 +100,5 @@ for fuel in ['H2', 'kero']:
             print('\t\tIsp vac: min={:.1f}, max={:.1f}, mean={:.1f}'.format(min(x), max(x), np.mean(x)))
         else:
             print('\t\tNo data')
-
+plt.savefig('engine_isp_dist.png')
 plt.show()
