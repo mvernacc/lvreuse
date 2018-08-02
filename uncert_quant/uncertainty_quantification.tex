@@ -16,6 +16,7 @@
 \usepackage[super]{nth}
 \makesavenoteenv{tabular}
 \setlength\LTleft{0pt} 
+\DeclareMathOperator*{\mean}{mean}
 
 \graphicspath{{figures/}}
 
@@ -72,11 +73,39 @@ We model the variation in nominal $I_{sp}$ by examining a sample of existing and
     All listed engines use liquid \ce{O2} oxidizer. GG = gas generator, SC = staged combustion. Data from \cite{hist_lpre,wiki:OrbitalEngines, Falcon9}.
 \end{table}
 
+Next, we need to quantify the uncertainty due to variation in operation. The listed specific impulse values are typically measured at design conditions; we expect that off-design operation could lower these values by 2\%. For \nth{2} (upper) stage engines, which operate in near vacuum, this is the end of the story. For booster engines, there is also a large variation in specific impulse due the effects of altitude. Our performance model requires $c_1$ to be the \emph{effective} \nth{1} stage specific impulse, averaged over the altitudes at which an engine operates. As a crude estimate, we will assume that the effective specific impulse is the mean of the sea level and vacuum values:
+
+\[
+    c_1 \approx g_0 \left( \frac{I_{sp, vac} + I_{sp, SL}}{2} \right)
+\]
+
+This crude estimate results in surprisingly descent performance predictions \cite{Alber2012}. 
 
 Our performance model needs distributions on $c_1$ and $c_2$, which represent the possible variation in those parameters for a given technology choice. We arbitrarily choose to use triangular distributions, which are commonly used as a rough guess description when limited sample data is available. We will choose the parameters of the distributions based on the historical engine data. We fit a different distribution for each choice of propellant and engine cycle.
 
-For upper stage engines, we set the maximum of the triangular distribution to the maximum of the historical data, 
+For upper stage engines, the distribution parameters are:
+\[
+ min = 0.98 g_0 \min_{e \in S}(I_{sp, vac}^{e})
+\]
+\[
+ max = g_0 \max_{e \in S}(I_{sp, vac}^{e})
+\]
+\[
+ mode = g_0 \mean_{e \in S}(I_{sp, vac}^{e})
+\]
 
+where $S$ is the set of historical engines matching the given propellant and cycle, and $e$ is an engine from that set.
+
+For booster engines, the mean of the vacuum and sea level $I_{sp}$ is used, and the bounds of the distribution are spread by an additional 3\% to account for the crudity of this estimate:
+\[
+ min = 0.95 g_0 \min_{e \in S}\left( \frac{I_{sp, vac}^e + I_{sp, SL}^e}{2} \right)
+\]
+\[
+ max = 1.03 g_0 \max_{e \in S}\left( \frac{I_{sp, vac}^e + I_{sp, SL}^e}{2} \right)
+\]
+\[
+ mode = g_0 \mean_{e \in S}\left( \frac{I_{sp, vac}^e + I_{sp, SL}^e}{2} \right)
+\]
 
 \section{Cost-Related Uncertainties}
 

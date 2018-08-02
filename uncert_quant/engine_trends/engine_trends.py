@@ -3,6 +3,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 import seaborn as sns
 
+sns.set(style='whitegrid')
+
 # Load engines data from csv file
 engines = pandas.read_csv('engines.csv', index_col=0)
 engines.sort_values(by='Engine', inplace=True)
@@ -18,10 +20,11 @@ print(engines)
 # Save engines data as a latex table
 with open('engine_historical_trends.tex', 'w') as f:
     tex = engines.to_latex(
-        columns=['Use', 'Fuel', 'Isp (vac)', 'Isp (sl)', 'Chamber pressure', 'Thrust/Weight', 'Year of first flight'],
+        columns=['Use', 'Fuel', 'Cycle', 'Isp (vac)', 'Isp (sl)', 'Chamber pressure', 'Thrust/Weight', 'Year of first flight'],
         formatters={
             'Use': '{:s}'.format,
             'Fuel': '{:s}'.format,
+            'Cycle': '{:s}'.format,
             'Isp (vac)': '{:.0f}'.format,
             'Isp (sl)': '{:.0f}'.format,
             'Chamber pressure': '{:.1f}'.format,
@@ -90,6 +93,8 @@ plt.title('Performance of Modern (Post-1975) Booster Engines')
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.tight_layout()
 
+plt.savefig('engine_isp_dist.png')
+
 # Compute the min, max, and mean vacuum Isp for each propellant and cycle
 print('Performance statistics, upper stage engines:')
 for fuel in ['H2', 'kero']:
@@ -100,5 +105,39 @@ for fuel in ['H2', 'kero']:
             print('\t\tIsp vac: min={:.1f}, max={:.1f}, mean={:.1f}'.format(min(x), max(x), np.mean(x)))
         else:
             print('\t\tNo data')
-plt.savefig('engine_isp_dist.png')
+
+print('Performance statistics, booster engines:')
+for fuel in ['H2', 'kero']:
+    for cycle in hue_order:
+        print('\tFuel = {:s}, cycle = {:s}'.format(fuel, cycle))
+        x = booster_engines.loc[(booster_engines['Fuel'] == fuel) & (booster_engines['Cycle'] == cycle)]['Isp (vac)']
+        if len(x) > 0:
+            print('\t\tIsp vac: min={:.1f}, max={:.1f}, mean={:.1f}'.format(min(x), max(x), np.mean(x)))
+        else:
+            print('\t\tNo data')
+
+isp_dist_params
+print('Triangular distribution parameters, upper stage engines:')
+for fuel in ['H2', 'kero']:
+    for cycle in hue_order:
+        print('\tFuel = {:s}, cycle = {:s}'.format(fuel, cycle))
+        x = upper_engines.loc[(upper_engines['Fuel'] == fuel) & (upper_engines['Cycle'] == cycle)]['Isp (vac)']
+        if len(x) > 0 and not np.isnan(x).all():
+            print('\t\tIsp: min={:.1f}, max={:.1f}, mean={:.1f}'.format(
+                0.98 * min(x), max(x), np.mean(x)))
+        else:
+            print('\t\tNo data')
+
+print('Triangular distribution parameters, booster stage engines:')
+for fuel in ['H2', 'kero']:
+    for cycle in hue_order:
+        print('\tFuel = {:s}, cycle = {:s}'.format(fuel, cycle))
+        engine_sample = booster_engines.loc[(booster_engines['Fuel'] == fuel) & (booster_engines['Cycle'] == cycle)]
+        x = (engine_sample['Isp (vac)'] + engine_sample['Isp (sl)']) / 2
+        if len(x) > 0 and not np.isnan(x).all():
+            print('\t\tIsp: min={:.1f}, max={:.1f}, mean={:.1f}'.format(
+                0.95 * np.nanmin(x), 1.03* np.nanmax(x), np.nanmean(x)))
+        else:
+            print('\t\tNo data')
+
 plt.show()
