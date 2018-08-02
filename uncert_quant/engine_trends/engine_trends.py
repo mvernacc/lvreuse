@@ -116,7 +116,7 @@ for fuel in ['H2', 'kero']:
         else:
             print('\t\tNo data')
 
-isp_dist_params
+# isp_dist_params
 print('Triangular distribution parameters, upper stage engines:')
 for fuel in ['H2', 'kero']:
     for cycle in hue_order:

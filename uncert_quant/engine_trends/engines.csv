@@ -1,7 +1,7 @@
 Engine,Origin,Designer,Use,Fuel,Oxidizer,Mixture ratio,Isp (vac),Isp (sl),Thrust (vac),Thrust (sl),Mass,Chamber pressure,Nozzle area ratio,Cycle,Year of first flight,Reference
 F-1,USA,Rocketdyne,Booster,kero,O2,2.27,305,265,7780000,6770000,8444,6770000,16,GG,1967,Sutton
 J-2,USA,Rocketdyne,Upper,H2,O2,5.5,425,,1020000,,1567,4940000,27.5,GG,1966,Sutton
-CE-20,India,LPSC,Upper,H2,O2,5.05,443,,200000,,588,6.00E+06,100,GG,2017,Wikipedia
+CE-20,India,LPSC,Upper,H2,O2,5.05,443,,200000,,588,6000000,100,GG,2017,Wikipedia
 CE-7.5,India,LPSC,Upper,H2,O2,,454,,82000,,435,5800000,,SC,2010,Wikipedia
 HM-7A,Europe,Snecma,Upper,H2,O2,4.5,421,,60000,,,,,GG,1979,Sutton
 HM-7B,Europe,Snecma,Upper,H2,O2,5,445,,62700,,165,3700000,83.1,GG,1986,Wikipedia
@@ -29,6 +29,7 @@ RL10A-3,USA,Pratt & Whitney,Upper,H2,O2,5,427,,66700,,131,2070000,40,Expander,19
 RL10B-2,USA,Pratt & Whitney,Upper,H2,O2,5.88,465,,110000,,227,4630000,290,Expander,1998,"Sutton, Wikipedia"
 RL10C-1,USA,Aerojet Rocketdyne,Upper,H2,O2,5.5,450,,102000,,190,,130,Expander,2014,Wikipedia
 RS-25 (SSME),USA,Rocketdyne,Booster,H2,O2,6.03,452,361,2090000,1660000,3526,18900000,69,SC,1981,Sutton
+RS-27A,USA,Rocketdyne,Booster,kero,O2,,302,255,1.05E+06,8.90E+05,1147,4.80E+06,12,GG,1989,Wikipedia
 RS-68,USA,Rocketdyne,Booster,H2,O2,6,410,365,3310000,2890000,6736,10100000,21.5,GG,2002,Sutton
 Rutherford,USA/New Zealand,Rocket Lab,Booster,kero,O2,,331,,24000,,35,,,Electric,2017,Wikipedia
 Vulcain 1,Europe,Snecma,Booster,H2,O2,6.2,431,326,1080000,773000,1300,10000000,,GG,1996,"Wikipedia, astronautix"
