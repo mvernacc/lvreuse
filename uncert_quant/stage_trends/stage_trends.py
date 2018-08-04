@@ -22,34 +22,34 @@ plt.figure()
 plt.subplot(2, 1, 1)
 plt.title('Upper stages')
 sns.scatterplot(data=upper_stages, x='Year of first flight', y='Inert mass fraction',
-                hue='Fuel', style='Tank material')
+                hue='Fuel', style='Tank material', size='Common bulkhead')
 
 plt.subplot(2, 1, 2)
 plt.title('Boosters')
 sns.scatterplot(data=boost_stages, x='Year of first flight', y='Inert mass fraction',
-                hue='Fuel', style='Tank material')
+                hue='Fuel', style='Tank material', size='Common bulkhead')
 
 plt.figure()
 plt.subplot(2, 1, 1)
 plt.title('Upper stages')
 sns.scatterplot(data=upper_stages, x='Gross mass [Mg]', y='Inert mass fraction',
-                hue='Fuel', style='Tank material')
+                hue='Fuel', style='Tank material', size='Common bulkhead')
 
 plt.subplot(2, 1, 2)
 plt.title('Boosters')
 sns.scatterplot(data=boost_stages, x='Gross mass [Mg]', y='Inert mass fraction',
-                hue='Fuel', style='Tank material')
+                hue='Fuel', style='Tank material', size='Common bulkhead')
 
 
 plt.figure(figsize=(8, 4))
 ax1 = plt.subplot(2, 1, 1)
-sns.stripplot(data=upper_stages, x='Inert mass fraction', y='Fuel', hue='Fuel',
+sns.stripplot(data=upper_stages, x='Inert mass fraction', y='Fuel', hue='Common bulkhead',
               jitter=False, dodge=True)
 plt.title('Inert mass fraction of Upper Stages')
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
 plt.subplot(2, 1, 2, sharex=ax1)
-sns.stripplot(data=boost_stages, x='Inert mass fraction', y='Fuel', hue='Fuel',
+sns.stripplot(data=boost_stages, x='Inert mass fraction', y='Fuel', hue='Common bulkhead',
               jitter=False, dodge=True)
 plt.title('Inert mass fraction of Booster Stages')
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
