@@ -5,6 +5,8 @@ import seaborn as sns
 
 sns.set(style='whitegrid')
 
+# TODO exclude  booster stages that cannot liftoff under own thrust w/o strap-ons.
+
 # Load stage data from csv file
 stages = pandas.read_csv('stages.csv', index_col=0)
 stages.sort_values(by='Launch Vehicle', inplace=True)
@@ -23,22 +25,26 @@ plt.subplot(2, 1, 1)
 plt.title('Upper stages')
 sns.scatterplot(data=upper_stages, x='Year of first flight', y='Inert mass fraction',
                 hue='Fuel', style='Tank material', size='Common bulkhead')
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
 plt.subplot(2, 1, 2)
 plt.title('Boosters')
 sns.scatterplot(data=boost_stages, x='Year of first flight', y='Inert mass fraction',
                 hue='Fuel', style='Tank material', size='Common bulkhead')
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
 plt.figure()
 plt.subplot(2, 1, 1)
 plt.title('Upper stages')
 sns.scatterplot(data=upper_stages, x='Gross mass [Mg]', y='Inert mass fraction',
                 hue='Fuel', style='Tank material', size='Common bulkhead')
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
 plt.subplot(2, 1, 2)
 plt.title('Boosters')
 sns.scatterplot(data=boost_stages, x='Gross mass [Mg]', y='Inert mass fraction',
                 hue='Fuel', style='Tank material', size='Common bulkhead')
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
 
 plt.figure(figsize=(8, 4))
