@@ -5,7 +5,6 @@ import seaborn as sns
 
 sns.set(style='whitegrid')
 
-# TODO exclude  booster stages that cannot liftoff under own thrust w/o strap-ons.
 
 # Load stage data from csv file
 stages = pandas.read_csv('stages.csv', index_col=0)
@@ -19,6 +18,10 @@ stages['Inert mass fraction'] = stages['Inert mass'] / stages['Gross mass']
 # Split into first stages / boosters vs. upper stages
 boost_stages = stages.loc[stages['Stage Number'] <= 1]
 upper_stages = stages.loc[stages['Stage Number'] > 1]
+
+# Exclude  booster stages that cannot liftoff under own thrust w/o strap-ons.
+boost_stages = boost_stages.loc[boost_stages['Liftoff under own thrust']]
+
 
 plt.figure()
 plt.subplot(2, 1, 1)
