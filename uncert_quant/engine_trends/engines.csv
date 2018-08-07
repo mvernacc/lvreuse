@@ -31,7 +31,8 @@ RL10C-1,USA,Aerojet Rocketdyne,Upper,H2,O2,5.5,450,,102000,,190,,130,Expander,20
 RS-25 (SSME),USA,Rocketdyne,Booster,H2,O2,6.03,452,361,2090000,1660000,3526,18900000,69,SC,1981,Sutton
 RS-27A,USA,Rocketdyne,Booster,kero,O2,,302,255,1050000,890000,1147,4800000,12,GG,1989,Wikipedia
 RS-68,USA,Rocketdyne,Booster,H2,O2,6,410,365,3310000,2890000,6736,10100000,21.5,GG,2002,Sutton
-Rutherford,USA/New Zealand,Rocket Lab,Booster,kero,O2,,331,,24000,,35,,,Electric,2017,Wikipedia
+Rutherford,USA/New Zealand,Rocket Lab,Booster,kero,O2,,311,,24000,,35,,,Electric,2017,rocketlabusa.com
+Rutherford Vacuum,USA/New Zealand,Rocket Lab,Upper,kero,O2,,343,,24000,,,,,Electric,2017,rocketlabusa.com
 Vulcain 1,Europe,Snecma,Booster,H2,O2,6.2,431,326,1080000,773000,1300,10000000,,GG,1996,"Wikipedia, astronautix"
 Vulcain 2,Europe,Snecma,Booster,H2,O2,6.7,429,318,1350000,940000,1800,11600000,,GG,2005,"Wikipedia, astronautix"
 YF-100,China,AALPT,Booster,kero,O2,2.6,335,300,1340000,1200000,,18000000,35,SC,2015,Wikipedia
