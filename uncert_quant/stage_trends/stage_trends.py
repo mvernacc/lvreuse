@@ -64,6 +64,7 @@ sns.scatterplot(data=boost_stages, x='Year of first flight', y='Inert mass fract
 plt.ylim([0, plt.ylim()[1]])
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.tight_layout()
+plt.savefig('stage_historical_trends.png')
 
 plt.figure(figsize=(8, 8))
 plt.subplot(2, 1, 1)
@@ -84,6 +85,7 @@ plt.xlim([0, plt.xlim()[1]])
 plt.ylim([0, plt.ylim()[1]])
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.tight_layout()
+plt.savefig('stage_gross_vs_inert_mass.png')
 
 
 plt.figure(figsize=(8, 4))
@@ -101,6 +103,7 @@ plt.title('Inert mass fraction of Booster Stages')
 plt.xlim([0, plt.xlim()[1]])
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.tight_layout()
+plt.savefig('stage_inert_mass_bulkhead.png')
 
 plt.figure(figsize=(8, 4))
 ax1 = plt.subplot(2, 1, 1)
@@ -119,5 +122,6 @@ plt.title('Inert mass fraction of Booster Stages')
 plt.xlim([0, plt.xlim()[1]])
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.tight_layout()
+plt.savefig('stage_inert_mass_material.png')
 
 plt.show()

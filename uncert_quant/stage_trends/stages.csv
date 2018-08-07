@@ -1,4 +1,4 @@
-Launch Vehicle,Stage Number,Stage Name,Origin,Designer,Fuel,Oxidizer,Inert mass,Propellant mass,Tank material,Common bulkhead,Liftoff under own thrust,Engine designation,Number of engines,Year of first flight,Year of final flight,Reference,Notes
+Launch vehicle,Stage number,Stage name,Origin,Designer,Fuel,Oxidizer,Inert mass,Propellant mass,Tank material,Common bulkhead,Liftoff under own thrust,Engine designation,Number of engines,Year of first flight,Year of final flight,Reference,Notes
 Ariane 4,3,H10,Europe,Arianespace,H2,O2,1780,1.17E+04,aluminum,TRUE,,HM7B,1,1988,2003,Isakowitz,includes vehicle equipment bay
 Ariane 5G,1,H158,Europe,Arianespace,H2,O2,1.22E+04,1.58E+05,aluminum,TRUE,FALSE,Vulcain,1,1996,2003,Isakowitz,
 Ariane 5ECA,1,H173,Europe,Arianespace,H2,O2,1.60E+04,1.72E+05,aluminum,TRUE,FALSE,Vulcain 2,1,2002,,Isakowitz,
