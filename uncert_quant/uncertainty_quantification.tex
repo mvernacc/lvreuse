@@ -14,6 +14,7 @@
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
 \newcommand{\head}[2]{\multicolumn{1}{>{\centering\arraybackslash}p{#1}}{#2}}
 \usepackage[super]{nth}
+\usepackage{multirow}
 \makesavenoteenv{tabular}
 \setlength\LTleft{0pt} 
 \DeclareMathOperator*{\mean}{mean}
@@ -106,6 +107,62 @@ For booster engines, the mean of the vacuum and sea level $I_{sp}$ is used, and 
 \[
  mode = g_0 \mean_{e \in S}\left( \frac{I_{sp, vac}^e + I_{sp, SL}^e}{2} \right)
 \]
+
+\subsubsection{Inert mass fraction - expendable baseline}
+The inert mass fraction expendable baselines, $E_1, E_2$, represent the lower limit of achievable inert mass fraction for a particular technology choice.
+The values of $E_1, E_2$ are uncertain and hard to predict from first principles, as they result from a complicated engineering process. However, we can make an informed guess as to what is possible by examining historical trends in launch vehicle stages.
+
+We compiled a sample of historical and active stages which have been sucessfully used in space launch vehicles; the data is drawn mainly from \cite{Isakowitz2004}. We segregate the data into boosters (first stages) and upper stages, as these have different structural design requirements. The present analysis only considers sequentially-staged launch vehciles, so we exclude boosters which cannot lift off under their own thrust.
+
+ First, we must determine whether there are historical trends in the inert mass fraction data. If there were a strong historical trend towards improving inert mass fraction, then a sample of historical stages would not be representative of the performance in modern and near-future stages. Examining Figure \ref{fig:stage_historical_trends}:
+ \begin{itemize}
+    \item For hydrogen upper stages there is no clear historical trend.
+    \item For kerosene upper stages inert mass fraction has declined with time.
+    \item For hygrogen boosters, there is only one example capable of liftoff under its own thrust (Delta IV Common Booster Core), so no historical trends can be observed.
+    \item For kerosene boosters, there is no clear historical trend.
+\end{itemize}
+
+% TODO include table
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=1\textwidth]{stage_trends/stage_historical_trends}
+    \caption{\label{fig:stage_historical_trends} Historical trends in stage inert mass. There are no clear trends with time, excepting the declining inert mass fraction of kerosene/\ce{O2} upper stages.}
+\end{figure}
+
+Next, we consider the relation between stage inert mass fraction and gross mass. There is reason to suspect that larger stages will have lower $E$, as some inert components (e.g. flight computer) have similar mass regarless of vehicle size. However, in Figure \ref{fig:stage_gross_vs_inert_mass}, we see that while there is a wider spread of inert mass fraction at low gross mass, the acheived \emph{lower limit} of inert mass fraction does not show a clear sensitivity to gross mass.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=1\textwidth]{stage_trends/stage_gross_vs_inert_mass}
+    \caption{\label{fig:stage_gross_vs_inert_mass} Stage inert mass versus gross mass.}
+\end{figure}
+
+The propellant technology choice has a noticeable effect on the inert mass fraction. \ce{H2}/\ce{O2} stages tend to have higher inert mass fraction than kerosene/\ce{O2} stages [Figure \ref{fig:stage_inert_mass_fuel}]. The lower denisty of hydrogen fuel requires larger tanks, increasing the ratio of tank mass to propellant mass.
+
+Other technology choices (e.g. whether to have common or separate bulkheads between the fuel and oxidizer tanks) also effect the inert mass fraction. However, this study will not consider such detailed design choices.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=1\textwidth]{stage_trends/stage_inert_mass_fuel}
+    \caption{\label{fig:stage_inert_mass_fuel} Stage inert mass fraction by propellant choice.}
+\end{figure}
+
+\begin{table}[hbt!]
+    \caption{\label{tab:inert_mass_fraction_distributions} Uncertianty distribution parameters on inert mass fraction lower limits.}
+    \begin{tabular}{l l c c c}
+    \hline
+    Stage & Propellant choice & \multicolumn{3}{c}{Triangular dist. params.} \\
+    & & Min & Mode & Max \\
+    \hline
+    \hline
+    2, Upper & \ce{H2} / \ce{O2} & 0.080 & 0.085 & 0.090 \\
+    2, Upper & kerosene / \ce{O2} & 0.040 & 0.050 & 0.060 \\
+    1, Booster & \ce{H2} / \ce{O2} & 0.011 & 0.012 & 0.013 \\
+    1, Booster & kerosene / \ce{O2} & 0.055 & 0.060 & 0.065 \\
+    \hline
+    \end{tabular}
+\end{table}
 
 \section{Cost-Related Uncertainties}
 

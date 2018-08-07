@@ -92,14 +92,14 @@ plt.figure(figsize=(8, 4))
 ax1 = plt.subplot(2, 1, 1)
 sns.stripplot(data=upper_stages, x='Inert mass fraction', y='Fuel', hue='Common bulkhead',
               jitter=False, dodge=True, order=fuel_order, palette=sns.color_palette(['C2', 'C3']))
-plt.title('Inert mass fraction of Upper Stages')
+plt.title('Inert mass fraction of Upper Stages | Common bulkhead?')
 plt.xlim([0, plt.xlim()[1]])
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
 plt.subplot(2, 1, 2, sharex=ax1)
 sns.stripplot(data=boost_stages, x='Inert mass fraction', y='Fuel', hue='Common bulkhead',
               jitter=False, dodge=True, order=fuel_order, palette=sns.color_palette(['C2', 'C3']))
-plt.title('Inert mass fraction of Booster Stages')
+plt.title('Inert mass fraction of Booster Stages | Common bulkhead?')
 plt.xlim([0, plt.xlim()[1]])
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.tight_layout()
@@ -110,7 +110,7 @@ ax1 = plt.subplot(2, 1, 1)
 sns.stripplot(data=upper_stages, x='Inert mass fraction', y='Fuel', hue='Tank material',
               jitter=False, dodge=True, order=fuel_order, hue_order=matl_order,
               palette=sns.color_palette(['C6', 'C7', 'C8']))
-plt.title('Inert mass fraction of Upper Stages')
+plt.title('Inert mass fraction of Upper Stages | Tank material?')
 plt.xlim([0, plt.xlim()[1]])
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
@@ -118,10 +118,27 @@ plt.subplot(2, 1, 2, sharex=ax1)
 sns.stripplot(data=boost_stages, x='Inert mass fraction', y='Fuel', hue='Tank material',
               jitter=False, dodge=True, order=fuel_order, hue_order=matl_order,
               palette=sns.color_palette(['C6', 'C7', 'C8']))
-plt.title('Inert mass fraction of Booster Stages')
+plt.title('Inert mass fraction of Booster Stages | Tank material?')
 plt.xlim([0, plt.xlim()[1]])
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.tight_layout()
 plt.savefig('stage_inert_mass_material.png')
 
+
+plt.figure(figsize=(8, 4))
+ax1 = plt.subplot(2, 1, 1)
+sns.stripplot(data=upper_stages, x='Inert mass fraction', y='Fuel', hue='Fuel',
+              jitter=False, dodge=True, order=fuel_order)
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+plt.title('Inert mass fraction of Upper Stages')
+plt.xlim([0, plt.xlim()[1]])
+
+plt.subplot(2, 1, 2, sharex=ax1)
+sns.stripplot(data=boost_stages, x='Inert mass fraction', y='Fuel', hue='Fuel',
+              jitter=False, dodge=True, order=fuel_order)
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+plt.title('Inert mass fraction of Booster Stages')
+plt.xlim([0, plt.xlim()[1]])
+plt.tight_layout()
+plt.savefig('stage_inert_mass_fuel.png')
 plt.show()
