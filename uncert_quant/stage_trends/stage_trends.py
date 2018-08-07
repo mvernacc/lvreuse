@@ -3,12 +3,26 @@ import numpy as np
 from matplotlib import pyplot as plt
 import seaborn as sns
 
+def label_points(x, y, labels, ax, x_offset=0, y_offset=0, **kwargs):
+    for x_, y_, label in zip(x, y, labels):
+        ax.text(x_ + x_offset, y_ + y_offset, str(label), **kwargs)
+
+def make_label(row):
+    label = row['Launch vehicle']
+    if isinstance(row['Stage name'], str):
+        label += ' ' + row['Stage name']
+    else:
+        label += ' stage {:d}'.format(row['Stage number'])
+    return label
+
+
+
 sns.set(style='whitegrid')
 
 
 # Load stage data from csv file
-stages = pandas.read_csv('stages.csv', index_col=0)
-stages.sort_values(by='Launch Vehicle', inplace=True)
+stages = pandas.read_csv('stages.csv')
+stages.sort_values(by='Launch vehicle', inplace=True)
 stages.sort_values(by='Fuel', inplace=True)
 
 # Compute the inert mass fractions.
@@ -17,8 +31,8 @@ stages['Gross mass [Mg]'] = stages['Gross mass'] / 1000
 stages['Inert mass fraction'] = stages['Inert mass'] / stages['Gross mass']
 
 # Split into first stages / boosters vs. upper stages
-boost_stages = stages.loc[stages['Stage Number'] <= 1]
-upper_stages = stages.loc[stages['Stage Number'] > 1]
+boost_stages = stages.loc[stages['Stage number'] <= 1]
+upper_stages = stages.loc[stages['Stage number'] > 1]
 
 # Exclude  booster stages that cannot liftoff under own thrust w/o strap-ons.
 boost_stages = boost_stages.loc[boost_stages['Liftoff under own thrust']]
@@ -28,11 +42,17 @@ matl_order = ['steel', 'aluminum', 'composite']
 
 
 plt.figure(figsize=(8, 8))
-plt.subplot(2, 1, 1)
+ax = plt.subplot(2, 1, 1)
 plt.title('Upper stages')
 sns.scatterplot(data=upper_stages, x='Year of first flight', y='Inert mass fraction',
                 hue='Fuel', style='Fuel',
                 hue_order=fuel_order)
+labels = upper_stages.apply(make_label, axis='columns')
+# label_points(upper_stages['Year of first flight'],
+#              upper_stages['Inert mass fraction'],
+#              labels, ax,
+#              size='x-small'
+#              )
 plt.ylim([0, plt.ylim()[1]])
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
