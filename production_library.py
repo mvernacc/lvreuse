@@ -69,8 +69,8 @@ crewed_space_system = SystemProductionValues(
     prod_x=.98
     )
 
-sys_prod_vals_list = [solid_prop_motor_booster, liquid_engine_cryo, liquid_engine_storable, 
-                        liquid_engine_monoprop, airbreathing_engine, prop_module, 
-                        ballistic_vehicles_storable_prop, ballistic_vehicles_cryo_prop, 
-                        high_speed_aircraft, winged_first_stage, winged_orbital_vehicle, 
-                        crewed_space_system] 
+sys_prod_vals_list = [solid_prop_motor_booster, liquid_engine_cryo, liquid_engine_storable,
+                      liquid_engine_monoprop, airbreathing_engine, prop_module,
+                      ballistic_vehicles_storable_prop, ballistic_vehicles_cryo_prop,
+                      high_speed_aircraft, winged_first_stage, winged_orbital_vehicle,
+                      crewed_space_system] 
