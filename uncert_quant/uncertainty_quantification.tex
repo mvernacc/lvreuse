@@ -165,7 +165,97 @@ Other technology choices (e.g. whether to have common or separate bulkheads betw
 \end{table}
 
 \subsection{Recovery Strategy Uncertainties}
-\
+
+\subsubsection{Winged / horizontal landing recovery}
+Need to estimate mass of recovery hardware $a$ and recovery propellant $P$.
+
+
+No winged recovery first stages have actually been operated, so we cannot infer these factors from a sample of historical systems. Instead, we estimate the mass of recovery hardware by three approximate soucres: high-fidelity studies of winged boosters undertaken by major aerospace institutions, a low fidelity study by Barry Hellman of Georgia Tech \cite{Hellman2005}, and analogies to other winged vehicles.
+
+First, we were able to find three high-fidelity winged booster concept designs: Khrunichev's Baikal booster \cite{Isakowitz2004}, NASA/Boeing's Liquid Flyback Booster (dual configuration from \cite{Healy1998}), and DRL's Liquid Flyback Booster \cite{Sippel2003}. These studies list the vehicle inert mass ($m_{inert,1} = m_{s,1} + m_{rh,1}$), the ascent propellant mass ($m_{p,1} - m_{pr,1}$) and the recovery propellant mass ($m_{pr,1}$). We compute $a$ and $P$ as:
+
+\[
+a = \frac{m_{inert,1} - m_{p,1} \frac{E_1}{1 - E_1}}{m_{inert,1}}
+\]
+\[
+P = \ln\left( \frac{m_{pr,1}}{m_{inert,1}} + 1 \right)
+\]
+
+where $E_1$ is the base expendable inert mass fraction (assumed to be 0.06 for kero/\ce{O2} and 0.12 for \ce{H2}/\ce{O2}), and $m_{p,1} \frac{E_1}{1 - E_1}$ estimates the inert mass of an equivalent expendable stage.
+
+Second, the Hellman study provides estimates of the inert and propellant masses for flyback and glideback boosters. These mass estimates are not based on detailed design considerations, but rather on subsystem mass-estimation relationships developed at Georgia Tech \cite{Rohrschneider2002}.
+
+Our third source is analogy to other winged vehicles. We considered the subsystems which would need to be added to an expendable booster to enable winged recovery (wing, stabiliser, landing gear, surface controls, hydraulics, thermal protection, air breathing propulsion) and computed the fraction of the empty mass is made up by these systems as an estimate of $a$. We considered winged vehicles which cover a variety of missions, sizes and construction technology (STS orbiter, Lockheed C-141, Gulfstream G550, Boeing 787-8).
+
+The resulting estimates of $a$ are shown in Figure \ref{fig:winged_perf_factors}. For powered-flight winged boosters, there is good agreement between the three estimate types. We can have some confidence that $a$ for powered-flight winged boosters is in the range 0.49 to 0.65, i.e. a powered-flight winged booster will have $1/(1-a) =$ 2.0 to 2.8 times the dry mass of an expendable booster with the same propellant load. Glider winged boosters can be expected to be somewhat lighter, with $a$ in the range of 0.38 to 0.54, i.e. having 1.6 to 1.8 times the dry mass of an expendable booster with the same propellant load. We represent the uncertainty on $a$ with a triangular distribution, the parameters of which are given in Table \ref{tab:winged_pref_factor_distributions}.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=1\textwidth]{recov_strats/winged_perf_factors}
+    \caption{\label{fig:winged_perf_factors} Various estimates of the recovery hardware factor $a$ for glider and powered horizontal-landing boosters. Data from \cite{Hellman2005, Isakowitz2004, Healy1998, Sippel2003}}
+\end{figure}
+
+\begin{table}[hbt!]
+    \centering
+    \caption{\label{tab:winged_pref_factor_distributions} Uncertainty distribution parameters of the recovery hardware factor $a$ for glider and powered horizontal-landing boosters.}
+    \begin{tabular}{l l c c c}
+    \hline
+     & \multicolumn{3}{c}{Triangular dist. params.} \\
+    & Min & Mode & Max \\
+    \hline
+    \hline
+    Glider  & 0.380 & 0.426 & 0.540 \\
+    Powered & 0.490 & 0.574 & 0.650 \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\subsubsection{Propulsive landing}
+
+Need to estimate recovery hardware mass factor $a$.
+
+Propulsive landing boosters require extra hardware not needed on an expendable booster. On most flown or proposed designs, this extra hardware includes aerodynamic control surfaces and actuators, landing gear\footnote{It may be possible to forgo landing gear by high-precision landing on a support structure \cite{Musk2017}, however this difficult technique has yet to be demonstrated.}, and thermal protection \cite{NewGlenn, Falcon9, DCX, Musk2017}.
+
+Although three propulsive landing boosters have been flown, we could not find reliable, publicly available data on the masses of the extra hardware systems. Instead, we will crudely estimate the mass of these systems by analogy to other aerospace vehicles (STS orbiter, Lockheed C-141, Gulfstream G550, Boeing 787-8). On these vehicles, the surface controls and actuators make up 2 to 5\% of the vehicle empty mass, and landing gear 7 to 8\%. Although the design of aircraft landing gear is quite different, this is a decent first guess. We guess that thermal protection adds another 2\% to 4\% (TODO although there is a trade-off against entry burn $\Delta v$). Thus, we expect $a$ to be 0.11 to 0.17, i.e. a propulsive landing booster should have 1.1 to 1.2 times the dry mass of an expendable booster with the same propellant load. Because these estimates are crude, we expand the bounds by 0.02 on either side when choosing the parameters of the triangular distribution (Table \ref{tab:propulsive_pref_factor_distributions}).
+
+\begin{table}[hbt!]
+    \centering
+    \caption{\label{tab:propulsive_pref_factor_distributions} Uncertainty distribution parameters of the recovery hardware factor $a$ for propulsive-landing boosters.}
+    \begin{tabular}{l l c c c}
+    \hline
+     & \multicolumn{3}{c}{Triangular dist. params.} \\
+     & Min & Mode & Max \\
+    \hline
+    \hline
+    Propulsive landing  & 0.09 & 0.14 & 0.19 \\
+    \hline
+    \end{tabular}
+\end{table}
+
+
+\subsubsection{Parachute recovery}
+Need to estimate recovery hardware mass factor $a$.
+
+The Space Shuttle Solid Rocket Boosters (SRBs) and the Ariane 5 EAP boosters are the only operational examples of parachute recovery of full space launch vehicle stages. The mass of the SRB parachutes were 3.5\% of booster dry mass \cite{Wolf1996}, and entry thermal protection added another few percent. Thus, we expect $a$ to be in the range \SIrange{0.05}{0.08}{}.
+
+owever, the SRB example is not indicative of parachute recovery for liquid boosters. Solid rocket boosters must contain a much higher internal pressure than pump-fed liquid stages, and are therefore have a stronger structure which is more robust to entry loads. Attempts to fully recover liquid stages via parachute have failed, with the stages breaking up during reentry \cite{Spencer2011}.
+
+Partial recovery via parachute may be more feasible for liquid boosters, as a compact engine pod could more easily survive entry loads. United Launch Alliance has proposed to recover the engines of Atlas V (or the next-generation Vulcan) via parachutes and mid-air capture \cite{Gravlee2008, Ragab2015}. This proposal also includes an inflatable heat shield (Hypersonic Inflatable Aerodynamic Decelerator, HIAD) which will protect and decelerate the recovery vehicle. The proposed \SI{10}{\meter} HIAD is estimated to have a mass of \SI{1.5}{\mega\gram} \cite{Bose2009}, about 13\% of the recovery vehicle mass. Including parachutes as well, the $a$ value for this strategy should be $\approx 0.17$. Recovery via mid-air capture should reduce recovery operations and refurbishment costs compared to recovery in the ocean.
+
+\begin{table}[hbt!]
+    \centering
+    \caption{\label{tab:parachute_pref_factor_distributions} Uncertainty distribution parameters of the recovery hardware factor $a$ for parachute recovery boosters.}
+    \begin{tabular}{l l c c c}
+    \hline
+     & \multicolumn{3}{c}{Triangular dist. params.} \\
+     & Min & Mode & Max \\
+    \hline
+    \hline
+    Parachutes & 0.050 & 0.065 & 0.080 \\
+    Parachutes and inflatable heat shield  & 0.150 & 0.170 & 0.190 \\
+    \hline
+    \end{tabular}
+\end{table}
 
 \section{Cost-Related Uncertainties}
 

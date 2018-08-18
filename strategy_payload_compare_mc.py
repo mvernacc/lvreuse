@@ -23,13 +23,13 @@ def monte_carlo():
     dv_mission = 12e3
     mission = 'GTO'
     dv_prop_ls = np.array([2930 + 800 + 150, 4360 + 800 + 350])
-    # Assume kerosene technology
+    # Assume technology: kerosene, gg cycle, Al alloy tanks
     tech = kerosene_tech
     tech_uncerts = [
-        rdm.UniformUncertainty('c_1', min_value=260 * g_0, max_value=310 * g_0),
-        rdm.UniformUncertainty('c_2', min_value=330 * g_0, max_value=350 * g_0),
-        rdm.UniformUncertainty('E_1', min_value=0.04, max_value=0.08),
-        rdm.UniformUncertainty('E_2', min_value=0.03, max_value=0.06),
+        rdm.TriangularUncertainty('c_1', min_value=264.6 * g_0, mode_value=287.9 * g_0, max_value=305.4 * g_0),
+        rdm.TriangularUncertainty('c_2', min_value=335.2 * g_0, mode_value=345.0 * g_0, max_value=348.0 * g_0),
+        rdm.TriangularUncertainty('E_1', min_value=0.055, mode_value=0.060, max_value=0.065),
+        rdm.TriangularUncertainty('E_2', min_value=0.040, mode_value=0.050, max_value=0.060),
         rdm.UniformUncertainty('y', min_value=0.2, max_value=0.3),
     ]
 
@@ -37,27 +37,27 @@ def monte_carlo():
 
     strategy_uncerts = {
         'prop_ls': [
-            rdm.UniformUncertainty('a', min_value=0.05, max_value=0.07),
+            rdm.TriangularUncertainty('a', min_value=0.09, mode_value=0.14, max_value=0.19),
             rdm.UniformUncertainty('P', min_value=dv_prop_ls[0] / c_1_recov, max_value=dv_prop_ls[1] / c_1_recov)
         ],
-        'wing_ls': [
-            rdm.UniformUncertainty('a', min_value=0.28, max_value=0.52),
-            rdm.UniformUncertainty('P', min_value=0.17, max_value=0.26),
+        'wing_pwr_ls': [
+            rdm.TriangularUncertainty('a', min_value=0.490, mode_value=0.574, max_value=0.650),
+            rdm.UniformUncertainty('P', min_value=0.15, max_value=0.20),
         ],
-        'wing_ls_partial': [
-            rdm.UniformUncertainty('a', min_value=0.28, max_value=0.52),
-            rdm.UniformUncertainty('P', min_value=0.17, max_value=0.26),
+        'wing_pwr_ls_partial': [
+            rdm.TriangularUncertainty('a', min_value=0.490, mode_value=0.574, max_value=0.650),
+            rdm.UniformUncertainty('P', min_value=0.15, max_value=0.20),
             rdm.UniformUncertainty('z_m', min_value=0.2, max_value=0.3),
         ],
         'prop_dr': [
-            rdm.UniformUncertainty('a', min_value=0.05, max_value=0.07),
+            rdm.TriangularUncertainty('a', min_value=0.09, mode_value=0.14, max_value=0.19),
             rdm.UniformUncertainty('P', min_value=800 / c_1_recov, max_value=1150 / c_1_recov)
         ],
-        'wing_dr': [
-            rdm.UniformUncertainty('a', min_value=0.18, max_value=0.37),
+        'wing_glide_dr': [
+            rdm.TriangularUncertainty('a', min_value=0.380, mode_value=0.426, max_value=0.540),
         ],
         'parachute_dr_partial': [
-            rdm.UniformUncertainty('a', min_value=0.15, max_value=0.19),
+            rdm.TriangularUncertainty('a', min_value=0.15, mode_value=0.17, max_value=0.19),
             rdm.UniformUncertainty('z_m', min_value=0.2, max_value=0.3),
         ],
         'expend': [],
