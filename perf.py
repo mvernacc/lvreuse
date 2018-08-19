@@ -75,7 +75,7 @@ def coupled_perf_solver(a, c_1, c_2, E_1, E_2, y, dv_mission, recovery_propellan
         e_1_guess = x[0]
         pi_1 = x[1]
         if pi_1 < 0:
-            pi_1 = 0
+            pi_1 = 1e-6
 
         v_ss = stage_sep_velocity(c_1, e_1_guess, pi_1)
         P = recovery_propellant_func(v_ss)
@@ -160,7 +160,6 @@ def rocketback_delta_v_demo():
     plt.xlabel('Stage sep. velocity $v_{ss}$ [m/s]')
     plt.ylabel('Rocketback $\\Delta v_{rb}$ [m/s]')
     plt.grid(True)
-    plt.show()
 
 
 def propulsive_ls_perf_demo():
@@ -213,10 +212,62 @@ def stage_mass_ratio_sweep():
     plt.grid(True)
 
     plt.tight_layout()
-    plt.show()
+
+
+def dv_mission_sweep():
+    a_prop = 0.17
+    a_wing_pwr = 0.57
+    c_1 = 3000
+    c_2 = 3500
+    E_1 = 0.06
+    E_2 = 0.04
+    y = 0.20
+    dv_mission = 9.5e3
+
+    dv_mission = np.linspace(9e3, 14e3)
+    pi_star_expend = np.zeros(len(dv_mission))
+    pi_star_prop_ls = np.zeros(len(dv_mission))
+    pi_star_wing_pwr_ls = np.zeros(len(dv_mission))
+    v_ss_prop_ls = np.zeros(len(dv_mission))
+    v_ss_wing_pwr_ls = np.zeros(len(dv_mission))
+
+    for i in range(len(dv_mission)):
+        pi_star_expend[i] = payload_fixed_stages(c_1, c_2, E_1, E_2, y, dv_mission[i])
+        (pi_star_prop_ls[i], v_ss_prop_ls[i]) = \
+            propulsive_ls_perf(a_prop, c_1, c_2, E_1, E_2, y, dv_mission[i])
+        (pi_star_wing_pwr_ls[i], v_ss_wing_pwr_ls[i]) = \
+            winged_powered_ls_perf(a_wing_pwr, c_1, c_2, E_1, E_2, y, dv_mission[i])
+
+    plt.figure(figsize=(6, 8))
+    ax1 = plt.subplot(2, 1, 1)
+    plt.plot(dv_mission * 1e-3, pi_star_expend, label='Expendable', color='black')
+    plt.plot(dv_mission * 1e-3, pi_star_prop_ls, label='Propulsive launch site recov.', color='red')
+    plt.plot(dv_mission * 1e-3, pi_star_wing_pwr_ls, label='Winged powered launch site recov.', color='C0')
+    plt.xlabel('Mission $\\Delta v_*$ [km/s]')
+    plt.ylabel('Overall payload mass fraction $\\pi_*$ [-]')
+    plt.ylim([0, plt.ylim()[1]])
+    plt.title('Effect of mission $\\Delta v$ on payload capacity'
+        + '\nStage 2 / stage 1 mass ratio $y$={:.2f}, kerosene/O2 tech.'.format(y))
+    plt.legend()
+    plt.text(9.5, 0.005, 'LEO', rotation=90)
+    plt.text(12, 0.005, 'GTO', rotation=90)
+    plt.grid(True)
+
+    plt.subplot(2, 1, 2, sharex=ax1)
+    plt.plot(dv_mission * 1e-3, v_ss_prop_ls, label='Propulsive launch site recov.', color='red')
+    plt.plot(dv_mission * 1e-3, v_ss_wing_pwr_ls, label='Winged powered launch site recov.', color='C0')
+    plt.xlabel('Mission $\\Delta v_*$ [km/s]')
+    plt.ylabel('Velocity at stage separation $v_{{ss}}$ [m/s]')
+    plt.ylim([0, plt.ylim()[1]])
+    plt.legend()
+    plt.grid(True)
+
+    plt.tight_layout()
 
 
 if __name__ == '__main__':
     # rocketback_delta_v_demo()
     # propulsive_ls_perf_demo()
     stage_mass_ratio_sweep()
+    dv_mission_sweep()
+    plt.show()
