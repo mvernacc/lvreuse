@@ -202,6 +202,17 @@ class WingedGlider(StrategyNoPropulsion):
         self.setup_model()
 
 
+class Parachute(StrategyNoPropulsion):
+    def __init__(self, tech, mission, y=0.20):
+        super(Parachute, self).__init__('parachute', 'downrange', 'all',
+                                                   tech, mission)
+        self.y = y
+        self.uncertainties += [
+            rdm.TriangularUncertainty('a', min_value=0.15, mode_value=0.17, max_value=0.19),
+        ]
+        self.setup_model()
+
+
 class ParachutePartial(StrategyNoPropulsion):
     def __init__(self, tech, mission, y=0.20):
         super(ParachutePartial, self).__init__('parachute', 'downrange', 'partial',
@@ -217,7 +228,7 @@ class ParachutePartial(StrategyNoPropulsion):
 def demo():
     strats = [Expendable, PropulsiveLaunchSite,
         WingedPoweredLaunchSite, WingedPoweredLaunchSitePartial,
-        PropulsiveDownrange, WingedGlider, ParachutePartial]
+        PropulsiveDownrange, WingedGlider, Parachute, ParachutePartial]
     results = {}
     for strat in strats:
         strat_instance = strat(kero_GG_tech, GTO)
