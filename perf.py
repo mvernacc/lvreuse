@@ -8,6 +8,19 @@ import unavail_mass
 from payload import payload_fixed_stages
 
 
+def stage_sep_range(v_ss, f_ss=0.02):
+    """Estimate the downrange distance at stage separation.
+    
+    Arguments:
+        v_ss (positive scalar): Velocity at stage separation [units: meter second**-1].
+        f_ss (positive scalar): Stage separation downrange distance model coefficient
+            [units: meter**-1 second**2].
+    Returns:
+        scalar: downrange distance at stage separation [units: meter].
+    """
+    return f_ss * v_ss**2
+
+
 def rocketback_delta_v(v_ss, f_ss=0.02, dz=50e3, dv_loss=200):
     """Estimate the delta-v for the rocket-back maneuver.
     
@@ -26,7 +39,7 @@ def rocketback_delta_v(v_ss, f_ss=0.02, dz=50e3, dv_loss=200):
     phi_rb = np.deg2rad(60)    # Flight path angle at end of rocket-back burn [units: radian].
 
     # Downrange distance at stage separation [units: meter].
-    x_ss = f_ss * v_ss**2
+    x_ss = stage_sep_range(v_ss, f_ss)
 
     # Velocity required at end of rocket-back burn [units: meter second**-1].
     v_rb = (g_0 * x_ss**2 / (np.cos(phi_rb)**2 * (dz + x_ss * np.tan(phi_rb))))**0.5
@@ -56,7 +69,7 @@ def stage_sep_velocity(c_1, e_1, pi_1, dv_loss_ascent=300):
     return v_ss
 
 
-def propulsive_ls_perf(a, c_1, c_2, E_1, E_2, y, dv_mission):
+def coupled_perf_solver(a, c_1, c_2, E_1, E_2, y, dv_mission, recovery_propellant_func):
     # Solve for the 1st stage payload mass fraction
     def root_fun(x):
         e_1_guess = x[0]
@@ -65,10 +78,7 @@ def propulsive_ls_perf(a, c_1, c_2, E_1, E_2, y, dv_mission):
             pi_1 = 0
 
         v_ss = stage_sep_velocity(c_1, e_1_guess, pi_1)
-        dv_rb = rocketback_delta_v(v_ss)
-        dv_entry = 800.
-        dv_land = landing_dv(m_A=2000., accel=30.)
-        P = (dv_rb + dv_entry + dv_land) / c_1
+        P = recovery_propellant_func(v_ss)
         e_1 = unavail_mass.unavail_mass(a, P, z_m=1, E_1=E_1)
 
         pi_2 = (y + 1) - y / pi_1
@@ -92,6 +102,53 @@ def propulsive_ls_perf(a, c_1, c_2, E_1, E_2, y, dv_mission):
     return pi_star
 
 
+def propulsive_ls_perf(a, c_1, c_2, E_1, E_2, y, dv_mission):
+    def recovery_propellant_func(v_ss):
+        dv_rb = rocketback_delta_v(v_ss)
+        dv_entry = 800.
+        dv_land = landing_dv(m_A=2000., accel=30.)
+        P = (dv_rb + dv_entry + dv_land) / c_1
+        return P
+
+    pi_star = coupled_perf_solver(a, c_1, c_2, E_1, E_2, y,
+                                  dv_mission, recovery_propellant_func)
+    return pi_star
+
+
+def breguet_propellant_winged_powered(R_cruise, v_cruise, lift_drag, I_sp_ab):
+    """Recovery propellant factor P for winged vehicle with air-breathing propulsion.
+
+    See Breguet range equation http://web.mit.edu/16.unified/www/FALL/thermodynamics/notes/node98.html
+
+    Arguments:
+        R_cruise (scalar): cruise range [units: meter].
+        v_crusie (scalar): cruise speed [units: meter second**-1].
+        lift_drag (scalar): Vehicle lift/drag ratio [units: dimensionless].
+        I_sp_ab (scalar): Air-breathing propulsion specific impulse [units: second].
+
+    Returns:
+        scalar: propellant factor P. The recovery vehicle will burn `e**P -1` times its inert mass
+            in propellant during the recovery cruise.
+    """
+    return R_cruise / (v_cruise * lift_drag * I_sp_ab)
+
+
+def winged_powered_ls_perf(a, c_1, c_2, E_1, E_2, y, dv_mission):
+    I_sp_ab = 3600    # Specific impulse of air-breathing propulsion [units: second].
+    v_cruise = 150    # Recovery cruise speed [units: meter second**-1].
+    lift_drag = 4    # Recovery vehicle lift/drag ratio [units: dimensionless].
+
+    def recovery_propellant_func(v_ss):
+        # Recovery cruise range [units: meter].
+        R_cruise = stage_sep_range(v_ss)
+        P = breguet_propellant_winged_powered(R_cruise, v_cruise, lift_drag, I_sp_ab)
+        return P
+
+    pi_star = coupled_perf_solver(a, c_1, c_2, E_1, E_2, y,
+                                  dv_mission, recovery_propellant_func)
+    return pi_star
+
+
 def rocketback_delta_v_demo():
     v_ss = np.linspace(1e3, 4e3)
     dv_rb = rocketback_delta_v(v_ss)
@@ -107,7 +164,8 @@ def propulsive_ls_perf_demo():
 
 
 def stage_mass_ratio_sweep():
-    a = 0.17
+    a_prop = 0.17
+    a_wing_pwr = 0.57
     c_1 = 3000
     c_2 = 3500
     E_1 = 0.06
@@ -117,13 +175,16 @@ def stage_mass_ratio_sweep():
     y = np.linspace(0.10, 0.40)
     pi_star_expend = np.zeros(len(y))
     pi_star_prop_ls = np.zeros(len(y))
+    pi_star_wing_pwr = np.zeros(len(y))
 
     for i in range(len(y)):
         pi_star_expend[i] = payload_fixed_stages(c_1, c_2, E_1, E_2, y[i], dv_mission)
-        pi_star_prop_ls[i] = propulsive_ls_perf(a, c_1, c_2, E_1, E_2, y[i], dv_mission)
+        pi_star_prop_ls[i] = propulsive_ls_perf(a_prop, c_1, c_2, E_1, E_2, y[i], dv_mission)
+        pi_star_wing_pwr[i] = winged_powered_ls_perf(a_wing_pwr, c_1, c_2, E_1, E_2, y[i], dv_mission)
 
     plt.plot(y, pi_star_expend, label='Expendable')
     plt.plot(y, pi_star_prop_ls, label='Propulsive launch site recov.')
+    plt.plot(y, pi_star_wing_pwr, label='Winged powered launch site recov.')
     plt.xlabel('Stage 2 / stage 1 mass ratio $y$ [-]')
     plt.ylabel('Overall payload mass fraction $\\pi_*$ [-]')
     plt.ylim([0, plt.ylim()[1]])
