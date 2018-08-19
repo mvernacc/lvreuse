@@ -193,7 +193,7 @@ def propulsive_ls_perf_demo():
 
 
 def stage_mass_ratio_sweep():
-    a_prop = 0.17
+    a_prop = 0.14
     a_wing_pwr = 0.57
     c_1 = 3000
     c_2 = 3500
@@ -201,7 +201,7 @@ def stage_mass_ratio_sweep():
     E_2 = 0.04
     dv_mission = 9.5e3
 
-    y = np.linspace(0.10, 0.40)
+    y = np.linspace(0.10, 1.)
     pi_star_expend = np.zeros(len(y))
     pi_star_prop_ls = np.zeros(len(y))
     pi_star_wing_pwr_ls = np.zeros(len(y))
@@ -248,13 +248,13 @@ def stage_mass_ratio_sweep():
 
 
 def dv_mission_sweep():
-    a_prop = 0.17
+    a_prop = 0.14
     a_wing_pwr = 0.57
     c_1 = 3000
     c_2 = 3500
     E_1 = 0.06
     E_2 = 0.04
-    y = 0.20
+    y = 0.25
     dv_mission = 9.5e3
 
     dv_mission = np.linspace(9e3, 14e3)
