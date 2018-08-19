@@ -5,7 +5,7 @@ from scipy.optimize import fsolve
 
 import launch_vehicles
 
-def payload_fixed_stages(c_1, c_2, e_1, e_2, y, dv_mission):
+def payload_fixed_stages(c_1, c_2, e_1, e_2, y, dv_mission, return_all_pis=False):
     """Get the payload capacity for a 2-stage launcher with fixed stagne mass ratio.
 
     Arguments:
@@ -38,6 +38,8 @@ def payload_fixed_stages(c_1, c_2, e_1, e_2, y, dv_mission):
 
     if pi_star < 0:
         return np.nan
+    if return_all_pis:
+        return (pi_star, pi_1, pi_2)
     return pi_star
 
 

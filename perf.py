@@ -207,9 +207,15 @@ def stage_mass_ratio_sweep():
     pi_star_wing_pwr_ls = np.zeros(len(y))
     v_ss_prop_ls = np.zeros(len(y))
     v_ss_wing_pwr_ls = np.zeros(len(y))
+    v_ss_expend = np.zeros(len(y))
 
     for i in range(len(y)):
-        pi_star_expend[i] = payload_fixed_stages(c_1, c_2, E_1, E_2, y[i], dv_mission)
+        expend_result = payload_fixed_stages(c_1, c_2, E_1, E_2, y[i],
+                                             dv_mission, return_all_pis=True)
+        if not np.any(np.isnan(expend_result)):
+            pi_star_expend[i] = expend_result[0]
+            pi_1 = expend_result[1]
+            v_ss_expend[i] = stage_sep_velocity(c_1, E_1, pi_1)
         (pi_star_prop_ls[i], v_ss_prop_ls[i]) = \
             propulsive_ls_perf(c_1, c_2, E_1, E_2, y[i], dv_mission, a_prop)
         (pi_star_wing_pwr_ls[i], v_ss_wing_pwr_ls[i]) = \
@@ -229,6 +235,7 @@ def stage_mass_ratio_sweep():
     plt.grid(True)
 
     plt.subplot(2, 1, 2, sharex=ax1)
+    plt.plot(y, v_ss_expend, label='Expendable', color='black')
     plt.plot(y, v_ss_prop_ls, label='Propulsive launch site recov.', color='red')
     plt.plot(y, v_ss_wing_pwr_ls, label='Winged powered launch site recov.', color='C0')
     plt.xlabel('Stage 2 / stage 1 mass ratio $y$ [-]')
@@ -256,13 +263,19 @@ def dv_mission_sweep():
     pi_star_wing_pwr_ls = np.zeros(len(dv_mission))
     v_ss_prop_ls = np.zeros(len(dv_mission))
     v_ss_wing_pwr_ls = np.zeros(len(dv_mission))
+    v_ss_expend = np.zeros(len(dv_mission))
 
     for i in range(len(dv_mission)):
-        pi_star_expend[i] = payload_fixed_stages(c_1, c_2, E_1, E_2, y, dv_mission[i])
+        expend_result = payload_fixed_stages(c_1, c_2, E_1, E_2, y,
+                                             dv_mission[i], return_all_pis=True)
+        if not np.any(np.isnan(expend_result)):
+            pi_star_expend[i] = expend_result[0]
+            pi_1 = expend_result[1]
+            v_ss_expend[i] = stage_sep_velocity(c_1, E_1, pi_1)
         (pi_star_prop_ls[i], v_ss_prop_ls[i]) = \
-            propulsive_ls_perf(a_prop, c_1, c_2, E_1, E_2, y, dv_mission[i])
+            propulsive_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission[i], a_prop)
         (pi_star_wing_pwr_ls[i], v_ss_wing_pwr_ls[i]) = \
-            winged_powered_ls_perf(a_wing_pwr, c_1, c_2, E_1, E_2, y, dv_mission[i])
+            winged_powered_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission[i], a_wing_pwr)
 
     plt.figure(figsize=(6, 8))
     ax1 = plt.subplot(2, 1, 1)
@@ -280,6 +293,7 @@ def dv_mission_sweep():
     plt.grid(True)
 
     plt.subplot(2, 1, 2, sharex=ax1)
+    plt.plot(dv_mission * 1e-3, v_ss_expend, label='Expendable', color='black')
     plt.plot(dv_mission * 1e-3, v_ss_prop_ls, label='Propulsive launch site recov.', color='red')
     plt.plot(dv_mission * 1e-3, v_ss_wing_pwr_ls, label='Winged powered launch site recov.', color='C0')
     plt.xlabel('Mission $\\Delta v_*$ [km/s]')
