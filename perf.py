@@ -90,16 +90,19 @@ def coupled_perf_solver(a, c_1, c_2, E_1, E_2, y, dv_mission, recovery_propellan
     x_guess = [y, 0.5]
     x, infodict, ier, mesg = fsolve(root_fun, x_guess, full_output=True)
     if ier != 1:
-        return np.nan
+        return (np.nan, np.nan)
+    e_1 = x[0]
     pi_1 = x[1]
-    if pi_1 <= 0:
-        return np.nan
+    if pi_1 <= 0 or e_1 <= 0:
+        return (np.nan, np.nan)
     pi_2 = (y + 1) - y / pi_1
     pi_star = pi_1 * pi_2
 
     if pi_star < 0:
-        return np.nan
-    return pi_star
+        return (np.nan, np.nan)
+
+    v_ss = stage_sep_velocity(c_1, e_1, pi_1)
+    return (pi_star, v_ss)
 
 
 def propulsive_ls_perf(a, c_1, c_2, E_1, E_2, y, dv_mission):
@@ -110,9 +113,9 @@ def propulsive_ls_perf(a, c_1, c_2, E_1, E_2, y, dv_mission):
         P = (dv_rb + dv_entry + dv_land) / c_1
         return P
 
-    pi_star = coupled_perf_solver(a, c_1, c_2, E_1, E_2, y,
+    results = coupled_perf_solver(a, c_1, c_2, E_1, E_2, y,
                                   dv_mission, recovery_propellant_func)
-    return pi_star
+    return results
 
 
 def breguet_propellant_winged_powered(R_cruise, v_cruise, lift_drag, I_sp_ab):
@@ -144,9 +147,9 @@ def winged_powered_ls_perf(a, c_1, c_2, E_1, E_2, y, dv_mission):
         P = breguet_propellant_winged_powered(R_cruise, v_cruise, lift_drag, I_sp_ab)
         return P
 
-    pi_star = coupled_perf_solver(a, c_1, c_2, E_1, E_2, y,
+    results = coupled_perf_solver(a, c_1, c_2, E_1, E_2, y,
                                   dv_mission, recovery_propellant_func)
-    return pi_star
+    return results
 
 
 def rocketback_delta_v_demo():
@@ -169,22 +172,28 @@ def stage_mass_ratio_sweep():
     c_1 = 3000
     c_2 = 3500
     E_1 = 0.06
-    E_2 = 0.05
+    E_2 = 0.04
     dv_mission = 9.5e3
 
     y = np.linspace(0.10, 0.40)
     pi_star_expend = np.zeros(len(y))
     pi_star_prop_ls = np.zeros(len(y))
-    pi_star_wing_pwr = np.zeros(len(y))
+    pi_star_wing_pwr_ls = np.zeros(len(y))
+    v_ss_prop_ls = np.zeros(len(y))
+    v_ss_wing_pwr_ls = np.zeros(len(y))
 
     for i in range(len(y)):
         pi_star_expend[i] = payload_fixed_stages(c_1, c_2, E_1, E_2, y[i], dv_mission)
-        pi_star_prop_ls[i] = propulsive_ls_perf(a_prop, c_1, c_2, E_1, E_2, y[i], dv_mission)
-        pi_star_wing_pwr[i] = winged_powered_ls_perf(a_wing_pwr, c_1, c_2, E_1, E_2, y[i], dv_mission)
+        (pi_star_prop_ls[i], v_ss_prop_ls[i]) = \
+            propulsive_ls_perf(a_prop, c_1, c_2, E_1, E_2, y[i], dv_mission)
+        (pi_star_wing_pwr_ls[i], v_ss_wing_pwr_ls[i]) = \
+            winged_powered_ls_perf(a_wing_pwr, c_1, c_2, E_1, E_2, y[i], dv_mission)
 
-    plt.plot(y, pi_star_expend, label='Expendable')
-    plt.plot(y, pi_star_prop_ls, label='Propulsive launch site recov.')
-    plt.plot(y, pi_star_wing_pwr, label='Winged powered launch site recov.')
+    plt.figure(figsize=(6, 8))
+    ax1 = plt.subplot(2, 1, 1)
+    plt.plot(y, pi_star_expend, label='Expendable', color='black')
+    plt.plot(y, pi_star_prop_ls, label='Propulsive launch site recov.', color='red')
+    plt.plot(y, pi_star_wing_pwr_ls, label='Winged powered launch site recov.', color='C0')
     plt.xlabel('Stage 2 / stage 1 mass ratio $y$ [-]')
     plt.ylabel('Overall payload mass fraction $\\pi_*$ [-]')
     plt.ylim([0, plt.ylim()[1]])
@@ -192,6 +201,17 @@ def stage_mass_ratio_sweep():
         + '\nMission $\\Delta v_*$ = {:.1f} km/s, kerosene/O2 tech.'.format(dv_mission * 1e-3))
     plt.legend()
     plt.grid(True)
+
+    plt.subplot(2, 1, 2, sharex=ax1)
+    plt.plot(y, v_ss_prop_ls, label='Propulsive launch site recov.', color='red')
+    plt.plot(y, v_ss_wing_pwr_ls, label='Winged powered launch site recov.', color='C0')
+    plt.xlabel('Stage 2 / stage 1 mass ratio $y$ [-]')
+    plt.ylabel('Velocity at stage separation $v_{{ss}}$ [m/s]')
+    plt.ylim([0, plt.ylim()[1]])
+    plt.legend()
+    plt.grid(True)
+
+    plt.tight_layout()
     plt.show()
 
 
