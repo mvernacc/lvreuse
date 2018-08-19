@@ -1,7 +1,7 @@
 """Recovery strategy performance models."""
 import numpy as np
 from matplotlib import pyplot as plt
-from scipy.optimize import fsolve
+from scipy.optimize import fsolve, minimize_scalar
 
 from landing_dv import landing_dv
 import unavail_mass
@@ -21,7 +21,7 @@ def stage_sep_range(v_ss, f_ss=0.02):
     return f_ss * v_ss**2
 
 
-def rocketback_delta_v(v_ss, f_ss=0.02, dz=50e3, dv_loss=200):
+def rocketback_delta_v(v_ss, f_ss=0.02, dz=50e3, dv_loss=200, phi_rb=None):
     """Estimate the delta-v for the rocket-back maneuver.
     
     Arguments:
@@ -31,21 +31,43 @@ def rocketback_delta_v(v_ss, f_ss=0.02, dz=50e3, dv_loss=200):
         dz (positive scalar): Altitude loss available for rocket-back maneuver & coast [units: meter].
         dv_loss (positive scalar): delta-v loss during the rocket-back maneuver
             [units: meter second**-1].
+        phi_rb (scalar): Flight path angle just after rocket-back burn. If `None`, the
+            dv-minimizing phi_rb will be computed and used. [units: radian].
     Returns:
         delta-v for the rocket-back maneuver [units: meter second**-1].
     """
     g_0 = 9.81    # Accel due to gravity near Earth's surface [units: meter second**-2].
     phi_ss = np.deg2rad(30)    # Flight path angle at stage sep [units: radian].
-    phi_rb = np.deg2rad(60)    # Flight path angle at end of rocket-back burn [units: radian].
 
     # Downrange distance at stage separation [units: meter].
     x_ss = stage_sep_range(v_ss, f_ss)
 
-    # Velocity required at end of rocket-back burn [units: meter second**-1].
-    v_rb = (g_0 * x_ss**2 / (np.cos(phi_rb)**2 * (dz + x_ss * np.tan(phi_rb))))**0.5
+    # Minimize dv over phi_rb
+    def dv_rb_ideal_func(phi_rb):
+        """Minimize this to find the optimal rocket-back flight path angle.
 
-    # Ideal delta-v for rocket-back maneuver [units: meter second**-1].
-    dv_rb_ideal = (v_rb**2 + v_ss**2 - 2 * v_rb * v_ss * np.cos(np.pi - phi_rb - phi_ss))**0.5
+        Arguments:
+            phi_rb (scalar): Flight path angle at end of rocket-back burn [units: radian].
+
+        Returns:
+            scalar: Ideal delta-v for the rocket-back maneuver [units: meter second**-1].
+        """
+        # Velocity required at end of rocket-back burn [units: meter second**-1].
+        v_rb = (g_0 * x_ss**2 / (np.cos(phi_rb)**2 * (dz + x_ss * np.tan(phi_rb))))**0.5
+
+        # Ideal delta-v for rocket-back maneuver [units: meter second**-1].
+        dv_rb_ideal = (v_rb**2 + v_ss**2 - 2 * v_rb * v_ss * np.cos(np.pi - phi_rb - phi_ss))**0.5
+        return dv_rb_ideal
+
+    if phi_rb is None:
+        res = minimize_scalar(dv_rb_ideal_func,
+                              bounds=(np.deg2rad(5), np.deg2rad(85)),
+                              method='Bounded',
+                              options={'disp': 0}
+                              )
+        dv_rb_ideal = res.fun
+    else:
+        dv_rb_ideal = dv_rb_ideal_func(phi_rb)
 
     dv_rb = dv_rb_ideal + dv_loss
     return dv_rb
@@ -155,7 +177,7 @@ def winged_powered_ls_perf(a, c_1, c_2, E_1, E_2, y, dv_mission):
 
 def rocketback_delta_v_demo():
     v_ss = np.linspace(1e3, 4e3)
-    dv_rb = rocketback_delta_v(v_ss)
+    dv_rb = np.array([rocketback_delta_v(v) for v in v_ss])
     plt.plot(v_ss, dv_rb)
     plt.xlabel('Stage sep. velocity $v_{ss}$ [m/s]')
     plt.ylabel('Rocketback $\\Delta v_{rb}$ [m/s]')
