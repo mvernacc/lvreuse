@@ -8,6 +8,8 @@ from matplotlib import pyplot as plt
 import rhodium as rdm
 import perf
 import payload
+from landing_dv import landing_dv
+from unavail_mass import unavail_mass
 
 
 g_0 = 9.81
@@ -44,7 +46,8 @@ I_sp_ab_uncert = rdm.TriangularUncertainty('I_sp_ab', min_value=3200, mode_value
 v_cruise_uncert = rdm.TriangularUncertainty('v_cruise', min_value=100, mode_value=200, max_value=300)
 # Winged recovery vehicle L/D [units: dimensionless]
 lift_drag_uncert = rdm.TriangularUncertainty('lift_drag', min_value=4, mode_value=6, max_value=8)
-
+# Engine pod mass / booster inert mass $z_m$ for partial recovery strategies [units: dimensionless].
+z_m_uncert = rdm.UniformUncertainty('z_m', min_value=0.15, mode_value=0.25, max_value=0.35)
 
 class Strategy(object):
     __metaclass__ = abc.ABCMeta
@@ -131,8 +134,54 @@ class WingedPoweredLaunchSite(Strategy):
                                            I_sp_ab, v_cruise, lift_drag, f_ss)[0]
 
 
+class WingedPoweredLaunchSitePartial(Strategy):
+    def __init__(self, tech, mission, y=0.20):
+        super(WingedPoweredLaunchSitePartial, self).__init__('winged powered', 'launch site', 'partial',
+                                                      tech, mission)
+        self.y = y
+        self.uncertainties += [
+            rdm.TriangularUncertainty('a', min_value=0.490, mode_value=0.574, max_value=0.650),
+            f_ss_uncert,
+            I_sp_ab_uncert,
+            v_cruise_uncert,
+            lift_drag_uncert,
+            z_m_uncert,
+        ]
+        self.setup_model()
+
+    def evaluate_performance(self, c_1, c_2, E_1, E_2, a,
+                       I_sp_ab, v_cruise, lift_drag, f_ss, z_m):
+        return perf.winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
+                                           I_sp_ab, v_cruise, lift_drag, f_ss, z_m)[0]
+
+class PropulsiveDownrange(Strategy):
+
+    def __init__(self, tech, mission, y=0.20):
+        super(PropulsiveDownrange, self).__init__('propulsive', 'downrange', 'all',
+                                                   tech, mission)
+        self.y = y
+        self.uncertainties += [
+            rdm.TriangularUncertainty('a', min_value=0.09, mode_value=0.14, max_value=0.19),
+            dv_entry_uncert,
+            landing_m_A_large_uncert,
+            landing_accel_uncert,
+        ]
+        self.setup_model()
+
+    def evaluate_performance(self, c_1, c_2, E_1, E_2, a,
+                       dv_entry, landing_m_A, landing_accel):
+        dv_land = landing_dv(m_A=landing_m_A, accel=landing_accel)
+        P = (dv_entry + dv_land) / c_1
+        propellant_margin = 0.10
+        P *= 1 + propellant_margin
+        e_1 = unavail_mass(a, P, z_m=1, E_1=E_1)
+        return payload.payload_fixed_stages(c_1, c_2, e_1, E_2, self.y, self.mission.dv)
+
+
 def demo():
-    strats = [Expendable, PropulsiveLaunchSite, WingedPoweredLaunchSite]
+    strats = [Expendable, PropulsiveLaunchSite,
+        WingedPoweredLaunchSite, WingedPoweredLaunchSitePartial,
+        PropulsiveDownrange]
     results = {}
     for strat in strats:
         strat_instance = strat(kero_GG_tech, GTO)
