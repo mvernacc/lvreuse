@@ -38,6 +38,12 @@ dv_entry_uncert = rdm.TriangularUncertainty('dv_entry', min_value=0, mode_value=
 landing_m_A_large_uncert = rdm.TriangularUncertainty('landing_m_A', min_value=1500, mode_value=2000, max_value=2500)
 # Landing burn acceleration for propulsive landing [units: meter second**-2].
 landing_accel_uncert = rdm.TriangularUncertainty('landing_accel', min_value=20, mode_value=30, max_value=40)
+# Air breathing propulsion specific impulse [units: second].
+I_sp_ab_uncert = rdm.TriangularUncertainty('I_sp_ab', min_value=3200, mode_value=3600, max_value=4000)
+# Recovery cruise speed [units: meter second*-1].
+v_cruise_uncert = rdm.TriangularUncertainty('v_cruise', min_value=100, mode_value=200, max_value=300)
+# Winged recovery vehicle L/D [units: dimensionless]
+lift_drag_uncert = rdm.TriangularUncertainty('lift_drag', min_value=4, mode_value=6, max_value=8)
 
 
 class Strategy(object):
@@ -71,7 +77,7 @@ class Strategy(object):
         return results
 
     @abc.abstractmethod
-    def evaluate_performance():
+    def evaluate_performance(self):
         pass
 
 
@@ -100,15 +106,33 @@ class PropulsiveLaunchSite(Strategy):
         ]
         self.setup_model()
 
-
     def evaluate_performance(self, c_1, c_2, E_1, E_2, a,
                        dv_entry, landing_m_A, landing_accel, f_ss):
         return perf.propulsive_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
                                        dv_entry, landing_m_A, landing_accel, f_ss)[0]
 
 
+class WingedPoweredLaunchSite(Strategy):
+    def __init__(self, tech, mission, y=0.20):
+        super(WingedPoweredLaunchSite, self).__init__('winged powered', 'launch site', 'all', tech, mission)
+        self.y = y
+        self.uncertainties += [
+            rdm.TriangularUncertainty('a', min_value=0.490, mode_value=0.574, max_value=0.650),
+            f_ss_uncert,
+            I_sp_ab_uncert,
+            v_cruise_uncert,
+            lift_drag_uncert,
+        ]
+        self.setup_model()
+
+    def evaluate_performance(self, c_1, c_2, E_1, E_2, a,
+                       I_sp_ab, v_cruise, lift_drag, f_ss):
+        return perf.winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
+                                           I_sp_ab, v_cruise, lift_drag, f_ss)[0]
+
+
 def demo():
-    strats = [PropulsiveLaunchSite, Expendable]
+    strats = [Expendable, PropulsiveLaunchSite, WingedPoweredLaunchSite]
     results = {}
     for strat in strats:
         strat_instance = strat(kero_GG_tech, GTO)

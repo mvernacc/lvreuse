@@ -159,14 +159,18 @@ def breguet_propellant_winged_powered(R_cruise, v_cruise, lift_drag, I_sp_ab):
     return R_cruise / (v_cruise * lift_drag * I_sp_ab)
 
 
-def winged_powered_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission, a):
-    I_sp_ab = 3600    # Specific impulse of air-breathing propulsion [units: second].
-    v_cruise = 150    # Recovery cruise speed [units: meter second**-1].
-    lift_drag = 4    # Recovery vehicle lift/drag ratio [units: dimensionless].
+def winged_powered_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission, a,
+                           I_sp_ab=3600, v_cruise=150, lift_drag=4, f_ss=0.02):
+    """
+    Arguments:
+        v_crusie (scalar): Recovery cruise speed [units: meter second**-1].
+        lift_drag (scalar): Recovery vehicle lift/drag ratio [units: dimensionless].
+        I_sp_ab (scalar): Air-breathing propulsion specific impulse [units: second].
+    """
     propellant_margin = 0.10
     def recovery_propellant_func(v_ss):
         # Recovery cruise range [units: meter].
-        R_cruise = stage_sep_range(v_ss)
+        R_cruise = stage_sep_range(v_ss, f_ss)
         P = breguet_propellant_winged_powered(R_cruise, v_cruise, lift_drag, I_sp_ab)
         return P * (1 + propellant_margin)
 
