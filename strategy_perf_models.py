@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 
 import rhodium as rdm
 import perf
+import payload
 
 
 g_0 = 9.81
@@ -28,13 +29,24 @@ Mission = namedtuple('Mission', ['name', 'dv'])
 
 GTO = Mission('GTO', 12e3)
 
+# Common uncertainties
+# Downrange distance at stage separation - model coefficient [units: meter**-1 second**2].
+f_ss_uncert = rdm.TriangularUncertainty('f_ss', min_value=0.01, mode_value=0.02, max_value=0.03)
+# Entry burn delta-v for propulsive recovery [units: meter second**-1].
+dv_entry_uncert = rdm.TriangularUncertainty('dv_entry', min_value=0, mode_value=800, max_value=1000)
+# Mass / area ratio for landing burn [units: kilogram meter**-2].
+landing_m_A_large_uncert = rdm.TriangularUncertainty('landing_m_A', min_value=1500, mode_value=2000, max_value=2500)
+# Landing burn acceleration for propulsive landing [units: meter second**-2].
+landing_accel_uncert = rdm.TriangularUncertainty('landing_accel', min_value=20, mode_value=30, max_value=40)
+
 
 class Strategy(object):
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, landing_method, recovery_location, tech, mission):
+    def __init__(self, landing_method, recovery_location, portion_recovered, tech, mission):
         self.landing_method = landing_method
         self.recovery_location = recovery_location
+        self.portion_recovered = portion_recovered
         self.tech = tech
         self.uncertainties = []
         self.uncertainties += tech.uncertainties
@@ -49,7 +61,7 @@ class Strategy(object):
         self.perf_model.parameters = [rdm.Parameter(u.name) for u in self.uncertainties]
         self.perf_model.uncertainties = self.uncertainties
         self.perf_model.responses = [
-            rdm.Response('pld_frac_recov', rdm.Response.MAXIMIZE),
+            rdm.Response('pi_star', rdm.Response.MAXIMIZE),
         ]
 
     def sample_perf_model(self, nsamples=1000):
@@ -63,29 +75,57 @@ class Strategy(object):
         pass
 
 
+class Expendable(Strategy):
+
+    def __init__(self, tech, mission, y=0.20):
+        super(Expendable, self).__init__('N/A', 'N/A', 'none', tech, mission)
+        self.y = y
+        self.setup_model()
+
+    def evaluate_performance(self, c_1, c_2, E_1, E_2):
+        return payload.payload_fixed_stages(c_1, c_2, E_1, E_2, self.y, self.mission.dv)
+
+
 class PropulsiveLaunchSite(Strategy):
 
-    def __init__(self, tech, mission):
-        super(PropulsiveLaunchSite, self).__init__('propulsive', 'launch site', tech, mission)
+    def __init__(self, tech, mission, y=0.20):
+        super(PropulsiveLaunchSite, self).__init__('propulsive', 'launch site', 'all', tech, mission)
+        self.y = y
         self.uncertainties += [
             rdm.TriangularUncertainty('a', min_value=0.09, mode_value=0.14, max_value=0.19),
+            f_ss_uncert,
+            dv_entry_uncert,
+            landing_m_A_large_uncert,
+            landing_accel_uncert,
         ]
         self.setup_model()
 
 
-    def evaluate_performance(self, c_1, c_2, E_1, E_2, y=0.2, a=0):
-        return perf.propulsive_ls_perf(c_1, c_2, E_1, E_2, y, self.mission.dv, a)[0]
+    def evaluate_performance(self, c_1, c_2, E_1, E_2, a,
+                       dv_entry, landing_m_A, landing_accel, f_ss):
+        return perf.propulsive_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
+                                       dv_entry, landing_m_A, landing_accel, f_ss)[0]
 
 
 def demo():
-    prop_ls = PropulsiveLaunchSite(kero_GG_tech, GTO)
-    res = prop_ls.sample_perf_model(nsamples=100)
-    res = res.as_dataframe()
-    print(res)
+    strats = [PropulsiveLaunchSite, Expendable]
+    results = {}
+    for strat in strats:
+        strat_instance = strat(kero_GG_tech, GTO)
+        name = strat.__name__
+        res = strat_instance.sample_perf_model(nsamples=100)
+        res = res.as_dataframe()
+        results[name] = res
+
+    pi_star = {}
+    for strat_name in results:
+        pi_star[strat_name] = results[strat_name]['pi_star']
+    pi_star = pandas.DataFrame(pi_star)
+    print(pi_star)
 
     sns.set(style='whitegrid')
 
-    sns.violinplot(data=res, y='pld_frac_recov')
+    sns.violinplot(data=pi_star)
     plt.show()
 
 

@@ -127,12 +127,12 @@ def coupled_perf_solver(a, c_1, c_2, E_1, E_2, y, dv_mission, recovery_propellan
     return (pi_star, v_ss)
 
 
-def propulsive_ls_perf(a, c_1, c_2, E_1, E_2, y, dv_mission):
+def propulsive_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission, a,
+                       dv_entry=800, landing_m_A=2000, landing_accel=30., f_ss=0.02):
     propellant_margin = 0.10
     def recovery_propellant_func(v_ss):
-        dv_rb = rocketback_delta_v(v_ss)
-        dv_entry = 800.
-        dv_land = landing_dv(m_A=2000., accel=30.)
+        dv_rb = rocketback_delta_v(v_ss, f_ss)
+        dv_land = landing_dv(m_A=landing_m_A, accel=landing_accel)
         P = (dv_rb + dv_entry + dv_land) / c_1
         return P * (1 + propellant_margin)
 
@@ -159,7 +159,7 @@ def breguet_propellant_winged_powered(R_cruise, v_cruise, lift_drag, I_sp_ab):
     return R_cruise / (v_cruise * lift_drag * I_sp_ab)
 
 
-def winged_powered_ls_perf(a, c_1, c_2, E_1, E_2, y, dv_mission):
+def winged_powered_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission, a):
     I_sp_ab = 3600    # Specific impulse of air-breathing propulsion [units: second].
     v_cruise = 150    # Recovery cruise speed [units: meter second**-1].
     lift_drag = 4    # Recovery vehicle lift/drag ratio [units: dimensionless].
@@ -185,7 +185,7 @@ def rocketback_delta_v_demo():
 
 
 def propulsive_ls_perf_demo():
-    print(propulsive_ls_perf(0.17, 3000, 3500, 0.06, 0.05, 0.20, 12e3))
+    print(propulsive_ls_perf(3000, 3500, 0.06, 0.05, 0.20, 12e3, 0.17))
 
 
 def stage_mass_ratio_sweep():
@@ -207,9 +207,9 @@ def stage_mass_ratio_sweep():
     for i in range(len(y)):
         pi_star_expend[i] = payload_fixed_stages(c_1, c_2, E_1, E_2, y[i], dv_mission)
         (pi_star_prop_ls[i], v_ss_prop_ls[i]) = \
-            propulsive_ls_perf(a_prop, c_1, c_2, E_1, E_2, y[i], dv_mission)
+            propulsive_ls_perf(c_1, c_2, E_1, E_2, y[i], dv_mission, a_prop)
         (pi_star_wing_pwr_ls[i], v_ss_wing_pwr_ls[i]) = \
-            winged_powered_ls_perf(a_wing_pwr, c_1, c_2, E_1, E_2, y[i], dv_mission)
+            winged_powered_ls_perf(c_1, c_2, E_1, E_2, y[i], dv_mission, a_wing_pwr)
 
     plt.figure(figsize=(6, 8))
     ax1 = plt.subplot(2, 1, 1)
