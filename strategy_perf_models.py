@@ -84,6 +84,19 @@ class Strategy(object):
         pass
 
 
+class StrategyNoPropulsion(Strategy):
+    __metaclass__ = abc.ABCMeta
+
+    def __init__(self, landing_method, recovery_location, portion_recovered, tech, mission):
+        super(StrategyNoPropulsion, self).__init__(landing_method, recovery_location,
+                                                   portion_recovered, tech, mission)
+
+    def evaluate_performance(self, c_1, c_2, E_1, E_2, a, z_m=1):
+        e_1 = unavail_mass(a, P=0, z_m=z_m, E_1=E_1)
+        return payload.payload_fixed_stages(c_1, c_2, e_1, E_2, self.y, self.mission.dv)
+
+
+
 class Expendable(Strategy):
 
     def __init__(self, tech, mission, y=0.20):
@@ -178,10 +191,33 @@ class PropulsiveDownrange(Strategy):
         return payload.payload_fixed_stages(c_1, c_2, e_1, E_2, self.y, self.mission.dv)
 
 
+class WingedGlider(StrategyNoPropulsion):
+    def __init__(self, tech, mission, y=0.20):
+        super(WingedGlider, self).__init__('winged glider', 'downrange', 'all',
+                                                   tech, mission)
+        self.y = y
+        self.uncertainties += [
+            rdm.TriangularUncertainty('a', min_value=0.380, mode_value=0.426, max_value=0.540),
+        ]
+        self.setup_model()
+
+
+class ParachutePartial(StrategyNoPropulsion):
+    def __init__(self, tech, mission, y=0.20):
+        super(ParachutePartial, self).__init__('parachute', 'downrange', 'partial',
+                                                   tech, mission)
+        self.y = y
+        self.uncertainties += [
+            rdm.TriangularUncertainty('a', min_value=0.15, mode_value=0.17, max_value=0.19),
+            z_m_uncert,
+        ]
+        self.setup_model()
+
+
 def demo():
     strats = [Expendable, PropulsiveLaunchSite,
         WingedPoweredLaunchSite, WingedPoweredLaunchSitePartial,
-        PropulsiveDownrange]
+        PropulsiveDownrange, WingedGlider, ParachutePartial]
     results = {}
     for strat in strats:
         strat_instance = strat(kero_GG_tech, GTO)
