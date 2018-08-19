@@ -51,7 +51,7 @@ def rocketback_delta_v(v_ss, f_ss=0.02, dz=50e3, dv_loss=200):
     return dv_rb
 
 
-def stage_sep_velocity(c_1, e_1, pi_1, dv_loss_ascent=300):
+def stage_sep_velocity(c_1, e_1, pi_1, dv_loss_ascent=1000):
     """Estimate the velocity at stage separation.
 
     Arguments:
@@ -106,12 +106,13 @@ def coupled_perf_solver(a, c_1, c_2, E_1, E_2, y, dv_mission, recovery_propellan
 
 
 def propulsive_ls_perf(a, c_1, c_2, E_1, E_2, y, dv_mission):
+    propellant_margin = 0.10
     def recovery_propellant_func(v_ss):
         dv_rb = rocketback_delta_v(v_ss)
         dv_entry = 800.
         dv_land = landing_dv(m_A=2000., accel=30.)
         P = (dv_rb + dv_entry + dv_land) / c_1
-        return P
+        return P * (1 + propellant_margin)
 
     results = coupled_perf_solver(a, c_1, c_2, E_1, E_2, y,
                                   dv_mission, recovery_propellant_func)
@@ -140,12 +141,12 @@ def winged_powered_ls_perf(a, c_1, c_2, E_1, E_2, y, dv_mission):
     I_sp_ab = 3600    # Specific impulse of air-breathing propulsion [units: second].
     v_cruise = 150    # Recovery cruise speed [units: meter second**-1].
     lift_drag = 4    # Recovery vehicle lift/drag ratio [units: dimensionless].
-
+    propellant_margin = 0.10
     def recovery_propellant_func(v_ss):
         # Recovery cruise range [units: meter].
         R_cruise = stage_sep_range(v_ss)
         P = breguet_propellant_winged_powered(R_cruise, v_cruise, lift_drag, I_sp_ab)
-        return P
+        return P * (1 + propellant_margin)
 
     results = coupled_perf_solver(a, c_1, c_2, E_1, E_2, y,
                                   dv_mission, recovery_propellant_func)
