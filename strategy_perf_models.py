@@ -112,7 +112,7 @@ class StrategyNoPropulsion(Strategy):
 class Expendable(Strategy):
 
     def __init__(self, tech, mission, y=0.20):
-        super(Expendable, self).__init__('N/A', 'N/A', 'none', tech, mission)
+        super(Expendable, self).__init__('expendable', 'N/A', 'none', tech, mission)
         self.y = y
         self.setup_model()
 
@@ -123,7 +123,7 @@ class Expendable(Strategy):
 class PropulsiveLaunchSite(Strategy):
 
     def __init__(self, tech, mission, y=0.20):
-        super(PropulsiveLaunchSite, self).__init__('propulsive', 'launch site', 'all', tech, mission)
+        super(PropulsiveLaunchSite, self).__init__('propulsive', 'launch site', 'full', tech, mission)
         self.y = y
         self.uncertainties += [
             rdm.TriangularUncertainty('a', min_value=0.09, mode_value=0.14, max_value=0.19),
@@ -142,7 +142,7 @@ class PropulsiveLaunchSite(Strategy):
 
 class WingedPoweredLaunchSite(Strategy):
     def __init__(self, tech, mission, y=0.20):
-        super(WingedPoweredLaunchSite, self).__init__('winged powered', 'launch site', 'all', tech, mission)
+        super(WingedPoweredLaunchSite, self).__init__('winged powered', 'launch site', 'full', tech, mission)
         self.y = y
         self.uncertainties += [
             rdm.TriangularUncertainty('a', min_value=0.490, mode_value=0.574, max_value=0.650),
@@ -182,7 +182,7 @@ class WingedPoweredLaunchSitePartial(Strategy):
 class PropulsiveDownrange(Strategy):
 
     def __init__(self, tech, mission, y=0.20):
-        super(PropulsiveDownrange, self).__init__('propulsive', 'downrange', 'all',
+        super(PropulsiveDownrange, self).__init__('propulsive', 'downrange', 'full',
                                                    tech, mission)
         self.y = y
         self.uncertainties += [
@@ -205,7 +205,7 @@ class PropulsiveDownrange(Strategy):
 
 class WingedGlider(StrategyNoPropulsion):
     def __init__(self, tech, mission, y=0.20):
-        super(WingedGlider, self).__init__('winged glider', 'downrange', 'all',
+        super(WingedGlider, self).__init__('winged glider', 'downrange', 'full',
                                                    tech, mission)
         self.y = y
         self.uncertainties += [
@@ -216,7 +216,7 @@ class WingedGlider(StrategyNoPropulsion):
 
 class Parachute(StrategyNoPropulsion):
     def __init__(self, tech, mission, y=0.20):
-        super(Parachute, self).__init__('parachute', 'downrange', 'all',
+        super(Parachute, self).__init__('parachute', 'downrange', 'full',
                                                    tech, mission)
         self.y = y
         self.uncertainties += [
@@ -238,19 +238,24 @@ class ParachutePartial(StrategyNoPropulsion):
 
 
 def demo():
+    strats = [Expendable, PropulsiveLaunchSite,
+                WingedPoweredLaunchSite, WingedPoweredLaunchSitePartial,
+                PropulsiveDownrange, WingedGlider, Parachute, ParachutePartial]
+
     for tech in [kero_GG_tech, H2_SC_tech]:
         for mission in [LEO, GTO]:
             plt.figure(figsize=(10, 6))
-            strats = [Expendable, PropulsiveLaunchSite,
-                WingedPoweredLaunchSite, WingedPoweredLaunchSitePartial,
-                PropulsiveDownrange, WingedGlider, Parachute, ParachutePartial]
+            
             results = {}
+            xticks = []
             for strat in strats:
                 strat_instance = strat(tech, mission)
                 name = strat.__name__
-                res = strat_instance.sample_perf_model(nsamples=100)
+                res = strat_instance.sample_perf_model(nsamples=10)
                 res = res.as_dataframe()
                 results[name] = res
+                xticks.append('{:s}\n{:s}'.format(strat_instance.landing_method,
+                                                  strat_instance.portion_recovered))
 
             pi_star = {}
             for strat_name in results:
@@ -259,11 +264,19 @@ def demo():
 
             sns.set(style='whitegrid')
 
-            sns.violinplot(data=pi_star)
+            ax = sns.violinplot(data=pi_star)
             plt.ylabel('Overall payload mass fraction $\\pi_*$ [-]')
-            plt.xticks(rotation=30)
             plt.title('{:s} mission, {:s} {:s} technology'.format(mission.name, tech.fuel, tech.cycle))
             plt.ylim([0, plt.ylim()[1]])
+
+            ax.set_xticklabels(xticks)
+            plt.xticks(rotation=30)
+
+            plt.axvline(x=0.5, color='grey')
+            plt.text(x=1, y=0.0, s='Launch site recovery')
+            plt.axvline(x=3.5, color='grey')
+            plt.text(x=4, y=0.0, s='Downrange recovery')
+
             plt.tight_layout()
     plt.show()
 
