@@ -27,8 +27,20 @@ kero_GG_tech = Technology(
     ]
     )
 
+H2_SC_tech = Technology(
+    fuel='H2',
+    cycle='staged combustion',
+    uncertainties=[
+        rdm.TriangularUncertainty('c_1', min_value=369.5 * g_0, mode_value=398.1 * g_0, max_value=418.7 * g_0),
+        rdm.TriangularUncertainty('c_2', min_value=444.9 * g_0, mode_value=458.0 * g_0, max_value=462.0 * g_0),
+        rdm.TriangularUncertainty('E_1', min_value=0.11, mode_value=0.12, max_value=0.13),
+        rdm.TriangularUncertainty('E_2', min_value=0.080, mode_value=0.085, max_value=0.090),
+    ]
+    )
+
 Mission = namedtuple('Mission', ['name', 'dv'])
 
+LEO = Mission('LEO', 9.5e3)
 GTO = Mission('GTO', 12e3)
 
 # Common uncertainties
@@ -226,26 +238,33 @@ class ParachutePartial(StrategyNoPropulsion):
 
 
 def demo():
-    strats = [Expendable, PropulsiveLaunchSite,
-        WingedPoweredLaunchSite, WingedPoweredLaunchSitePartial,
-        PropulsiveDownrange, WingedGlider, Parachute, ParachutePartial]
-    results = {}
-    for strat in strats:
-        strat_instance = strat(kero_GG_tech, GTO)
-        name = strat.__name__
-        res = strat_instance.sample_perf_model(nsamples=100)
-        res = res.as_dataframe()
-        results[name] = res
+    for tech in [kero_GG_tech, H2_SC_tech]:
+        for mission in [LEO, GTO]:
+            plt.figure(figsize=(10, 6))
+            strats = [Expendable, PropulsiveLaunchSite,
+                WingedPoweredLaunchSite, WingedPoweredLaunchSitePartial,
+                PropulsiveDownrange, WingedGlider, Parachute, ParachutePartial]
+            results = {}
+            for strat in strats:
+                strat_instance = strat(tech, mission)
+                name = strat.__name__
+                res = strat_instance.sample_perf_model(nsamples=100)
+                res = res.as_dataframe()
+                results[name] = res
 
-    pi_star = {}
-    for strat_name in results:
-        pi_star[strat_name] = results[strat_name]['pi_star']
-    pi_star = pandas.DataFrame(pi_star)
-    print(pi_star)
+            pi_star = {}
+            for strat_name in results:
+                pi_star[strat_name] = results[strat_name]['pi_star']
+            pi_star = pandas.DataFrame(pi_star)
 
-    sns.set(style='whitegrid')
+            sns.set(style='whitegrid')
 
-    sns.violinplot(data=pi_star)
+            sns.violinplot(data=pi_star)
+            plt.ylabel('Overall payload mass fraction $\\pi_*$ [-]')
+            plt.xticks(rotation=30)
+            plt.title('{:s} mission, {:s} {:s} technology'.format(mission.name, tech.fuel, tech.cycle))
+            plt.ylim([0, plt.ylim()[1]])
+            plt.tight_layout()
     plt.show()
 
 
