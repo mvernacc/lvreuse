@@ -10,7 +10,7 @@ import perf
 import payload
 from landing_dv import landing_dv
 from unavail_mass import unavail_mass
-
+import launch_vehicles
 
 g_0 = 9.81
 
@@ -251,7 +251,7 @@ def demo():
             for strat in strats:
                 strat_instance = strat(tech, mission)
                 name = strat.__name__
-                res = strat_instance.sample_perf_model(nsamples=10)
+                res = strat_instance.sample_perf_model(nsamples=100)
                 res = res.as_dataframe()
                 results[name] = res
                 xticks.append('{:s}\n{:s}'.format(strat_instance.landing_method,
@@ -276,6 +276,22 @@ def demo():
             plt.text(x=1, y=0.0, s='Launch site recovery')
             plt.axvline(x=3.5, color='grey')
             plt.text(x=4, y=0.0, s='Downrange recovery')
+
+            if tech.fuel == 'kerosene' and tech.cycle == 'gas generator':
+                # Plot Falcon 9 data for comparison
+                pi_star = launch_vehicles.f9_b3_e.payload_actual(mission.name)
+                plt.scatter(0, pi_star, marker='+', color='red', zorder=10)
+                plt.text(0.1, pi_star, 'Falcon 9', color='red', zorder=10)
+
+                if mission.name == 'GTO':
+                    pi_star = launch_vehicles.f9_b3_e.payload_actual(mission.name, recov='DR')
+                    plt.scatter(4, pi_star, marker='+', color='red', zorder=10)
+                    plt.text(4.1, pi_star, 'Falcon 9', color='red', zorder=10)
+
+                if mission.name == 'LEO':
+                    pi_star = launch_vehicles.f9_b3_e.payload_actual(mission.name, recov='LS')
+                    plt.scatter(1, pi_star, marker='+', color='red', zorder=10)
+                    plt.text(1.1, pi_star, 'Falcon 9', color='red', zorder=10)
 
             plt.tight_layout()
     plt.show()
