@@ -4,6 +4,7 @@ import seaborn as sns
 import pandas
 import numpy as np
 from matplotlib import pyplot as plt
+import os.path
 
 import rhodium as rdm
 import perf
@@ -294,6 +295,8 @@ def demo():
                     plt.text(1.1, pi_star, 'Falcon 9', color='red', zorder=10)
 
             plt.tight_layout()
+            plt.savefig(os.path.join('plots', 'strategy_perf_{:s}_{:s}.png'.format(
+                mission.name, tech.fuel)))
     plt.show()
 
 
