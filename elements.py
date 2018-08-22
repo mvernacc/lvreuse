@@ -44,6 +44,8 @@ class LaunchVehicleElement(object):
 
         avg_prod_cost = CER_vals.prod_a * self.m**CER_vals.prod_x * f4_avg * element_cost_factors.f8 * \
                         element_cost_factors.f10 * element_cost_factors.f11
+
+        print(self.name + ': ' + str(avg_prod_cost))
         return avg_prod_cost
 
 

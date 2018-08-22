@@ -63,10 +63,9 @@ class LaunchVehicle(object):
             element_prod_cost = element.average_element_production_cost(CER_vals, element_cost_factors, element_prod_nums_list)
             sum_prod_cost += n * element_prod_cost
 
-        num_vehicles = len(vehicle_prod_nums_list)
-        avg_vehicle_prod_cost = (1./num_vehicles) * vehicle_cost_factors.f0_prod**self.N * sum_prod_cost * \
+        avg_vehicle_prod_cost = vehicle_cost_factors.f0_prod**self.N * sum_prod_cost * \
                                     vehicle_cost_factors.f9
-        return avg_vehicle_prod_cost
+        return avg_vehicle_prod_cost 
 
 
     def preflight_ground_ops_cost(self, launch_rate, ops_cost_factors, launch_nums_list):
@@ -81,7 +80,7 @@ class LaunchVehicle(object):
             Pre-flight ground oeperations cost [units: work-year]"""
 
         if launch_rate < 3:
-            print "Warning: Pre-launch ground operations cost model is only valid for launch rates of 3 or more per year."
+            print("Warning: Pre-launch ground operations cost model is only valid for launch rates of 3 or more per year.")
 
         f4_avg = cost_reduction_factor(ops_cost_factors.p, launch_nums_list)
     

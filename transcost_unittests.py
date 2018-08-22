@@ -66,6 +66,7 @@ class TestVehicleClass(unittest.TestCase):
         self.ariane5_cost_factors = VehicleCostFactors(f0_dev=1.04**3, f0_prod=1.025, f6=1.0, f7=1.0, f8=0.86, f9=1.07, p=0.9)
 
         self.ariane_prod_nums = [1]
+        self.ariane_prod_nums3 = [1, 2, 3]
         
         self.ariane5_ops_cost_factors = OperationsCostFactors(f5_vehicle=0, f5_engine=0, f8=0.86, f11=1.0, fv=0.9, fc=0.85, p=0.9)
         self.launch_rate = 7
@@ -119,6 +120,43 @@ class TestVehicleClass(unittest.TestCase):
 
         ariane5_TFU_prod_cost = self.ariane5.average_vehicle_production_cost(self.ariane5_cost_factors, self.ariane_prod_nums, self.ariane5_element_map)
         self.assertAlmostEqual(ariane5_TFU_prod_cost, 1183, delta=1)
+
+    def test_vehicle_prod_cost3(self):
+
+        ariane5_first3_prod_cost = self.ariane5.average_vehicle_production_cost(self.ariane5_cost_factors, self.ariane_prod_nums3, self.ariane5_element_map)
+
+        # vehicle1
+        SRB_prod_cost = self.SRB.average_element_production_cost(self.SRB_CER_vals, self.SRB_cost_factors, [1])
+        SRB_prod_cost2 = self.SRB.average_element_production_cost(self.SRB_CER_vals, self.SRB_cost_factors, [2])
+        core_veh_prod_cost = self.core_vehicle.average_element_production_cost(self.core_veh_CER_vals, self.core_veh_cost_factors, [1])
+        vulcain_engine_prod_cost = self.vulcain_engine.average_element_production_cost(self.vulcain_engine_CER_vals, self.vulcain_engine_cost_factors, [1])
+        stage2_prod_cost = self.stage2.average_element_production_cost(self.stage2_CER_vals, self.stage2_cost_factors, [1])
+        aestus_engine_prod_cost = self.aestus_engine.average_element_production_cost(self.aestus_engine_CER_vals, self.aestus_engine_cost_factors, [1])
+
+        vehicle1_cost = SRB_prod_cost + SRB_prod_cost2 + core_veh_prod_cost + vulcain_engine_prod_cost + stage2_prod_cost + aestus_engine_prod_cost
+
+        #vehicle2
+        SRB_prod_cost = self.SRB.average_element_production_cost(self.SRB_CER_vals, self.SRB_cost_factors, [3])
+        SRB_prod_cost2 = self.SRB.average_element_production_cost(self.SRB_CER_vals, self.SRB_cost_factors, [4])
+        core_veh_prod_cost = self.core_vehicle.average_element_production_cost(self.core_veh_CER_vals, self.core_veh_cost_factors, [2])
+        vulcain_engine_prod_cost = self.vulcain_engine.average_element_production_cost(self.vulcain_engine_CER_vals, self.vulcain_engine_cost_factors, [2])
+        stage2_prod_cost = self.stage2.average_element_production_cost(self.stage2_CER_vals, self.stage2_cost_factors, [2])
+        aestus_engine_prod_cost = self.aestus_engine.average_element_production_cost(self.aestus_engine_CER_vals, self.aestus_engine_cost_factors, [2])
+
+        vehicle2_cost = SRB_prod_cost + SRB_prod_cost2 + core_veh_prod_cost + vulcain_engine_prod_cost + stage2_prod_cost + aestus_engine_prod_cost
+
+        SRB_prod_cost = self.SRB.average_element_production_cost(self.SRB_CER_vals, self.SRB_cost_factors, [5])
+        SRB_prod_cost2 = self.SRB.average_element_production_cost(self.SRB_CER_vals, self.SRB_cost_factors, [6])
+        core_veh_prod_cost = self.core_vehicle.average_element_production_cost(self.core_veh_CER_vals, self.core_veh_cost_factors, [3])
+        vulcain_engine_prod_cost = self.vulcain_engine.average_element_production_cost(self.vulcain_engine_CER_vals, self.vulcain_engine_cost_factors, [3])
+        stage2_prod_cost = self.stage2.average_element_production_cost(self.stage2_CER_vals, self.stage2_cost_factors, [3])
+        aestus_engine_prod_cost = self.aestus_engine.average_element_production_cost(self.aestus_engine_CER_vals, self.aestus_engine_cost_factors, [3])
+
+        vehicle3_cost = SRB_prod_cost + SRB_prod_cost2 + core_veh_prod_cost + vulcain_engine_prod_cost + stage2_prod_cost + aestus_engine_prod_cost
+
+        vehicle_avg = (vehicle1_cost + vehicle2_cost + vehicle3_cost)/3. * self.ariane5_cost_factors.f0_prod**self.ariane5.N * self.ariane5_cost_factors.f9
+
+        self.assertAlmostEqual(ariane5_first3_prod_cost, vehicle_avg, delta=1)
 
     def test_preflight_ground_ops_cost(self):
 
