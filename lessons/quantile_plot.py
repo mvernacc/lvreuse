@@ -3,8 +3,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import wquantiles
+from scipy import signal
 
-def quantile_plot(x, y, quantiles=(0.1, 0.9), ax=None, scatter=True, **kwarg):
+
+def quantile_plot(x, y, quantiles=(0.1, 0.9), ax=None, scatter=True, smooth=True, **kwarg):
     """ Plot the quantiles of an output variable against an input variable.
 
     This function visualizes the relation between two random variables x and y
@@ -29,15 +31,27 @@ def quantile_plot(x, y, quantiles=(0.1, 0.9), ax=None, scatter=True, **kwarg):
 
     x_test, q_test = running_quantiles_window(x, y, (*quantiles, 0.5))
 
+    if smooth:
+        b, a = signal.butter(N=4, Wn=0.25)
+        q_test = signal.filtfilt(b, a, q_test, axis=0)
+
     if ax is None:
         ax = plt.subplot(1, 1, 1)
 
     if scatter:
         ax.scatter(x, y, marker='+', color=(0.8, 0.8, 0.8))
 
-    ax.plot(x_test, q_test[:, 2], label='Median', **kwarg)
-    ax.fill_between(x_test, q_test[:, 0], q_test[:, 1],
-        label='{:.2f} to {:.2f} quantiles'.format(*quantiles), alpha=0.5, **kwarg)
+    label_provided = 'label' in kwarg
+    if not label_provided:
+        kwarg['label'] = 'Median'
+    ax.plot(x_test, q_test[:, 2], **kwarg)
+
+    if not label_provided:
+        kwarg['label'] = '{:.2f} to {:.2f} quantiles'.format(*quantiles)
+    else:
+        # If a label is provided, only put that label on the median line.
+        kwarg['Label'] = None
+    ax.fill_between(x_test, q_test[:, 0], q_test[:, 1], alpha=0.5, **kwarg)
 
     return ax
 
