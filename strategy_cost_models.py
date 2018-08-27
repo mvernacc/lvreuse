@@ -12,9 +12,12 @@ import rhodium as rdm
 import seaborn as sns
 import pandas
 
-from cpf_models.atlasV import atlasV_401, atlasV_engines_dict, atlasV_f8_dict, atlas_uncertainty_list
-from cpf_models.falcon9 import falcon9_block3, falcon9_engines_dict, falcon9_f8_dict, falcon_uncertainty_list
-from cpf_models.electron import electron, electron_engines_dict, electron_f8_dict, electron_uncertainty_list
+from cpf_models.atlasV import atlasV_401, atlasV_engines_dict, atlasV_f8_dict, atlas_uncertainty_list, atlas_prod_nums
+from cpf_models.falcon9 import falcon9_block3, falcon9_engines_dict, falcon9_f8_dict, falcon_uncertainty_list, falcon_prod_nums
+from cpf_models.electron import electron, electron_engines_dict, electron_f8_dict, electron_uncertainty_list, electron_prod_nums
+from cpf_models.deltaIV import deltaIV_medium, delta_engines_dict, delta_f8_dict, delta_uncertainty_list, delta_prod_nums
+from cpf_models.antares230 import antares230, antares_engines_dict, antares_f8_dict, antares_uncertainty_list, antares_prod_nums
+
 
 def get_prod_dist(element):
     """Get the production CER parameter distributions from an element.
@@ -147,11 +150,43 @@ class TwoLiquidStageTwoEngine(VehicleArchitecture):
 
         return cost
 
+class OneSolidOneLiquid(VehicleArchitecture):
+    """Two stage vehicle, first stage liquid with one engine type, second stage solid."""
+
+    def __init__(self, launch_vehicle, vehicle_prod_nums_list, num_engines_dict, f8_dict, prod_cost_facs_unc_list):
+        super(OneSolidOneLiquid, self).__init__(launch_vehicle, vehicle_prod_nums_list, num_engines_dict, f8_dict, prod_cost_facs_unc_list)
+        self.prod_uncertainties += prod_cost_facs_unc_list
+        self.prod_uncertainties += [unc for element in self.launch_vehicle.element_list for unc in get_prod_dist(element)]
+        self.setup_avg_prod_cost_model()
+
+    def evaluate_avg_prod_cost(self, f0_prod_veh=1.0, f9_veh=1.0,
+                               f10_s1=1.0, f11_s1=1.0, p_s1=1.0, prod_a_s1=1.0, prod_x_s1=1.0,
+                               f10_e1=1.0, f11_e1=1.0, p_e1=1.0, prod_a_e1=1.0, prod_x_e1=1.0,
+                               f10_s2=1.0, f11_s2=1.0, p_s2=1.0, prod_a_s2=1.0, prod_x_s2=1.0):
+
+        s1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_s1, prod_x=prod_x_s1)
+        e1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_e1, prod_x=prod_x_e1)
+        s2_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_s2, prod_x=prod_x_s2)
+
+        s1_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['s1'], f10=f10_s1, f11=f11_s1, p=p_s1)
+        e1_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['e1'], f10=f10_e1, f11=f11_e1, p=p_e1)
+        s2_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['s2'], f10=f10_s2, f11=f11_s2, p=p_s2)
+
+        element_map = {'s1': [s1_CER_vals, s1_cost_factors, 1],
+                       'e1': [e1_CER_vals, e1_cost_factors, self.num_engines_dict['e1']],
+                       's2': [s2_CER_vals, s2_cost_factors, 1]}
+
+        veh_cost_factors = VehicleCostFactors(f0_dev=None, f0_prod=f0_prod_veh, f6=None, f7=None, f8=self.f8_dict['veh'], f9=f9_veh, p=None)
+
+        cost = self.launch_vehicle.average_vehicle_production_cost(veh_cost_factors, self.vehicle_prod_nums_list, element_map)
+
+        return cost
+
 prod_nums = range(1,11)
 
 atlasV_401_architecture = TwoLiquidStageTwoEngine(
     launch_vehicle=atlasV_401,
-    vehicle_prod_nums_list=prod_nums,
+    vehicle_prod_nums_list=atlas_prod_nums,
     num_engines_dict=atlasV_engines_dict,
     f8_dict=atlasV_f8_dict,
     prod_cost_facs_unc_list=atlas_uncertainty_list
@@ -159,7 +194,7 @@ atlasV_401_architecture = TwoLiquidStageTwoEngine(
 
 falcon9_block3_architecture = TwoLiquidStageTwoEngine(
     launch_vehicle=falcon9_block3,
-    vehicle_prod_nums_list=prod_nums,
+    vehicle_prod_nums_list=falcon_prod_nums,
     num_engines_dict=falcon9_engines_dict,
     f8_dict=falcon9_f8_dict,
     prod_cost_facs_unc_list=falcon_uncertainty_list
@@ -167,15 +202,32 @@ falcon9_block3_architecture = TwoLiquidStageTwoEngine(
 
 electron_architecture = TwoLiquidStageTwoEngine(
     launch_vehicle=electron,
-    vehicle_prod_nums_list=prod_nums,
+    vehicle_prod_nums_list=electron_prod_nums,
     num_engines_dict=electron_engines_dict,
     f8_dict=electron_f8_dict,
     prod_cost_facs_unc_list=electron_uncertainty_list
 )
 
+delta_architecture = TwoLiquidStageTwoEngine(
+    launch_vehicle=deltaIV_medium,
+    vehicle_prod_nums_list=delta_prod_nums,
+    num_engines_dict=delta_engines_dict,
+    f8_dict=delta_f8_dict,
+    prod_cost_facs_unc_list=delta_uncertainty_list
+)
+
+antares230_architecture = OneSolidOneLiquid(
+    launch_vehicle=antares230,
+    vehicle_prod_nums_list=antares_prod_nums,
+    num_engines_dict=antares_engines_dict,
+    f8_dict=antares_f8_dict,
+    prod_cost_facs_unc_list=antares_uncertainty_list
+)
+
 def demo():
 
-    vehicles = [atlasV_401_architecture, falcon9_block3_architecture, electron_architecture]
+    vehicles = [atlasV_401_architecture, falcon9_block3_architecture,
+                delta_architecture, antares230_architecture]
 
     results_prod = {}
     xticks = []
@@ -193,9 +245,14 @@ def demo():
 
     sns.set(style='whitegrid')
     ax = sns.violinplot(data=prod_cost)
-    plt.title('Production cost')
+    plt.title('Current production cost')
     plt.ylabel('Cost [WYr]')
     plt.xlabel('Launch vehicle')
+
+    plt.scatter(0, 314, marker='+', color='red', zorder=10)
+    plt.scatter(1, 177, marker='+', color='red', zorder=10)
+    plt.scatter(2, 553, marker='+', color='red', zorder=10)
+    plt.scatter(3, 229, marker='+', color='red', zorder=10)
 
     plt.show()
 

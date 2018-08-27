@@ -199,6 +199,8 @@ class SolidPropellantVehicleStage(LaunchVehicleElement):
     def __init__(self, name, m):
         super(SolidPropellantVehicleStage, self).__init__(name, m)
         self.dev_a, self.dev_x, self.prod_a, self.prod_x = [22.4, 0.54, 2.75, 0.412]
+        self.prod_a_conf_int = [2.288, 2.771]
+        self.prod_x_conf_int = [0.38625392, 0.43420692]
 
 
 class LiquidPropulsionModule(LaunchVehicleElement):

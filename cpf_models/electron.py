@@ -31,3 +31,4 @@ electron_uncertainty_list = [
     rdm.TriangularUncertainty('f11_e2', min_value=0.45, mode_value=0.5, max_value=0.55)
 ]
 
+electron_prod_nums = range(1, 4)
