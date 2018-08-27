@@ -12,7 +12,7 @@ class ElementCostFactors(object):
                     [units: dimensionless]. Probably in the range of 0.5 - 1.4.
             f8 (positive scalar): country productivity correction factor as defined by TRANSCOST 8.2 p. 25
                     [units: dimensionless].
-            f10 (positive scalar): cost reduction factor by past experience, technical progress and
+            f10 (positive scalar): cost reduction factor by past eperience, technical progress and
                     application of cost engineering [units: dimensionless]. Probably in the range of 
                     0.75 - 1.0.
             f11 (positive scalar): cost reduction factor by independent development without government 

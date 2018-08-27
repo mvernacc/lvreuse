@@ -17,7 +17,7 @@ turbo_fed_dev = CER_data(
     y_data=[2641.3523, 3206.8723, 3936.8616, 5957.9663, 6881.573, 8546.317, 9678.603, 11230.634, 13780.293, 19279.154]
 )
 
-pump_fed_dev = CER_data(
+pressure_fed_dev = CER_data(
     x_data=[2.1583464, 47.369507, 76.376595, 109.647026, 118.151505, 177.21681, 209.16373],
     y_data=[216.07182, 615.2648, 758.4653, 858.8503, 921.1465, 969.70807, 1060.8213]
 )
@@ -84,6 +84,21 @@ liquid_cryo_prod = CER_data(
     y_data=[45.070126, 49.99756, 137.74219, 188.14326, 316.08774]
 )
 
+turbojet_prod = CER_data(
+    x_data=[2087.8093, 1886.7289, 4277.4854],
+    y_data=[135.77345, 141.02576, 218.0098]
+)
+
+storable_ballistic_stage_prod = CER_data(
+    x_data=[783.68896, 899.9267, 1874.6211, 2214.1091, 3009.1702, 3948.4155, 6075.5107, 11556.278, 28017.28, 85031.984],
+    y_data=[64.13001, 116.19791, 117.34558, 123.27801, 137.20741, 210.39647, 256.49707, 315.06998, 689.411, 1244.7727]
+)
+
+cryo_ballistic_stage_prod = CER_data(
+    x_data=[961.1333, 1298.5214, 1470.3142, 2400.992, 8261.439, 32291.346],
+    y_data=[105.42263, 147.07135, 163.87299, 233.37228, 493.2801, 1109.7167]
+)
+
 """solid_booster_dev = CER_data(
     x_data=[11436.089, 31271.062, 36586.43, 39327.535, 63267.285, 86835.17],
     y_data=[3172.8008, 5036.0806, 5734.68, 5796.9756, 9284.008, 12238.791]
@@ -93,8 +108,9 @@ solid_stage_dev = CER_data(
     x_data=[7366.4, 14626.3],
     y_data=[2772.38, 4316.98]"""
 
-CER_data_list = [SRM_dev, turbo_fed_dev, pump_fed_dev, air_breathing_dev, liquid_prop_module_dev,
+CER_data_list = [SRM_dev, turbo_fed_dev, pressure_fed_dev, air_breathing_dev, liquid_prop_module_dev,
                     expendable_ballistic_stage_dev, reusable_ballistic_stage_dev,
                     winged_orbital_vehicles_dev, advanced_aircraft_dev, flyback_booster_dev,
                     crewed_ballistic_reentry_capsule_dev, crewed_space_system, SRM_strap_on_prod,
-                    liquid_storable_prod, liquid_cryo_prod]
+                    liquid_storable_prod, liquid_cryo_prod, storable_ballistic_stage_prod,
+                    cryo_ballistic_stage_prod, turbojet_prod]
