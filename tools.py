@@ -24,3 +24,4 @@ if __name__ == '__main__':
 
     f4_avg = cost_reduction_factor(0.9, [12])
     print(f4_avg)
+

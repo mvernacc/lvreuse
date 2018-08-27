@@ -9,9 +9,6 @@ from tools import cost_reduction_factor
 from elements import SolidRocketMotor, CryoLH2TurboFed, ExpendableBallisticStageLH2, \
     SolidPropellantBooster, ExpendableBallisticStageStorable, StorableTurboFed
 from vehicle import LaunchVehicle
-from CERValues import CERValues
-from cost_factors import ElementCostFactors, VehicleCostFactors, OperationsCostFactors
-from indirect_ops import indirect_ops_cost
 
 core = ExpendableBallisticStageStorable("s1", 20743 + 420 + 375 - 5480) # CCB, data from Isakowitz, p. 77, includes core, booster and interstage adapter
 core_engine = StorableTurboFed("e1", 5480) # RD-180

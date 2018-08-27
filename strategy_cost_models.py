@@ -13,6 +13,8 @@ import seaborn as sns
 import pandas
 
 from cpf_models.atlasV import atlasV_401, atlasV_engines_dict, atlasV_f8_dict, atlas_uncertainty_list
+from cpf_models.falcon9 import falcon9_block3, falcon9_engines_dict, falcon9_f8_dict, falcon_uncertainty_list
+from cpf_models.electron import electron, electron_engines_dict, electron_f8_dict, electron_uncertainty_list
 
 def get_prod_dist(element):
     """Get the production CER parameter distributions from an element.
@@ -155,9 +157,25 @@ atlasV_401_architecture = TwoLiquidStageTwoEngine(
     prod_cost_facs_unc_list=atlas_uncertainty_list
 )
 
+falcon9_block3_architecture = TwoLiquidStageTwoEngine(
+    launch_vehicle=falcon9_block3,
+    vehicle_prod_nums_list=prod_nums,
+    num_engines_dict=falcon9_engines_dict,
+    f8_dict=falcon9_f8_dict,
+    prod_cost_facs_unc_list=falcon_uncertainty_list
+)
+
+electron_architecture = TwoLiquidStageTwoEngine(
+    launch_vehicle=electron,
+    vehicle_prod_nums_list=prod_nums,
+    num_engines_dict=electron_engines_dict,
+    f8_dict=electron_f8_dict,
+    prod_cost_facs_unc_list=electron_uncertainty_list
+)
+
 def demo():
 
-    vehicles = [atlasV_401_architecture]
+    vehicles = [atlasV_401_architecture, falcon9_block3_architecture, electron_architecture]
 
     results_prod = {}
     xticks = []

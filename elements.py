@@ -122,6 +122,8 @@ class ModernPressureFed(LaunchVehicleElement):
         self.dev_a, self.dev_x, self.prod_a, self.prod_x = [167., 0.35, 1.2, 0.535]
         self.dev_a_conf_int = [149.75335940452638, 181.67568396416385]
         self.dev_x_conf_int = [0.3273087, 0.37139749]
+        self.prod_a_conf_int = [0.729, 2.089]
+        self.prod_x_conf_int = [0.49908152, 0.57606891]
 
     def average_element_production_cost(self, CER_vals, element_cost_factors, element_prod_nums_list):
         """Calculate average production cost per vehicle element unit.
@@ -146,6 +148,8 @@ class ModernTurboFed(TurboFedEngine):
         self.dev_a, self.dev_x, self.prod_a, self.prod_x = [277., 0.48, 1.2, 0.535]
         self.dev_a_conf_int = [195.1340728668754, 389.01133900679804]
         self.dev_x_conf_int = [0.42853851, 0.52827748]
+        self.prod_a_conf_int = [0.729, 2.089]
+        self.prod_x_conf_int = [0.49908152, 0.57606891]
 
     def average_element_production_cost(self, CER_vals, element_cost_factors, element_prod_nums_list):
         """Calculate average production cost per vehicle element unit.
