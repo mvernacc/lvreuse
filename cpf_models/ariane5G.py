@@ -23,13 +23,13 @@ ariane_engines_dict = {'e1': 1, 'e2': 1, 'b1': 2}
 ariane_f8_dict = {'s1': 0.86, 'e1': 0.86, 's2':0.86, 'e2': 0.77, 'b1': 0.86, 'veh': 0.86}
 
 ariane_uncertainty_list = [
-    rdm.TriangularUncertainty('p_s1', min_value=0.85, mode_value=0.9, max_value=0.95),
-    rdm.TriangularUncertainty('p_e1', min_value=0.85, mode_value=0.9, max_value=0.95),
-    rdm.TriangularUncertainty('p_s2', min_value=0.85, mode_value=0.9, max_value=0.95),
-    rdm.TriangularUncertainty('p_e2', min_value=0.85, mode_value=0.9, max_value=0.95),
-    rdm.TriangularUncertainty('p_b1', min_value=0.9, mode_value=0.925, max_value=0.95),
-    rdm.TriangularUncertainty('f0_prod_veh', min_value=1.05, mode_value=1.08, max_value=1.15),
-    rdm.TriangularUncertainty('f9_veh', min_value=1.01, mode_value=1.02, max_value=1.03),
+    rdm.TriangularUncertainty('p_s1', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('p_e1', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('p_s2', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('p_e2', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('p_b1', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('f0_prod_veh', min_value=1.02, mode_value=1.025, max_value=1.03),
+    rdm.TriangularUncertainty('f9_veh', min_value=1.05, mode_value=1.08, max_value=1.15),
 ]
 
-ariane_prod_nums_list = range(1,13)
+ariane_prod_nums_list = range(89, 100)

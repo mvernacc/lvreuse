@@ -21,10 +21,10 @@ atlasV_401 = LaunchVehicle(name='AtlasV_401', M0=334.5, N=2, element_list=atlas_
 atlasV_engines_dict = {'e1': 1, 'e2': 1}
 atlasV_f8_dict = {'s1': 1.0, 'e1': 1.49, 's2': 1.0, 'e2': 1.0, 'veh': 1.0}
 atlas_uncertainty_list = [
-    rdm.TriangularUncertainty('p_s1', min_value=0.85, mode_value=0.9, max_value=0.95),
-    rdm.TriangularUncertainty('p_e1', min_value=0.85, mode_value=0.9, max_value=0.95),
-    rdm.TriangularUncertainty('p_s2', min_value=0.85, mode_value=0.9, max_value=0.95),
-    rdm.TriangularUncertainty('p_e2', min_value=0.85, mode_value=0.9, max_value=0.95),
+    rdm.TriangularUncertainty('p_s1', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('p_e1', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('p_s2', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('p_e2', min_value=0.75, mode_value=0.8, max_value=0.85),
     rdm.TriangularUncertainty('f0_prod_veh', min_value=1.02, mode_value=1.025, max_value=1.03),
     rdm.TriangularUncertainty('f9_veh', min_value=1.05, mode_value=1.08, max_value=1.15),
     rdm.TriangularUncertainty('f10_s1', min_value=0.75, mode_value=0.8, max_value=0.85),

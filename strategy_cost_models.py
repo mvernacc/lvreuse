@@ -38,9 +38,9 @@ def get_prod_dist(element):
 
     prod_a_unc = rdm.TriangularUncertainty(
         name=tag_a, 
-        min_value=element.prod_a_conf_int[0], 
-        mode_value=element.prod_a, 
-        max_value=element.prod_a_conf_int[1]
+        min_value=math.log10(element.prod_a_conf_int[0]), 
+        mode_value=math.log10(element.prod_a), 
+        max_value=math.log10(element.prod_a_conf_int[1])
     )
     prod_x_unc = rdm.TriangularUncertainty(
         name=tag_x,
@@ -66,9 +66,9 @@ def get_dev_dist(element):
 
     dev_a_unc = rdm.TriangularUncertainty(
         name=tag_a,
-        min_value=element.dev_a_conf_int[0],
-        mode_value=element.dev_a,
-        max_value=element.dev_a_conf_int[1]
+        min_value=math.log10(element.dev_a_conf_int[0]),
+        mode_value=math.log10(element.dev_a),
+        max_value=math.log10(element.dev_a_conf_int[1])
     )
     dev_x_unc = rdm.TriangularUncertainty(
         name=tag_x,
@@ -132,10 +132,10 @@ class TwoLiquidStageTwoEngine(VehicleArchitecture):
                                f10_s2=1.0, f11_s2=1.0, p_s2=1.0, prod_a_s2=1.0, prod_x_s2=1.0,
                                f10_e2=1.0, f11_e2=1.0, p_e2=1.0, prod_a_e2=1.0, prod_x_e2=1.0):
 
-        s1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_s1, prod_x=prod_x_s1)
-        e1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_e1, prod_x=prod_x_e1)
-        s2_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_s2, prod_x=prod_x_s2)
-        e2_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_e2, prod_x=prod_x_e2)
+        s1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=10**prod_a_s1, prod_x=prod_x_s1)
+        e1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=10**prod_a_e1, prod_x=prod_x_e1)
+        s2_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=10**prod_a_s2, prod_x=prod_x_s2)
+        e2_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=10**prod_a_e2, prod_x=prod_x_e2)
 
         s1_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['s1'], f10=f10_s1, f11=f11_s1, p=p_s1)
         e1_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['e1'], f10=f10_e1, f11=f11_e1, p=p_e1)
@@ -167,9 +167,9 @@ class OneSolidOneLiquid(VehicleArchitecture):
                                f10_e1=1.0, f11_e1=1.0, p_e1=1.0, prod_a_e1=1.0, prod_x_e1=1.0,
                                f10_s2=1.0, f11_s2=1.0, p_s2=1.0, prod_a_s2=1.0, prod_x_s2=1.0):
 
-        s1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_s1, prod_x=prod_x_s1)
-        e1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_e1, prod_x=prod_x_e1)
-        s2_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_s2, prod_x=prod_x_s2)
+        s1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=10**prod_a_s1, prod_x=prod_x_s1)
+        e1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=10**prod_a_e1, prod_x=prod_x_e1)
+        s2_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=10**prod_a_s2, prod_x=prod_x_s2)
 
         s1_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['s1'], f10=f10_s1, f11=f11_s1, p=p_s1)
         e1_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['e1'], f10=f10_e1, f11=f11_e1, p=p_e1)
@@ -201,11 +201,11 @@ class TwoLiquidStageTwoEngineWithBooster(VehicleArchitecture):
                                f10_e2=1.0, f11_e2=1.0, p_e2=1.0, prod_a_e2=1.0, prod_x_e2=1.0,
                                f10_b1=1.0, f11_b1=1.0, p_b1=1.0, prod_a_b1=1.0, prod_x_b1=1.0):
 
-        s1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_s1, prod_x=prod_x_s1)
-        e1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_e1, prod_x=prod_x_e1)
-        s2_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_s2, prod_x=prod_x_s2)
-        e2_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_e2, prod_x=prod_x_e2)
-        b1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_b1, prod_x=prod_x_b1)
+        s1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=10**prod_a_s1, prod_x=prod_x_s1)
+        e1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=10**prod_a_e1, prod_x=prod_x_e1)
+        s2_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=10**prod_a_s2, prod_x=prod_x_s2)
+        e2_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=10**prod_a_e2, prod_x=prod_x_e2)
+        b1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=10**prod_a_b1, prod_x=prod_x_b1)
 
         s1_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['s1'], f10=f10_s1, f11=f11_s1, p=p_s1)
         e1_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['e1'], f10=f10_e1, f11=f11_e1, p=p_e1)
@@ -267,7 +267,7 @@ antares230_architecture = OneSolidOneLiquid(
     prod_cost_facs_unc_list=antares230.antares_uncertainty_list
 )
 
-atlas5G_architecture = TwoLiquidStageTwoEngineWithBooster(
+ariane5G_architecture = TwoLiquidStageTwoEngineWithBooster(
     launch_vehicle=ariane5G.ariane5G,
     vehicle_prod_nums_list=ariane5G.ariane_prod_nums_list,
     num_engines_dict=ariane5G.ariane_engines_dict,
@@ -278,7 +278,7 @@ atlas5G_architecture = TwoLiquidStageTwoEngineWithBooster(
 def demo():
 
     vehicles = [atlasV_401_architecture, falcon9_block3_architecture,
-                delta_architecture, antares230_architecture, atlas5G_architecture]
+                delta_architecture, ariane5G_architecture]
 
     results_prod = {}
     xticks = []
@@ -288,6 +288,9 @@ def demo():
         res_prod = res_prod.as_dataframe()
         results_prod[name] = res_prod
         xticks.append(name)
+
+    sa_results = rdm.sa(ariane5G_architecture.avg_prod_cost_model, "cost")
+    print(sa_results)
 
     prod_cost = {}
     for lv_name in results_prod:
@@ -303,7 +306,8 @@ def demo():
     plt.scatter(0, 314, marker='+', color='red', zorder=10)
     plt.scatter(1, 177, marker='+', color='red', zorder=10)
     plt.scatter(2, 553, marker='+', color='red', zorder=10)
-    plt.scatter(3, 229, marker='+', color='red', zorder=10)
+    # plt.scatter(3, 229, marker='+', color='red', zorder=10)
+    plt.scatter(3, 485, marker='+', color='red', zorder=10)
 
     plt.show()
 

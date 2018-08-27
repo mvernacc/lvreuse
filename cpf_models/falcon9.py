@@ -20,10 +20,10 @@ falcon9_block3 = LaunchVehicle(name='Falon9_Block3', M0=459.054, N=2, element_li
 falcon9_engines_dict = {'e1': 9, 'e2': 1}
 falcon9_f8_dict = {'s1': 1.0, 'e1': 1.0, 's2': 1.0, 'e2': 1.0, 'veh': 1.0}
 falcon_uncertainty_list = [
-    rdm.TriangularUncertainty('p_s1', min_value=0.8, mode_value=0.85, max_value=0.9),
-    rdm.TriangularUncertainty('p_e1', min_value=0.8, mode_value=0.85, max_value=0.9),
-    rdm.TriangularUncertainty('p_s2', min_value=0.8, mode_value=0.85, max_value=0.9),
-    rdm.TriangularUncertainty('p_e2', min_value=0.8, mode_value=0.85, max_value=0.9),
+    rdm.TriangularUncertainty('p_s1', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('p_e1', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('p_s2', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('p_e2', min_value=0.75, mode_value=0.8, max_value=0.85),
     rdm.TriangularUncertainty('f0_prod_veh', min_value=1.02, mode_value=1.025, max_value=1.03),
     rdm.TriangularUncertainty('f9_veh', min_value=1.01, mode_value=1.02, max_value=1.03),
     rdm.TriangularUncertainty('f11_s1', min_value=0.45, mode_value=0.5, max_value=0.55),
