@@ -16,7 +16,7 @@ stage2 = SolidPropellantVehicleStage("s2", 2100 + 972) # stage + fairing, from I
 antares_elements = [core, core_engine, stage2]
 antares230 = LaunchVehicle(name='antares230', M0=286, N=2, element_list=antares_elements) # mass from spacelaunchreport
 antares_engines_dict = {'e1': 2}
-antares_f8_dict = {'s1': 1.0, 'e1': 1.49, 's2': 1.0, 'veh': 1.0}
+antares_f8_dict = {'s1': 1.0, 'e1': 1.49, 's2': 1.0, 'veh': 1.0, 'ops': 1.0}
 
 antares_uncertainty_list = [
     rdm.TriangularUncertainty('p_s1', min_value=0.75, mode_value=0.8, max_value=0.85),
@@ -29,4 +29,17 @@ antares_uncertainty_list = [
     rdm.TriangularUncertainty('f10_s2', min_value=0.75, mode_value=0.8, max_value=0.85),
 ]
 
+antares_ops_uncertainty_list =[
+    rdm.TriangularUncertainty('launch_rate', min_value=3, mode_value=3.5, max_value=4),
+    rdm.TriangularUncertainty('p_ops', min_value = 0.8, mode_value=0.85, max_value=0.9),
+    rdm.TriangularUncertainty('insurance', min_value = 1, mode_value=2, max_value = 3),
+]
+
 antares_prod_nums = range(1, 10)
+antares_launch_nums = antares_prod_nums
+antares_fv = 0.65
+antares_fc = 0.7
+antares_sum_QN = 0.55
+antares_launch_provider_type = 'B'
+
+antares_props_dict = {'RP-1': 34571, 'LOX': 207428 * 1.6}
