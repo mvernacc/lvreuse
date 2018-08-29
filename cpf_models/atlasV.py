@@ -19,7 +19,7 @@ atlas_elements = [core, core_engine, stage2, stage2_engine]
 
 atlasV_401 = LaunchVehicle(name='AtlasV_401', M0=334.5, N=2, element_list=atlas_elements)
 atlasV_engines_dict = {'e1': 1, 'e2': 1}
-atlasV_f8_dict = {'s1': 1.0, 'e1': 1.49, 's2': 1.0, 'e2': 1.0, 'veh': 1.0}
+atlasV_f8_dict = {'s1': 1.0, 'e1': 1.49, 's2': 1.0, 'e2': 1.0, 'veh': 1.0, 'ops': 1.0}
 atlas_uncertainty_list = [
     rdm.TriangularUncertainty('p_s1', min_value=0.75, mode_value=0.8, max_value=0.85),
     rdm.TriangularUncertainty('p_e1', min_value=0.75, mode_value=0.8, max_value=0.85),
@@ -33,4 +33,17 @@ atlas_uncertainty_list = [
     rdm.TriangularUncertainty('f10_e2', min_value=0.75, mode_value=0.8, max_value=0.85)
 ]
 
+atlas_ops_uncertainty_list = [
+    rdm.TriangularUncertainty('launch_rate', min_value=5, mode_value=7, max_value=9),
+    rdm.TriangularUncertainty('p_ops', min_value=0.8, mode_value=0.85, max_value=0.9),
+    rdm.TriangularUncertainty('insurance', min_value=1, mode_value=2, max_value=3),
+]
+
 atlas_prod_nums = range(68, 79)
+atlas_launch_nums = atlas_prod_nums
+atlas_fv = 0.9
+atlas_fc = 0.85
+atlas_sum_QN = 0.8
+atlas_launch_provider_type = 'B'
+
+atlas_props_dict = {'RP-1': 76370, 'LOX': (207729 + 17625) * 1.6, 'LH2': 3204 * 1.85} # including boil-off

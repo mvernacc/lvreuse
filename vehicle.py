@@ -166,10 +166,24 @@ class LaunchVehicle(object):
         
         return engines_refurb_cost
 
-    def total_refurbishment_cost(self):
+    def element_refurb_cost(self, element_name, ops_cost_factors, element_map):
 
-        pass
+        element_refurb = next(element for element in self.element_list if element.name == element_name)
 
-    def indirect_operations_cost(self):
+        CER_vals, element_cost_factors, n = element_map[element_name]
 
-        pass
+        TFU = element_refurb.average_element_production_cost(CER_vals, element_cost_factors, [1])
+
+        element_refurb_cost = n * ops_cost_factors.f5_dict[element_name] * TFU
+
+        return element_refurb_cost
+
+    def total_refurbishment_cost(self, ops_cost_factors, element_map):
+
+        refurb_cost = 0
+        for element_name in ops_cost_factors.f5_dict:
+
+            refurb_cost += self.element_refurb_cost(element_name, ops_cost_factors, element_map)
+
+        return refurb_cost
+

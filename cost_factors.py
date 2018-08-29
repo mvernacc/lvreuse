@@ -57,7 +57,7 @@ class VehicleCostFactors(object):
 
 class OperationsCostFactors(object):
 
-    def __init__(self, f5_vehicle, f5_engine, f8, f11, fv, fc, p):
+    def __init__(self, f5_dict, f8, f11, fv, fc, p):
         """Describes operations-specific cost factors for vehicle operation.
 
         Arguments:
@@ -73,8 +73,7 @@ class OperationsCostFactors(object):
             p (positive scalar): learning factor for series production [units: dimensionless]. p <= 1
             """
 
-        self.f5_vehicle = f5_vehicle
-        self.f5_engine = f5_engine
+        self.f5_dict = f5_dict
         self.f8 = f8
         self.f11 = f11
         self.fv = fv

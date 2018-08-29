@@ -22,6 +22,6 @@ def cost_reduction_factor(p, prod_nums_list):
 
 if __name__ == '__main__':
 
-    f4_avg = cost_reduction_factor(0.9, [12])
+    f4_avg = cost_reduction_factor(0.9, [1])
     print(f4_avg)
 
