@@ -59,9 +59,9 @@ def get_dev_dist(element):
 
     dev_a_unc = rdm.TriangularUncertainty(
         name=tag_a,
-        min_value=math.log10(element.dev_a_conf_int[0]),
-        mode_value=math.log10(element.dev_a),
-        max_value=math.log10(element.dev_a_conf_int[1])
+        min_value=element.dev_a_conf_int[0],
+        mode_value=element.dev_a,
+        max_value=element.dev_a_conf_int[1]
     )
     dev_x_unc = rdm.TriangularUncertainty(
         name=tag_x,
@@ -95,7 +95,8 @@ class VehicleArchitecture(object):
 
     def __init__(self, launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list, 
                  num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type,
-                 vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list):
+                 vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list, 
+                 dev_cost_unc_list):
         self.launch_vehicle = launch_vehicle
         self.vehicle_prod_nums_list = vehicle_prod_nums_list
         self.vehicle_launch_nums_list = vehicle_launch_nums_list
@@ -108,6 +109,7 @@ class VehicleArchitecture(object):
         self.vehicle_props_dict = vehicle_props_dict
         self.prod_cost_facs_unc_list = prod_cost_facs_unc_list
         self.ops_cost_unc_list = ops_cost_unc_list
+        self.dev_cost_unc_list = dev_cost_unc_list
         self.uncertainties = []
         self.cost_model = rdm.Model(self.evaluate_cost)
 
@@ -118,7 +120,9 @@ class VehicleArchitecture(object):
         self.cost_model.responses = [
             rdm.Response('prod_cost_per_flight', rdm.Response.MINIMIZE),
             rdm.Response('ops_cost_per_flight', rdm.Response.MINIMIZE),
-            rdm.Response('cost_per_flight', rdm.Response.MINIMIZE)
+            rdm.Response('cost_per_flight', rdm.Response.MINIMIZE),
+            rdm.Response('dev_cost', rdm.Response.MINIMIZE),
+            rdm.Response('price_per_flight', rdm.Response.MINIMIZE),
         ]
 
     @abc.abstractmethod
@@ -135,40 +139,62 @@ class VehicleArchitecture(object):
 class TwoLiquidStageTwoEngine(VehicleArchitecture):
     """Two stage vehicle, liquid stages, one type of engine per stage."""
 
-    def __init__(self, launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list, num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type, vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list):
-        super(TwoLiquidStageTwoEngine, self).__init__(launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list, num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type, vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list)
+    def __init__(self, launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list,
+                 num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type,
+                 vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list,
+                 dev_cost_unc_list):
+        super(TwoLiquidStageTwoEngine, self).__init__(launch_vehicle, vehicle_prod_nums_list,
+                                                      vehicle_launch_nums_list, num_engines_dict,
+                                                      f8_dict, fv, fc, sum_QN, launch_provider_type,
+                                                      vehicle_props_dict, prod_cost_facs_unc_list,
+                                                      ops_cost_unc_list, dev_cost_unc_list)
         self.uncertainties += prod_cost_facs_unc_list
-        self.uncertainties += [unc for element in self.launch_vehicle.element_list for unc in get_prod_dist(element)]
         self.uncertainties += ops_cost_unc_list
+        self.uncertainties += dev_cost_unc_list
+        self.uncertainties += [unc for element in self.launch_vehicle.element_list for unc in
+                               get_prod_dist(element)]
+        self.uncertainties += [unc for element in self.launch_vehicle.element_list for unc in
+                               get_dev_dist(element)]
         self.setup_cost_model()
 
-
-    def evaluate_cost(self, f0_prod_veh=1.0, f9_veh=1.0,
+    def evaluate_cost(self, f0_prod_veh=1.0, f0_dev_veh = 1.0, f6_veh=1.0, f7_veh=1.0, f9_veh=1.0,
+                      f1_s1=1.0, f2_s1=1.0, f3_s1=1.0, dev_a_s1=1.0, dev_x_s1=1.0,
+                      f1_e1=1.0, f2_e1=1.0, f3_e1=1.0, dev_a_e1=1.0, dev_x_e1=1.0,
+                      f1_s2=1.0, f2_s2=1.0, f3_s2=1.0, dev_a_s2=1.0, dev_x_s2=1.0,
+                      f1_e2=1.0, f2_e2=1.0, f3_e2=1.0, dev_a_e2=1.0, dev_x_e2=1.0,
                       f10_s1=1.0, f11_s1=1.0, p_s1=1.0, prod_a_s1=1.0, prod_x_s1=1.0,
                       f10_e1=1.0, f11_e1=1.0, p_e1=1.0, prod_a_e1=1.0, prod_x_e1=1.0,
                       f10_s2=1.0, f11_s2=1.0, p_s2=1.0, prod_a_s2=1.0, prod_x_s2=1.0,
                       f10_e2=1.0, f11_e2=1.0, p_e2=1.0, prod_a_e2=1.0, prod_x_e2=1.0,
                       f5_s1=0, f5_e1=0, f11_ops=1.0, p_ops=1.0, num_reuses = 1,
-                      launch_rate=None, fees=0, insurance=0, recovery_cost=0):
+                      num_program_flights=1, profit_multiplier=1.0, launch_rate=None, fees=0,
+                      insurance=0, recovery_cost=0, frac_dev_paid=1.0):
 
-        s1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_s1, prod_x=prod_x_s1)
-        e1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_e1, prod_x=prod_x_e1)
-        s2_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_s2, prod_x=prod_x_s2)
-        e2_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_e2, prod_x=prod_x_e2)
+        s1_CER_vals = CERValues(dev_a=dev_a_s1, dev_x=dev_x_s1, prod_a=prod_a_s1, prod_x=prod_x_s1)
+        e1_CER_vals = CERValues(dev_a=dev_a_e1, dev_x=dev_x_e1, prod_a=prod_a_e1, prod_x=prod_x_e1)
+        s2_CER_vals = CERValues(dev_a=dev_a_s2, dev_x=dev_x_s2, prod_a=prod_a_s2, prod_x=prod_x_s2)
+        e2_CER_vals = CERValues(dev_a=dev_a_e2, dev_x=dev_x_e2, prod_a=prod_a_e2, prod_x=prod_x_e2)
 
-        s1_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['s1'], f10=f10_s1, f11=f11_s1, p=p_s1)
-        e1_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['e1'], f10=f10_e1, f11=f11_e1, p=p_e1)
-        s2_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['s2'], f10=f10_s2, f11=f11_s2, p=p_s2)
-        e2_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['e2'], f10=f10_e2, f11=f11_e2, p=p_e2)
+        s1_cost_factors = ElementCostFactors(f1=f1_s1, f2=f2_s1, f3=f3_s1, f8=self.f8_dict['s1'],
+                                             f10=f10_s1, f11=f11_s1, p=p_s1)
+        e1_cost_factors = ElementCostFactors(f1=f1_e1, f2=f2_e1, f3=f3_e1, f8=self.f8_dict['e1'],
+                                             f10=f10_e1, f11=f11_e1, p=p_e1)
+        s2_cost_factors = ElementCostFactors(f1=f1_s2, f2=f2_s2, f3=f3_s2, f8=self.f8_dict['s2'],
+                                             f10=f10_s2, f11=f11_s2, p=p_s2)
+        e2_cost_factors = ElementCostFactors(f1=f1_e2, f2=f2_e2, f3=f3_e2, f8=self.f8_dict['e2'],
+                                             f10=f10_e2, f11=f11_e2, p=p_e2)
 
         element_map = {'s1': [s1_CER_vals, s1_cost_factors, 1],
                        'e1': [e1_CER_vals, e1_cost_factors, self.num_engines_dict['e1']],
                        's2': [s2_CER_vals, s2_cost_factors, 1],
                        'e2': [e2_CER_vals, e2_cost_factors, self.num_engines_dict['e2']]}
 
-        veh_cost_factors = VehicleCostFactors(f0_dev=None, f0_prod=f0_prod_veh, f6=None, f7=None, f8=self.f8_dict['veh'], f9=f9_veh, p=None)
+        veh_cost_factors = VehicleCostFactors(f0_dev=f0_dev_veh, f0_prod=f0_prod_veh, f6=f6_veh,
+                                              f7=f7_veh, f8=self.f8_dict['veh'], f9=f9_veh, p=None)
 
-        prod_cost = self.launch_vehicle.average_vehicle_production_cost(veh_cost_factors, self.vehicle_prod_nums_list, element_map)
+        prod_cost = self.launch_vehicle.average_vehicle_production_cost(veh_cost_factors, 
+                                                                        self.vehicle_prod_nums_list, 
+                                                                        element_map)
 
         prod_cost_per_flight = prod_cost/num_reuses
 
@@ -188,14 +214,22 @@ class TwoLiquidStageTwoEngine(VehicleArchitecture):
 
         cost_per_flight = prod_cost_per_flight + ops_cost_per_flight
 
-        return (prod_cost_per_flight, ops_cost_per_flight, cost_per_flight)
+        dev_cost = self.launch_vehicle.vehicle_development_cost(veh_cost_factors, element_map)
+
+        frac_dev_cost = dev_cost * frac_dev_paid
+
+        dev_cost_per_flight = frac_dev_cost/num_program_flights
+
+        price_per_flight = (prod_cost_per_flight + ops_cost_per_flight)*profit_multiplier + dev_cost_per_flight
+
+        return (prod_cost_per_flight, ops_cost_per_flight, cost_per_flight, dev_cost, price_per_flight)
 
 
 class OneSolidOneLiquid(VehicleArchitecture):
     """Two stage vehicle, first stage liquid with one engine type, second stage solid."""
 
-    def __init__(self, launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list, num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type, vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list):
-        super(OneSolidOneLiquid, self).__init__(launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list, num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type, vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list)
+    def __init__(self, launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list, num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type, vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list, dev_cost_unc_list):
+        super(OneSolidOneLiquid, self).__init__(launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list, num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type, vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list, dev_cost_unc_list)
         self.uncertainties += prod_cost_facs_unc_list
         self.uncertainties += [unc for element in self.launch_vehicle.element_list for unc in get_prod_dist(element)]
         self.uncertainties += ops_cost_unc_list
@@ -249,33 +283,40 @@ class OneSolidOneLiquid(VehicleArchitecture):
 class TwoLiquidStageTwoEngineWithBooster(VehicleArchitecture):
     """Two stage vehicle, liquid stages, one type of engine per stage."""
 
-    def __init__(self, launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list, num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type, vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list):
-        super(TwoLiquidStageTwoEngineWithBooster, self).__init__(launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list, num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type, vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list)
+    def __init__(self, launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list, num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type, vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list, dev_cost_unc_list):
+        super(TwoLiquidStageTwoEngineWithBooster, self).__init__(launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list, num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type, vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list, dev_cost_unc_list)
         self.uncertainties += prod_cost_facs_unc_list
         self.uncertainties += [unc for element in self.launch_vehicle.element_list for unc in get_prod_dist(element)]
+        self.uncertainties += [unc for element in self.launch_vehicle.element_list for unc in get_dev_dist(element)]
         self.uncertainties += ops_cost_unc_list
         self.setup_cost_model()
 
-    def evaluate_cost(self, f0_prod_veh=1.0, f9_veh=1.0,
+    def evaluate_cost(self, f0_prod_veh=1.0, f0_dev_veh = 1.0, f6_veh=1.0, f7_veh=1.0, f9_veh=1.0,
+                      f1_s1=1.0, f2_s1=1.0, f3_s1=1.0, dev_a_s1=1.0, dev_x_s1=1.0,
+                      f1_e1=1.0, f2_e1=1.0, f3_e1=1.0, dev_a_e1=1.0, dev_x_e1=1.0,
+                      f1_s2=1.0, f2_s2=1.0, f3_s2=1.0, dev_a_s2=1.0, dev_x_s2=1.0,
+                      f1_e2=1.0, f2_e2=1.0, f3_e2=1.0, dev_a_e2=1.0, dev_x_e2=1.0,
+                      f1_b1=1.0, f2_b1=1.0, f3_b1=1.0, dev_a_b1=1.0, dev_x_b1=1.0,
                       f10_s1=1.0, f11_s1=1.0, p_s1=1.0, prod_a_s1=1.0, prod_x_s1=1.0,
                       f10_e1=1.0, f11_e1=1.0, p_e1=1.0, prod_a_e1=1.0, prod_x_e1=1.0,
                       f10_s2=1.0, f11_s2=1.0, p_s2=1.0, prod_a_s2=1.0, prod_x_s2=1.0,
                       f10_e2=1.0, f11_e2=1.0, p_e2=1.0, prod_a_e2=1.0, prod_x_e2=1.0,
                       f10_b1=1.0, f11_b1=1.0, p_b1=1.0, prod_a_b1=1.0, prod_x_b1=1.0,
                       f5_s1=0, f5_e1=0, f11_ops=1.0, p_ops=1.0, num_reuses = 1,
-                      launch_rate=None, fees=0, insurance=0, recovery_cost=0):
+                      num_program_flights=1, profit_multiplier=1.0, launch_rate=None, fees=0,
+                      insurance=0, recovery_cost=0, frac_dev_paid=1.0):
 
-        s1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_s1, prod_x=prod_x_s1)
-        e1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_e1, prod_x=prod_x_e1)
-        s2_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_s2, prod_x=prod_x_s2)
-        e2_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_e2, prod_x=prod_x_e2)
-        b1_CER_vals = CERValues(dev_a=None, dev_x=None, prod_a=prod_a_b1, prod_x=prod_x_b1)
+        s1_CER_vals = CERValues(dev_a=dev_a_s1, dev_x=dev_x_s1, prod_a=prod_a_s1, prod_x=prod_x_s1)
+        e1_CER_vals = CERValues(dev_a=dev_a_e1, dev_x=dev_x_e1, prod_a=prod_a_e1, prod_x=prod_x_e1)
+        s2_CER_vals = CERValues(dev_a=dev_a_s2, dev_x=dev_x_s2, prod_a=prod_a_s2, prod_x=prod_x_s2)
+        e2_CER_vals = CERValues(dev_a=dev_a_e2, dev_x=dev_x_e2, prod_a=prod_a_e2, prod_x=prod_x_e2)
+        b1_CER_vals = CERValues(dev_a=dev_a_b1, dev_x=dev_x_b1, prod_a=prod_a_b1, prod_x=prod_x_b1)
 
-        s1_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['s1'], f10=f10_s1, f11=f11_s1, p=p_s1)
-        e1_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['e1'], f10=f10_e1, f11=f11_e1, p=p_e1)
-        s2_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['s2'], f10=f10_s2, f11=f11_s2, p=p_s2)
-        e2_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['e2'], f10=f10_e2, f11=f11_e2, p=p_e2)
-        b1_cost_factors = ElementCostFactors(f1=None, f2=None, f3=None, f8=self.f8_dict['b1'], f10=f10_b1, f11=f11_b1, p=p_b1)
+        s1_cost_factors = ElementCostFactors(f1=f1_s1, f2=f2_s1, f3=f3_s1, f8=self.f8_dict['s1'], f10=f10_s1, f11=f11_s1, p=p_s1)
+        e1_cost_factors = ElementCostFactors(f1=f1_e1, f2=f2_e1, f3=f3_e1, f8=self.f8_dict['e1'], f10=f10_e1, f11=f11_e1, p=p_e1)
+        s2_cost_factors = ElementCostFactors(f1=f1_s2, f2=f2_s2, f3=f3_s2, f8=self.f8_dict['s2'], f10=f10_s2, f11=f11_s2, p=p_s2)
+        e2_cost_factors = ElementCostFactors(f1=f1_e2, f2=f2_e2, f3=f3_e2, f8=self.f8_dict['e2'], f10=f10_e2, f11=f11_e2, p=p_e2)
+        b1_cost_factors = ElementCostFactors(f1=f1_b1, f2=f2_b1, f3=f3_b1, f8=self.f8_dict['b1'], f10=f10_b1, f11=f11_b1, p=p_b1)
 
         element_map = {'s1': [s1_CER_vals, s1_cost_factors, 1],
                        'e1': [e1_CER_vals, e1_cost_factors, self.num_engines_dict['e1']],
@@ -283,7 +324,7 @@ class TwoLiquidStageTwoEngineWithBooster(VehicleArchitecture):
                        'e2': [e2_CER_vals, e2_cost_factors, self.num_engines_dict['e2']],
                        'b1': [b1_CER_vals, b1_cost_factors, self.num_engines_dict['b1']]}
 
-        veh_cost_factors = VehicleCostFactors(f0_dev=None, f0_prod=f0_prod_veh, f6=None, f7=None, f8=self.f8_dict['veh'], f9=f9_veh, p=None)
+        veh_cost_factors = VehicleCostFactors(f0_dev=f0_dev_veh, f0_prod=f0_prod_veh, f6=f6_veh, f7=f7_veh, f8=self.f8_dict['veh'], f9=f9_veh, p=None)
 
         prod_cost = self.launch_vehicle.average_vehicle_production_cost(veh_cost_factors, self.vehicle_prod_nums_list, element_map)
 
@@ -297,7 +338,7 @@ class TwoLiquidStageTwoEngineWithBooster(VehicleArchitecture):
         props_cost = get_props_cost(self.vehicle_props_dict)
 
         direct_ops_cost = ground_ops + mission_ops + props_cost + fees + insurance + recovery_cost
-        indir_ops_cost = indirect_ops_cost(launch_rate=launch_rate, launch_provider_type = self.launch_provider_type)
+        indir_ops_cost = indirect_ops_cost(launch_rate=launch_rate, launch_provider_type=self.launch_provider_type)
 
         refurb_cost = self.launch_vehicle.total_refurbishment_cost(ops_cost_factors, element_map)
 
@@ -305,7 +346,15 @@ class TwoLiquidStageTwoEngineWithBooster(VehicleArchitecture):
 
         cost_per_flight = prod_cost_per_flight + ops_cost_per_flight
 
-        return (prod_cost_per_flight, ops_cost_per_flight, cost_per_flight)
+        dev_cost = self.launch_vehicle.vehicle_development_cost(veh_cost_factors, element_map)
+
+        frac_dev_cost = dev_cost * frac_dev_paid
+
+        dev_cost_per_flight = frac_dev_cost/num_program_flights
+
+        price_per_flight = (prod_cost_per_flight + ops_cost_per_flight)*profit_multiplier + dev_cost_per_flight
+
+        return (prod_cost_per_flight, ops_cost_per_flight, cost_per_flight, dev_cost, price_per_flight)
 
 
 atlasV_401_architecture = TwoLiquidStageTwoEngine(
@@ -321,8 +370,9 @@ atlasV_401_architecture = TwoLiquidStageTwoEngine(
     vehicle_props_dict=atlasV.atlas_props_dict,
     prod_cost_facs_unc_list=atlasV.atlas_uncertainty_list,
     ops_cost_unc_list=atlasV.atlas_ops_uncertainty_list,
+    dev_cost_unc_list=atlasV.atlas_dev_uncertainty_list
 )
-
+"""
 falcon9_block3_architecture = TwoLiquidStageTwoEngine(
     launch_vehicle=falcon9.falcon9_block3,
     vehicle_prod_nums_list=falcon9.falcon_prod_nums,
@@ -337,7 +387,7 @@ falcon9_block3_architecture = TwoLiquidStageTwoEngine(
     prod_cost_facs_unc_list=falcon9.falcon_uncertainty_list,
     ops_cost_unc_list=falcon9.falcon_ops_uncertainty_list
 )
-"""
+
 electron_architecture = TwoLiquidStageTwoEngine(
     launch_vehicle=electron.electron,
     vehicle_prod_nums_list=electron.electron_prod_nums,
@@ -345,7 +395,7 @@ electron_architecture = TwoLiquidStageTwoEngine(
     f8_dict=electron.electron_f8_dict,
     prod_cost_facs_unc_list=electron.electron_uncertainty_list
 )
-"""
+
 delta_architecture = TwoLiquidStageTwoEngine(
     launch_vehicle=deltaIV.deltaIV_medium,
     vehicle_prod_nums_list=deltaIV.delta_prod_nums,
@@ -375,7 +425,7 @@ antares230_architecture = OneSolidOneLiquid(
     prod_cost_facs_unc_list=antares230.antares_uncertainty_list,
     ops_cost_unc_list=antares230.antares_ops_uncertainty_list,
 )
-
+"""
 ariane5G_architecture = TwoLiquidStageTwoEngineWithBooster(
     launch_vehicle=ariane5G.ariane5G,
     vehicle_prod_nums_list=ariane5G.ariane_prod_nums_list,
@@ -388,13 +438,13 @@ ariane5G_architecture = TwoLiquidStageTwoEngineWithBooster(
     launch_provider_type=ariane5G.ariane_launch_provider_type,
     vehicle_props_dict=ariane5G.ariane_props_dict,
     prod_cost_facs_unc_list=ariane5G.ariane_uncertainty_list,
-    ops_cost_unc_list=ariane5G.ariane_ops_uncertainty_list
+    ops_cost_unc_list=ariane5G.ariane_ops_uncertainty_list,
+    dev_cost_unc_list=ariane5G.ariane_dev_uncertainty_list
 )
 
 def demo():
 
-    vehicles = [atlasV_401_architecture, delta_architecture, falcon9_block3_architecture,
-                antares230_architecture, ariane5G_architecture]
+    vehicles = [atlasV_401_architecture, ariane5G_architecture]
 
     results = {}
     xticks = []
@@ -413,13 +463,19 @@ def demo():
     prod_cost_per_flight = {}
     ops_cost_per_flight = {}
     cost_per_flight = {}
+    dev_cost = {}
+    price_per_flight = {}
     for lv_name in results:
         prod_cost_per_flight[lv_name] = results[lv_name]['prod_cost_per_flight']
         ops_cost_per_flight[lv_name] = results[lv_name]['ops_cost_per_flight']
         cost_per_flight[lv_name] = results[lv_name]['cost_per_flight']
+        dev_cost[lv_name] = results[lv_name]['dev_cost']
+        price_per_flight[lv_name] = results[lv_name]['price_per_flight']
     prod_cost_per_flight = pandas.DataFrame(prod_cost_per_flight)
     ops_cost_per_flight = pandas.DataFrame(ops_cost_per_flight)
     cost_per_flight = pandas.DataFrame(cost_per_flight)
+    dev_cost = pandas.DataFrame(dev_cost)
+    price_per_flight = pandas.DataFrame(price_per_flight)
 
 
     plt.figure()
@@ -430,10 +486,10 @@ def demo():
     plt.xlabel('Launch vehicle')
 
     plt.scatter(0, 314, marker='+', color='red', zorder=10) # atlas, from rocketbuilder
-    plt.scatter(1, 553, marker='+', color='red', zorder=10) # delta
+    """plt.scatter(1, 553, marker='+', color='red', zorder=10) # delta
     plt.scatter(2, 177, marker='+', color='red', zorder=10) # falcon 9
     plt.scatter(3, 244, marker='+', color='red', zorder=10) # antares
-    plt.scatter(4, 485, marker='+', color='red', zorder=10) # ariane 5
+    plt.scatter(4, 485, marker='+', color='red', zorder=10) # ariane 5"""
 
     plt.figure()
     sns.set(style='whitegrid')
@@ -443,16 +499,24 @@ def demo():
     plt.xlabel('Launch vehicle')
 
     plt.scatter(0, 314, marker='+', color='red', zorder=10) # atlas, from rocketbuilder
+    """
     plt.scatter(1, 553, marker='+', color='red', zorder=10) # delta
     plt.scatter(2, 177, marker='+', color='red', zorder=10) # falcon 9
     plt.scatter(3, 244, marker='+', color='red', zorder=10) # antares
-    plt.scatter(4, 485, marker='+', color='red', zorder=10) # ariane 5
+    plt.scatter(4, 485, marker='+', color='red', zorder=10) # ariane 5"""
 
     """
     plt.scatter(1, 177, marker='+', color='red', zorder=10) # falcon 9
     plt.scatter(2, 553, marker='+', color='red', zorder=10) # delta
     # plt.scatter(3, 229, marker='+', color='red', zorder=10) # antares
     plt.scatter(3, 485, marker='+', color='red', zorder=10) # ariane 5"""
+
+    plt.figure()
+    sns.set(style='whitegrid')
+    ax = sns.violinplot(data=dev_cost)
+    plt.title('Development cost')
+    plt.ylabel('Cost [WYr]')
+    plt.xlabel('Launch vehicle')
 
     plt.show()
 

@@ -69,7 +69,7 @@ class TestVehicleClass(unittest.TestCase):
         self.ariane_prod_nums = [1]
         self.ariane_prod_nums3 = [1, 2, 3]
         
-        self.ariane5_ops_cost_factors = OperationsCostFactors(f5_vehicle=0, f5_engine=0, f8=0.86, f11=1.0, fv=0.9, fc=0.85, p=0.9)
+        self.ariane5_ops_cost_factors = OperationsCostFactors(f5_dict={}, f8=0.86, f11=1.0, fv=0.9, fc=0.85, p=0.9)
         self.launch_rate = 7
         self.launch_nums_list = range(1,10)
 
