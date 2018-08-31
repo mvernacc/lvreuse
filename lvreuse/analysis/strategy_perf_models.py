@@ -1,17 +1,19 @@
 import abc
+import os.path
 from collections import namedtuple
+
 import seaborn as sns
 import pandas
 import numpy as np
 from matplotlib import pyplot as plt
-import os.path
-
 import rhodium as rdm
-import perf
-import payload
-from landing_dv import landing_dv
-from unavail_mass import unavail_mass
-import launch_vehicles
+
+from lvreuse.performance import payload_fixed_stages
+from lvreuse.performance.unavail_mass import unavail_mass
+from lvreuse.performance.landing_dv import landing_dv
+from lvreuse.performance.launch_site_return import (propulsive_ls_perf,
+                                                    winged_powered_ls_perf)
+from lvreuse.data import launch_vehicles
 
 g_0 = 9.81
 
@@ -128,7 +130,7 @@ class StrategyNoPropulsion(Strategy):
 
     def evaluate_performance(self, c_1, c_2, E_1, E_2, a, z_m=1):
         e_1 = unavail_mass(a, P=0, z_m=z_m, E_1=E_1)
-        return payload.payload_fixed_stages(c_1, c_2, e_1, E_2, self.y, self.mission.dv)
+        return payload_fixed_stages(c_1, c_2, e_1, E_2, self.y, self.mission.dv)
 
 
 
@@ -140,7 +142,7 @@ class Expendable(Strategy):
         self.setup_model()
 
     def evaluate_performance(self, c_1, c_2, E_1, E_2):
-        return payload.payload_fixed_stages(c_1, c_2, E_1, E_2, self.y, self.mission.dv)
+        return payload_fixed_stages(c_1, c_2, E_1, E_2, self.y, self.mission.dv)
 
 
 class PropulsiveLaunchSite(Strategy):
@@ -160,7 +162,7 @@ class PropulsiveLaunchSite(Strategy):
 
     def evaluate_performance(self, c_1, c_2, E_1, E_2, a,
                        dv_entry, landing_m_A, landing_accel, f_ss):
-        return perf.propulsive_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
+        return propulsive_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
                                        dv_entry, landing_m_A, landing_accel, f_ss)[0]
 
 
@@ -180,7 +182,7 @@ class WingedPoweredLaunchSite(Strategy):
 
     def evaluate_performance(self, c_1, c_2, E_1, E_2, a,
                        I_sp_ab, v_cruise, lift_drag, f_ss):
-        return perf.winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
+        return winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
                                            I_sp_ab, v_cruise, lift_drag, f_ss)[0]
 
 
@@ -201,7 +203,7 @@ class WingedPoweredLaunchSitePartial(Strategy):
 
     def evaluate_performance(self, c_1, c_2, E_1, E_2, a,
                        I_sp_ab, v_cruise, lift_drag, f_ss, z_m):
-        return perf.winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
+        return winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
                                            I_sp_ab, v_cruise, lift_drag, f_ss, z_m)[0]
 
 class PropulsiveDownrange(Strategy):
@@ -225,7 +227,7 @@ class PropulsiveDownrange(Strategy):
         propellant_margin = 0.10
         P *= 1 + propellant_margin
         e_1 = unavail_mass(a, P, z_m=1, E_1=E_1)
-        return payload.payload_fixed_stages(c_1, c_2, e_1, E_2, self.y, self.mission.dv)
+        return payload_fixed_stages(c_1, c_2, e_1, E_2, self.y, self.mission.dv)
 
 
 class WingedGlider(StrategyNoPropulsion):

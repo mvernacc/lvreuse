@@ -1,18 +1,12 @@
 """examine the variation of performance with inert mass fraction."""
 
-import seaborn as sns
-import pandas
-import numpy as np
-from matplotlib import pyplot as plt
 import os.path
 
+from matplotlib import pyplot as plt
 import rhodium as rdm
-import perf
-import payload
-from landing_dv import landing_dv
-from unavail_mass import unavail_mass
-import strategy_perf_models
-from lessons.quantile_plot import quantile_plot
+
+from lvreuse.analysis import strategy_perf_models
+from lvreuse.utils import quantile_plot
 
 
 def main():
@@ -26,9 +20,9 @@ def main():
     mission = strategy_perf_models.GTO
 
 
-    plt.figure(figsize=(8,6))
+    plt.figure(figsize=(8, 6))
     strats = [strategy_perf_models.Expendable, strategy_perf_models.PropulsiveLaunchSite,
-                strategy_perf_models.WingedPoweredLaunchSite]
+              strategy_perf_models.WingedPoweredLaunchSite]
     colors = ['grey', 'red', 'blue']
     for strat, color in zip(strats, colors):
         strat_instance = strat(tech_1, tech_2, mission)
@@ -40,8 +34,8 @@ def main():
     plt.xlabel('First stage baseline inert mass fraction $E_1$ [-]')
     plt.ylabel('Overall payload mass fraction $\\pi_*$ [-]')
     plt.title('Payload performance for {:s} mission'.format(mission.name)
-                + '\nstage 1: {:s} {:s} tech.,'.format(tech_1.fuel, tech_1.cycle)
-                + ' stage 2: {:s} {:s} tech.'.format(tech_2.fuel, tech_2.cycle))
+              + '\nstage 1: {:s} {:s} tech.,'.format(tech_1.fuel, tech_1.cycle)
+              + ' stage 2: {:s} {:s} tech.'.format(tech_2.fuel, tech_2.cycle))
     plt.ylim([0, plt.ylim()[1]])
     plt.text(x=0.060, y=plt.ylim()[1]/2, s='Al alloy tanks', rotation=90)
     plt.text(x=0.035, y=plt.ylim()[1]/2, s='Composite tanks?', rotation=90)

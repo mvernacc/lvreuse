@@ -1,28 +1,12 @@
-"""Primary mission unavailable mass ratio for first stage recovery."""
-import numpy as np
-from matplotlib import pyplot as plt
-import matplotlib.gridspec as gridspec
+"""Plot contours of first stage unvaiable mass vs recovery hardware factor and recovery propellant factor."""
+
+import os.path
 from collections import namedtuple
 
-import payload
+import numpy as np
+from matplotlib import pyplot as plt
 
-def unavail_mass(a, P, z_m, E_1):
-    """Primary mission unavailable mass ratio for first stage recovery.
-
-    Arguments:
-        a (scalar): Fraction of the recovery vehicle dry mass which is added recovery
-            hardware [units: dimensionless].
-        P (scalar): Propulsion exponent recovery maneuver (e.g. Delta v / c) [units: dimensionless].
-        z_m (scalar): Fraction of baseline dry mass which is to be recovered [units: dimensionless].
-        E_1 (scalar): Structural mass ratio w/o reuse hardware [units: dimensionless].
-
-    Returns:
-        scalar: unavailable mass ratio [units: dimensionless].
-    """
-    chi_r = a * z_m / (1 - a)
-    epsilon_1_prime = ((1 + chi_r + z_m / (1 - a) * (np.exp(P) - 1))
-        / (1 + chi_r + (1 - E_1) / E_1))
-    return epsilon_1_prime
+from lvreuse.performance.unavail_mass import unavail_mass
 
 
 def main():
@@ -58,7 +42,7 @@ def plot_effect_of_structure_mass():
     ax.set_xlim(xmin=0)
     ax.set_ylim(ymin=0)
     plt.xlabel('First stage mass tech limit $E_1$ [-]')
-    plt.ylabel("First stage unavail. mass $\epsilon_1'$ [-]")
+    plt.ylabel("First stage unavail. mass $\\epsilon_1'$ [-]")
     plt.legend()
     plt.savefig('effect_of_structure_mass.png')
 
@@ -110,7 +94,7 @@ def plot_contours_ap():
         dv_ax.spines['left'].set_visible(True)
         dv_ax.yaxis.set_label_position('left')
         dv_ax.yaxis.set_ticks_position('left')
-        dv_ax.set_ylabel('Recov. $\Delta v$ [m/s]')
+        dv_ax.set_ylabel('Recov. $\\Delta v$ [m/s]')
         # Air-breathing cruise range axis
         ab_ax = host_ax.twinx()
         ab_ax.set_ylim(0, max(P) * lift_drag * Isp_ab * v_cruise * 1e-3)
@@ -119,17 +103,10 @@ def plot_contours_ap():
             lift_drag, v_cruise))
 
         plt.tight_layout()
-        plt.savefig('unavail_mass_{:s}.png'.format(
-            case.name.replace(' ', '_').replace(',', '')))
-
-    # plt.figure(figsize=(6,6))
-    # cs = plt.contour(chi_r_grid, dv_r_grid, r_p_grid)
-    # plt.clabel(cs, inline=1, fontsize=10)
-    # plt.xlabel('Recov. h/w mass ratio $\\chi_r = m_{rh,1}/m_{s,1}$ [-]')
-    # plt.ylabel('Recov. $\\Delta v_r$ [m/s]')
-    # plt.title("Recov. / Expend payload ratio $r_p$\n" +
-    #           'for $c_1/g_0$={:.0f} s, $c_2/g_0$={:.0f} s $E_1=E_2$={:.2f}, $\\Delta v_*$={:.0f} m/s'.format(
-    #             c_1/g_0, c_2/g_0, E, dv_mission))
+        plt.savefig(os.path.join(
+            'plots',
+            'unavail_mass_{:s}.png'.format(
+            case.name.replace(' ', '_').replace(',', ''))))
 
 
 if __name__ == '__main__':

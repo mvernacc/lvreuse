@@ -1,12 +1,13 @@
 """Effect of stage mass ratio on payload capacity."""
+import os.path
+from itertools import cycle
 
 import numpy as np
 from matplotlib import pyplot as plt
-from itertools import cycle
 from scipy import interpolate
 
-import payload
-import launch_vehicles
+from lvreuse.performance import payload_fixed_stages
+from lvreuse.data import launch_vehicles
 
 g_0 = 9.81
 
@@ -36,13 +37,13 @@ def main():
             plt.ylabel('')
 
     plt.suptitle("Effect of $\\epsilon_1'$ and $y$ on payload capacity"
-        + ' to {:s} ($\Delta v_*$ = {:.1f} km/s)'.format(
+        + ' to {:s} ($\\Delta v_*$ = {:.1f} km/s)'.format(
             mission, get_dv_mission(mission) * 1e-3))
 
     plt.tight_layout()
     plt.subplots_adjust(wspace=0, top=0.85)
 
-    plt.savefig('stage_mass_ratio.png')
+    plt.savefig(os.path.join('plots', 'stage_mass_ratio.png'))
     plt.show()
 
 
@@ -72,7 +73,7 @@ def plot_lv(lv, mission, full_legend=True):
     for e_1 in  e_1_steps:
         pi_star = np.zeros(y.shape)
         for i in range(len(y)):
-            pi_star[i] = payload.payload_fixed_stages(
+            pi_star[i] = payload_fixed_stages(
                 c_1, c_2, e_1, e_2, y[i], dv_mission)
         if e_1 == e_1_actual:
             color='black'
