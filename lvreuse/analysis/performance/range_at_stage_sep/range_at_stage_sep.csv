@@ -1,0 +1,10 @@
+Reference,Type,Case/flight,stage sep velocity [m/s],range at stage sep [km],Notes
+McKinney,Simulation,1A,2778,70,"1st stage ideal dv given, assume 300 m/s losses"
+Hellman,Simulation,Glideback,983,37,
+Hellman,Simulation,Boostback – min dry mass,1705,74,
+Hellman,Simulation,Flyback – min dry mass,2060,93,
+https://i.redd.it/8mwqvbd2n5py.png,Flight data,OG2-2,1600,33,
+https://i.redd.it/8mwqvbd2n5py.png,Flight data,CRS-8,1800,60,
+https://i.redd.it/8mwqvbd2n5py.png,Flight data,Iridium NEXT 1,1900,65,
+https://i.redd.it/8mwqvbd2n5py.png,Flight data,SES-9,2300,90,
+https://i.redd.it/8mwqvbd2n5py.png,Flight data,Echostar XXIII,2700,120,

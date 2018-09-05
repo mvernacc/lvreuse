@@ -1,0 +1,43 @@
+Engine,Origin,Designer,Use,Fuel,Oxidizer,Mixture ratio,Isp (vac),Isp (sl),Thrust (vac),Thrust (sl),Mass,Chamber pressure,Nozzle area ratio,Cycle,Year of first flight,Reference
+F-1,USA,Rocketdyne,Booster,kero,O2,2.27,305,265,7780000,6770000,8444,6770000,16,GG,1967,Sutton
+J-2,USA,Rocketdyne,Upper,H2,O2,5.5,425,,1020000,,1567,4940000,27.5,GG,1966,Sutton
+CE-20,India,LPSC,Upper,H2,O2,5.05,443,,200000,,588,6000000,100,GG,2017,Wikipedia
+CE-7.5,India,LPSC,Upper,H2,O2,,454,,82000,,435,5800000,,SC,2010,Wikipedia
+HM7A,Europe,Snecma,Upper,H2,O2,4.5,421,,60000,,,,,GG,1979,Sutton
+HM7B,Europe,Snecma,Upper,H2,O2,5,445,,62700,,165,3700000,83.1,GG,1986,Wikipedia
+LE-5,Japan,Mitsubishi,Upper,H2,O2,5.5,450,,103005,,255,3650000,140,GG,1984,"Sutton, Wikipedia"
+LE-5A,Japan,Mitsubishi,Upper,H2,O2,5,452,,122000,,285,3980000,130,Expander,1991,"Sutton, Wikipedia"
+LE-5B,Japan,Mitsubishi,Upper,H2,O2,5,450,347.5,137000,,290,3600000,100,Expander,2002,"Sutton, Wikipedia"
+LE-7,Japan,Mitsubishi,Booster,H2,O2,,446.5,339,1079100,844000,1714,12700000,52,SC,1994,"Sutton, Wikipedia"
+LE-7A,Japan,Mitsubishi,Booster,H2,O2,5.9,440,338,1100000,870000,1800,11900000,54,SC,2002,"Sutton, Wikipedia"
+Merlin 1C,USA,SpaceX,Booster,kero,O2,,304,266,480000,423000,630,6770000,,GG,2008,Wikipedia
+Merlin 1C Vacuum,USA,SpaceX,Upper,kero,O2,,342,,411000,,,,,GG,2010,Wikipedia
+Merlin 1D,USA,SpaceX,Booster,kero,O2,,311,282,914000,845000,470,9700000,,GG,2013,"Wikipedia, spacex.com"
+Merlin 1D Vacuum,USA,SpaceX,Upper,kero,O2,,348,,934000,,,,165,GG,2013,"Wikipedia, spacex.com"
+NK-33,Soviet Union,Kuznetsov,Booster,kero,O2,,331,279,1680000,1500000,1242,14500000,27,SC,1969,"Sutton, Wikipedia"
+RD-0110,Soviet Union,KBKhA,Upper,kero,O2,2.2,326,,298000,,409,6800000,,GG,1965,Wikipedia
+RD-0120,Soviet Union,KBKhA,Booster,H2,O2,6,455,353,1960000,1530000,3450,21900000,85.7,SC,1987,Wikipedia
+RD-0124,Russia,KBKhA,Upper,kero,O2,,359,,294000,,572,15700000,,SC,2006,Wikipedia
+RD-107,Soviet Union,Energomash,Booster,kero,O2,,313,256,1000000,814000,1190,5900000,,GG,1957,"Sutton, Wikipedia"
+RD-107A,Russia,Energomash,Booster,kero,O2,,320,263,1020000,839000,1190,6000000,,GG,2001,"Sutton, Wikipedia"
+RD-120,Soviet Union,Energomash,Upper,kero,O2,,350,,833000,,1125,16300000,,SC,1985,"Sutton, Wikipedia"
+"RD-170, RD-171",Soviet Union,Energomash,Booster,kero,O2,2.63,337,309,7900000,7260000,10750,24500000,,SC,1985,"Sutton, Wikipedia"
+RD-180,Russia,Energomash,Booster,kero,O2,,338,311,4150000,3830000,5480,26700000,36.87,SC,2000,Wikipedia
+RD-181,Russia,Energomash,Booster,kero,O2,2.63,339,312,2090000,1920000,2200,26300000,,SC,2016,"Wikipedia, spaceflight101"
+RD-56 (KDV-1),Soviet Union,KB KhimMash,Upper,H2,O2,,462,,69600,,282,5600000,,SC,2001,Wikipedia
+RL10A-3,USA,Pratt & Whitney,Upper,H2,O2,5,427,,66700,,131,2070000,40,Expander,1963,"Sutton, Wikipedia"
+RL10B-2,USA,Pratt & Whitney,Upper,H2,O2,5.88,465,,110000,,227,4630000,290,Expander,1998,"Sutton, Wikipedia"
+RL10C-1,USA,Aerojet Rocketdyne,Upper,H2,O2,5.5,450,,102000,,190,,130,Expander,2014,Wikipedia
+RS-25 (SSME),USA,Rocketdyne,Booster,H2,O2,6.03,452,361,2090000,1660000,3526,18900000,69,SC,1981,Sutton
+RS-27A,USA,Rocketdyne,Booster,kero,O2,,302,255,1050000,890000,1147,4800000,12,GG,1989,Wikipedia
+RS-68,USA,Rocketdyne,Booster,H2,O2,6,410,365,3310000,2890000,6736,10100000,21.5,GG,2002,Sutton
+Rutherford,USA/New Zealand,Rocket Lab,Booster,kero,O2,,311,,24000,,35,,,Electric,2017,rocketlabusa.com
+Rutherford Vacuum,USA/New Zealand,Rocket Lab,Upper,kero,O2,,343,,24000,,,,,Electric,2017,rocketlabusa.com
+Vulcain 1,Europe,Snecma,Booster,H2,O2,6.2,431,326,1080000,773000,1300,10000000,,GG,1996,"Wikipedia, astronautix"
+Vulcain 2,Europe,Snecma,Booster,H2,O2,6.7,429,318,1350000,940000,1800,11600000,,GG,2005,"Wikipedia, astronautix"
+YF-100,China,AALPT,Booster,kero,O2,2.6,335,300,1340000,1200000,,18000000,35,SC,2015,Wikipedia
+YF-115,China,AALPT,Upper,kero,O2,2.5,341.5,,177000,147000,,12000000,,SC,2015,Wikipedia
+YF-73,China,,Upper,H2,O2,5,420,,44200,,236,2590000,40,GG,1987,"Sutton, Wikipedia"
+YF-75,China,Beijing Aerospace Propulsion Institute,Upper,H2,O2,5.1,438,,78400,,550,3760000,80,GG,1994,"Sutton, Wikipedia"
+YF-75D,China,AALPT,Upper,H2,O2,6,442,,88300,,,4100000,80,Expander,2016,Wikipedia
+YF-77,China,AALPT,Booster,H2,O2,5.5,430,310,700000,510000,,10200000,49,GG,2016,Wikipedia
