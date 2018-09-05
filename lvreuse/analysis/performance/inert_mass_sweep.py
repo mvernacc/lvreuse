@@ -5,7 +5,7 @@ import os.path
 from matplotlib import pyplot as plt
 import rhodium as rdm
 
-from lvreuse.analysis import strategy_perf_models
+from lvreuse.analysis.performance import strategy_perf_models
 from lvreuse.utils import quantile_plot
 
 
