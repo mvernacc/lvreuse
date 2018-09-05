@@ -372,7 +372,7 @@ atlasV_401_architecture = TwoLiquidStageTwoEngine(
     ops_cost_unc_list=atlasV.atlas_ops_uncertainty_list,
     dev_cost_unc_list=atlasV.atlas_dev_uncertainty_list
 )
-"""
+
 falcon9_block3_architecture = TwoLiquidStageTwoEngine(
     launch_vehicle=falcon9.falcon9_block3,
     vehicle_prod_nums_list=falcon9.falcon_prod_nums,
@@ -385,9 +385,10 @@ falcon9_block3_architecture = TwoLiquidStageTwoEngine(
     launch_provider_type=falcon9.falcon_launch_provider_type,
     vehicle_props_dict=falcon9.falcon_props_dict,
     prod_cost_facs_unc_list=falcon9.falcon_uncertainty_list,
-    ops_cost_unc_list=falcon9.falcon_ops_uncertainty_list
+    ops_cost_unc_list=falcon9.falcon_ops_uncertainty_list,
+    dev_cost_unc_list=falcon9.falcon_dev_uncertainty_list,
 )
-
+"""
 electron_architecture = TwoLiquidStageTwoEngine(
     launch_vehicle=electron.electron,
     vehicle_prod_nums_list=electron.electron_prod_nums,
@@ -444,7 +445,7 @@ ariane5G_architecture = TwoLiquidStageTwoEngineWithBooster(
 
 def demo():
 
-    vehicles = [atlasV_401_architecture, ariane5G_architecture]
+    vehicles = [atlasV_401_architecture, ariane5G_architecture, falcon9_block3_architecture]
 
     results = {}
     xticks = []

@@ -42,7 +42,7 @@ atlas_ops_uncertainty_list = [
 atlas_dev_uncertainty_list = [
     rdm.TriangularUncertainty('f1_s1', min_value=0.6, mode_value=0.7, max_value=0.8), # wikipedia, 1st stage was modified from Atlas III
     rdm.TriangularUncertainty('f1_e1', min_value=0.0, mode_value=0.0, max_value=0.01), # engines previously used on Atlas III
-    rdm.TriangularUncertainty('f1_s2', min_value=0.6, mode_value=0.7, max_value=0.8), # elongation of Atlas II Centaur
+    rdm.TriangularUncertainty('f1_s2', min_value=0.3, mode_value=0.4, max_value=0.5), # elongation of Atlas II Centaur
     rdm.TriangularUncertainty('f1_e2', min_value=0.3, mode_value=0.4, max_value=0.5), # modification of older RL-10 designs
     rdm.TriangularUncertainty('f2_s1', min_value=0.9, mode_value=1.0, max_value=1.1), # guess
     rdm.TriangularUncertainty('f2_e1', min_value=0.72, mode_value=0.78, max_value=0.84), # based on 238 firings, from incorporation-of-rd-180-failure-response-2011
