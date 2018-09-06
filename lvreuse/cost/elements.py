@@ -3,7 +3,7 @@ from lvreuse.cost.tools import cost_reduction_factor
 class LaunchVehicleElement(object):
 
     def __init__(self, name, m):
-        """Characterization of a system/element in a launch vehicle system.
+        """General characterization of a system/element in a launch vehicle system.
 
         Arguments:
             name (string): identifying name or tag for launch vehicle element
@@ -41,16 +41,15 @@ class LaunchVehicleElement(object):
             Average production cost of launch vehicle element [units: person-year]."""
 
         f4_avg = cost_reduction_factor(element_cost_factors.p, element_prod_nums_list)
-        # print('f4_avg: ', f4_avg)
 
         avg_prod_cost = CER_vals.prod_a * self.m**CER_vals.prod_x * f4_avg * element_cost_factors.f8 * \
                         element_cost_factors.f10 * element_cost_factors.f11
 
-        # print(self.name + ': ' + str(avg_prod_cost))
         return avg_prod_cost
 
 
 class ComplexElement(LaunchVehicleElement):
+    """General characterization of element requiring additional cost factors for development cost"""
 
     def __init__(self, name, m):
         super(ComplexElement, self).__init__(name, m)
@@ -64,6 +63,7 @@ class ComplexElement(LaunchVehicleElement):
 
 
 class TurboFedEngine(LaunchVehicleElement):
+    """General characterization of a turbo fed engine element."""
 
     def __init__(self, name, m):
         super(TurboFedEngine, self).__init__(name, m)
@@ -85,6 +85,29 @@ class SolidRocketMotor(LaunchVehicleElement):
         self.prod_a_conf_int = [1.9209268723712933, 2.7710185782712706]
         self.prod_x_conf_int = [0.38625392, 0.43420692]
 
+
+class SolidPropellantBooster(LaunchVehicleElement):
+
+    def __init__(self, name, m):
+        super(SolidPropellantBooster, self).__init__(name, m)
+        self.dev_a, self.dev_x, self.prod_a, self.prod_x = [19.5, 0.54, 2.3, 0.412]
+        self.dev_a_conf_int = [19.5, 26.8] # [21.068, 26.8]
+        self.dev_x_conf_int = [0.4772495, 0.62277953]
+        self.prod_a_conf_int = [1.9209268723712933, 2.7710185782712706]
+        self.prod_x_conf_int = [0.38625392, 0.43420692]
+
+
+class SolidPropellantVehicleStage(LaunchVehicleElement):
+
+    def __init__(self, name, m):
+        super(SolidPropellantVehicleStage, self).__init__(name, m)
+        self.dev_a, self.dev_x, self.prod_a, self.prod_x = [22.4, 0.54, 2.75, 0.412]
+        self.dev_a_conf_int = [12.823, 52.119]
+        self.dev_x_conf_int = [0.4772495, 0.62277953]
+        self.prod_a_conf_int = [2.288, 2.771]
+        self.prod_x_conf_int = [0.38625392, 0.43420692]
+
+
 class CryoLH2TurboFed(TurboFedEngine):
 
     def __init__(self, name, m):
@@ -94,6 +117,7 @@ class CryoLH2TurboFed(TurboFedEngine):
         self.dev_x_conf_int = [0.42853851, 0.52827748]
         self.prod_a_conf_int = [2.764, 4.128]
         self.prod_x_conf_int = [0.49908152, 0.57606891] # from StorableTurboFed
+
 
 class StorableTurboFed(TurboFedEngine):
 
@@ -105,6 +129,7 @@ class StorableTurboFed(TurboFedEngine):
         self.prod_a_conf_int = [1.438868469813962, 2.29113324341886]
         self.prod_x_conf_int = [0.49908152, 0.57606891]
 
+
 class StorablePressureFed(LaunchVehicleElement):
 
     def __init__(self, name, m):
@@ -114,6 +139,7 @@ class StorablePressureFed(LaunchVehicleElement):
         self.dev_x_conf_int = [0.3273087, 0.37139749]
         self.prod_a_conf_int = [1.438868469813962, 2.29113324341886]
         self.prod_x_conf_int = [0.49908152, 0.57606891]
+
 
 class ModernPressureFed(LaunchVehicleElement):
 
@@ -163,33 +189,12 @@ class TurboJetEngine(LaunchVehicleElement):
         self.prod_a_conf_int = [3.200280413229723e-05, 90664.04883039849]
         self.prod_x_conf_int = [0, 1] # [-0.80539725, 1.96446499]
 
+
 class RamjetEngine(LaunchVehicleElement):
 
     def __init__(self, name, m):
         super(RamjetEngine, self).__init__(name, m)
         self.dev_a, self.dev_x, self.prod_a, self.prod_x = [355., 0.295, None, None]
-
-
-class SolidPropellantBooster(LaunchVehicleElement):
-
-    def __init__(self, name, m):
-        super(SolidPropellantBooster, self).__init__(name, m)
-        self.dev_a, self.dev_x, self.prod_a, self.prod_x = [19.5, 0.54, 2.3, 0.412]
-        self.dev_a_conf_int = [19.5, 26.8] # [21.068, 26.8]
-        self.dev_x_conf_int = [0.4772495, 0.62277953]
-        self.prod_a_conf_int = [1.9209268723712933, 2.7710185782712706]
-        self.prod_x_conf_int = [0.38625392, 0.43420692]
-
-
-class SolidPropellantVehicleStage(LaunchVehicleElement):
-
-    def __init__(self, name, m):
-        super(SolidPropellantVehicleStage, self).__init__(name, m)
-        self.dev_a, self.dev_x, self.prod_a, self.prod_x = [22.4, 0.54, 2.75, 0.412]
-        self.dev_a_conf_int = [12.823, 52.119]
-        self.dev_x_conf_int = [0.4772495, 0.62277953]
-        self.prod_a_conf_int = [2.288, 2.771]
-        self.prod_x_conf_int = [0.38625392, 0.43420692]
 
 
 class LiquidPropulsionModule(LaunchVehicleElement):
@@ -199,6 +204,7 @@ class LiquidPropulsionModule(LaunchVehicleElement):
         self.dev_a, self.dev_x, self.prod_a, self.prod_x = [14.2, 0.577, 3.04, 0.581]
         self.dev_a_conf_int = [6.489031194474779, 28.212166317456276]
         self.dev_x_conf_int = [0.4810022, 0.69573074]
+
 
 class ExpendableBallisticStageStorable(ComplexElement):
 
@@ -221,6 +227,7 @@ class ExpendableBallisticStageLH2(ComplexElement):
         self.prod_a_conf_int = [1.84, 2.484] # [1.987, 2.484]
         self.prod_x_conf_int = [0.50440936, 0.68569942] # from ExpendableBallisticStageStorable
 
+
 class ReusableBallisticStageStorable(ComplexElement): 
 
     def __init__(self, name, m):
@@ -230,6 +237,7 @@ class ReusableBallisticStageStorable(ComplexElement):
         self.dev_x_conf_int = [0.34053124, 0.4265368]
         self.prod_a_conf_int = [0.6424330247666832, 3.0449842761799766]
         self.prod_x_conf_int = [0.50440936, 0.68569942]
+
 
 class ReusableBallisticStageLH2(ComplexElement): 
 
@@ -241,6 +249,7 @@ class ReusableBallisticStageLH2(ComplexElement):
         self.prod_a_conf_int = [1.84, 2.484] # [1.987, 2.484]
         self.prod_x_conf_int = [0.50440936, 0.68569942] # from ExpendableBallisticStageStorable
 
+
 class WingedOrbitalVehicle(ComplexElement):
 
     def __init__(self, name, m):
@@ -249,6 +258,7 @@ class WingedOrbitalVehicle(ComplexElement):
         self.dev_a_conf_int = [833.5406027210969, 2373.8200128800067]
         self.dev_x_conf_int = [0.30198781, 0.40052414]
 
+
 class AdvancedAircraft(ComplexElement):
 
     def __init__(self, name, m):
@@ -256,6 +266,7 @@ class AdvancedAircraft(ComplexElement):
         self.dev_a, self.dev_x, self.prod_a, self.prod_x = [2169., 0.262, 0.357, 0.762]
         self.dev_a_conf_int = [1138.1882040647638, 3996.4441371072517]
         self.dev_x_conf_int = [0.20291993, 0.3229399]
+
 
 class VTOStageFlybackVehicle(LaunchVehicleElement):
 
@@ -281,14 +292,14 @@ class CrewedBallisticReentryCapsule(ComplexElement):
         self.dev_a_conf_int = [0.000228800100628152, 772048685.9231286]
         self.dev_x_conf_int = [0, 1] #[-1.46338225, 2.2841254]
 
+
 class CrewedSpaceSystem(LaunchVehicleElement):
 
-    def __init(self, name, m):
+    def __init__(self, name, m):
         super(CrewedSpaceSystem, self).__init__(name, m)
         self.dev_a, self.dev_x, self.prod_a, self.prod_x = [1113., 0.383, 0.16, 0.98]
         self.dev_a_conf_int = [448.81060831506323, 2704.1854749425434]
         self.dev_x_conf_int = [0.29281118, 0.47303145]
-
 
     def element_development_cost(self, CER_vals, element_cost_factors):
 

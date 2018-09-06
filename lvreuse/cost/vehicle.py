@@ -89,13 +89,19 @@ class LaunchVehicle(object):
         return C_ops
 
     def flight_mission_ops_cost(self, sum_QN, launch_rate, ops_cost_factors, launch_nums_list, num_crew=0, mission_duration=0):
-        ##### TODO UPDATE
         """Find launch, flight, and mission operations cost.
 
         Arguments:
-            sum_QN: TODO
+            sum_QN: sum of vehicle stage type factors Q, choose from:
+                small solid motor stages: Q = 0.15 each
+                expendable liquid-prop stage or large booster: Q = 0.4 each
+                recoverable or fly-back systems: Q = 1.0 each
+                unmanned reusable orbital systems: Q = 2.0 each
+                crewed orbital vehicles: Q = 3.0 each
+                expendable lunar transfer vehicle: Q = 2.0 each
             launch_rate (positive scalar): launch rate [units: launches/year]
             ops_cost_factors: instance of OperationsCostFactors class describing the operations-specific cost fators
+            launch_nums_list: list of consecutive flight numbers to evaluate
             num_crew (positive integer): number of crew members on a crewed mission
             mission_duration (positive scalar): duration of a crewed mission [units: days]
 

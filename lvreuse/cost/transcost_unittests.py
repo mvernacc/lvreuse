@@ -1,11 +1,12 @@
 import math
 import unittest
-from tools import cost_reduction_factor
-from elements import SolidRocketMotor, CryoLH2TurboFed, ExpendableBallisticStageLH2, \
+import os.path
+from lvreuse.cost.tools import cost_reduction_factor
+from lvreuse.cost.elements import SolidRocketMotor, CryoLH2TurboFed, ExpendableBallisticStageLH2, \
     SolidPropellantBooster, ExpendableBallisticStageStorable, StorablePressureFed
-from vehicle import LaunchVehicle
-from CERValues import CERValues
-from cost_factors import ElementCostFactors, VehicleCostFactors, OperationsCostFactors
+from lvreuse.cost.vehicle import LaunchVehicle
+from lvreuse.cost.CER_values import CERValues
+from lvreuse.cost.cost_factors import ElementCostFactors, VehicleCostFactors, OperationsCostFactors
 
 class TestElementClass(unittest.TestCase):
 
@@ -125,7 +126,7 @@ class TestVehicleClass(unittest.TestCase):
     def test_vehicle_prod_cost3(self):
 
         ariane5_first3_prod_cost = self.ariane5.average_vehicle_production_cost(self.ariane5_cost_factors, self.ariane_prod_nums3, self.ariane5_element_map)
-        print('ariane5_first3_prod_cost: ', ariane5_first3_prod_cost)
+        
         # vehicle1
         SRB_prod_cost = self.SRB.average_element_production_cost(self.SRB_CER_vals, self.SRB_cost_factors, [1])
         SRB_prod_cost2 = self.SRB.average_element_production_cost(self.SRB_CER_vals, self.SRB_cost_factors, [2])
@@ -156,7 +157,6 @@ class TestVehicleClass(unittest.TestCase):
         vehicle3_cost = SRB_prod_cost + SRB_prod_cost2 + core_veh_prod_cost + vulcain_engine_prod_cost + stage2_prod_cost + aestus_engine_prod_cost
 
         vehicle_avg = (vehicle1_cost + vehicle2_cost + vehicle3_cost)/3. * self.ariane5_cost_factors.f0_prod**self.ariane5.N * self.ariane5_cost_factors.f9
-        print('vehicle_avg: ', vehicle_avg)
 
         self.assertAlmostEqual(ariane5_first3_prod_cost, vehicle_avg, delta=1)
 

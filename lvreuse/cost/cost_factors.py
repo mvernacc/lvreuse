@@ -61,7 +61,8 @@ class OperationsCostFactors(object):
         """Describes operations-specific cost factors for vehicle operation.
 
         Arguments:
-            f5 (positive scalar): refurbishment cost factor [units: dimensionless].
+            f5_dict (positive scalar): dictionary mapping element names to their corresponding vehicle
+                refurbishment cost factor (if applicable), i.e. {element_name: refurb_cost_factor}.
             f8 (positive scalar): country productivity correction factor as defined by TRANSCOST 8.2 p. 25
                     [units: dimensionless].
             f11 (positive scalar): cost reduction factor by independent development without government 
