@@ -1,16 +1,13 @@
 """Cost per flight model for first stage reuse."""
 import math
 import matplotlib.pyplot as plt
-import sys
-import os
-sys.path.append(os.path.abspath('..'))
-from tools import cost_reduction_factor
-from elements import SolidRocketMotor, CryoLH2TurboFed, ExpendableBallisticStageLH2, \
+import rhodium as rdm
+import os.path
+from lvreuse.cost.tools import cost_reduction_factor
+from lvreuse.cost.elements import SolidRocketMotor, CryoLH2TurboFed, ExpendableBallisticStageLH2, \
     SolidPropellantBooster, ExpendableBallisticStageStorable, StorablePressureFed
-from vehicle import LaunchVehicle
-from CERValues import CERValues
-from cost_factors import ElementCostFactors, VehicleCostFactors, OperationsCostFactors
-from indirect_ops import indirect_ops_cost
+from lvreuse.cost.vehicle import LaunchVehicle
+from lvreuse.cost.indirect_ops import indirect_ops_cost
 
 ### Ariane 5 ECA
 

@@ -1,7 +1,7 @@
 """Create launch vehicle elements and launch vehicle."""
 
 import math
-from tools import cost_reduction_factor
+from lvreuse.cost.tools import cost_reduction_factor
 
 class LaunchVehicle(object):
 

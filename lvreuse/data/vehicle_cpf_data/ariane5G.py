@@ -2,13 +2,12 @@
 import math
 import matplotlib.pyplot as plt
 import rhodium as rdm
-import sys
-import os
-sys.path.append(os.path.abspath('..'))
-from tools import cost_reduction_factor
-from elements import SolidRocketMotor, CryoLH2TurboFed, ExpendableBallisticStageLH2, \
+import os.path
+from lvreuse.cost.tools import cost_reduction_factor
+from lvreuse.cost.elements import SolidRocketMotor, CryoLH2TurboFed, ExpendableBallisticStageLH2, \
     SolidPropellantBooster, ExpendableBallisticStageStorable, StorablePressureFed
-from vehicle import LaunchVehicle
+from lvreuse.cost.vehicle import LaunchVehicle
+from lvreuse.cost.indirect_ops import indirect_ops_cost
 
 SRB = SolidPropellantBooster("b1", 39800) # data from Isakowitz p. 31
 core_vehicle = ExpendableBallisticStageLH2("s1", 12200 - 1300) # data from Isakowitz, less engine

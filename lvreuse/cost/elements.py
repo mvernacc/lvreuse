@@ -1,4 +1,4 @@
-from tools import cost_reduction_factor
+from lvreuse.cost.tools import cost_reduction_factor
 
 class LaunchVehicleElement(object):
 
@@ -126,13 +126,6 @@ class ModernPressureFed(LaunchVehicleElement):
         self.prod_x_conf_int = [0.49908152, 0.57606891]
 
     def average_element_production_cost(self, CER_vals, element_cost_factors, element_prod_nums_list):
-        """Calculate average production cost per vehicle element unit.
-
-        Arguments:
-            element_prod_nums_list: list of consecutive vehicle element production numbers to consider.
-
-        Returns:
-            Average production cost of launch vehicle element [units: person-year]"""
 
         f4_avg = cost_reduction_factor(element_cost_factors.p, element_prod_nums_list)
 
@@ -152,15 +145,6 @@ class ModernTurboFed(TurboFedEngine):
         self.prod_x_conf_int = [0.49908152, 0.57606891]
 
     def average_element_production_cost(self, CER_vals, element_cost_factors, element_prod_nums_list):
-        """Calculate average production cost per vehicle element unit.
-
-        Arguments:
-            element_prod_nums_list: list of consecutive vehicle element production numbers to consider.
-
-        Returns:
-            Average production cost of launch vehicle element [units: person-year]
-
-        ####### CHECK THIS """
 
         f4_avg = cost_reduction_factor(element_cost_factors.p, element_prod_nums_list)
 
@@ -281,7 +265,7 @@ class VTOStageFlybackVehicle(LaunchVehicleElement):
         self.dev_a_conf_int = [135.34253464446792, 15336.623033405793]
         self.dev_x_conf_int = [0.10541958, 0.5443403]
 
-    def element_development_method(self, CER_vals, element_cost_factors):
+    def element_development_cost(self, CER_vals, element_cost_factors):
 
         dev_cost = element_cost_factors.f1 * element_cost_factors.f3 * element_cost_factors.f8 * \
                     element_cost_factors.f10 * element_cost_factors.f11 * CER_vals.dev_a * \
@@ -306,7 +290,7 @@ class CrewedSpaceSystem(LaunchVehicleElement):
         self.dev_x_conf_int = [0.29281118, 0.47303145]
 
 
-    def element_development_method(self, CER_vals, element_cost_factors):
+    def element_development_cost(self, CER_vals, element_cost_factors):
 
         dev_cost = element_cost_factors.f1 * element_cost_factors.f3 * element_cost_factors.f8 * \
                     element_cost_factors.f10 * element_cost_factors.f11 * CER_vals.dev_a * \

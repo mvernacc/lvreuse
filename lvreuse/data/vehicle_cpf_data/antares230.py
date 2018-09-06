@@ -2,12 +2,12 @@
 import math
 import matplotlib.pyplot as plt
 import rhodium as rdm
-import sys
-import os
-sys.path.append(os.path.abspath('..'))
-from tools import cost_reduction_factor
-from elements import ExpendableBallisticStageStorable, SolidPropellantVehicleStage, StorableTurboFed
-from vehicle import LaunchVehicle
+import os.path
+from lvreuse.cost.tools import cost_reduction_factor
+from lvreuse.cost.elements import ExpendableBallisticStageStorable, SolidPropellantVehicleStage, StorableTurboFed
+from lvreuse.cost.vehicle import LaunchVehicle
+from lvreuse.cost.indirect_ops import indirect_ops_cost
+
 
 core = ExpendableBallisticStageStorable("s1", 18800 - 2 * 2350) # stage - engines, from spacelaunchreport,
 core_engine = StorableTurboFed("e1", 2350) # from russianspaceweb
