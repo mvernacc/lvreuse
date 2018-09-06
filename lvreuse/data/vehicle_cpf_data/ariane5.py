@@ -1,4 +1,4 @@
-"""Cost per flight model for first stage reuse."""
+"""Cost per flight model for Ariane 5 rocket."""
 import math
 import matplotlib.pyplot as plt
 import rhodium as rdm
@@ -79,8 +79,6 @@ ariane5G_element_map = {"P230": [SRB_CER_vals, SRB_cost_factors, 2],
 ariane5_cost_factors = VehicleCostFactors(f0_dev=1.04**3, f0_prod=1.02, f6=1.0, f7=1.0, f8=0.86, f9=1.07, p=0.9)
 
 ariane5_ops_cost_factors = OperationsCostFactors(f5_vehicle=0, f5_engine=0, f8=0.86, f11=1.0, fv=0.6, fc=0.85, p=0.85)
-
-
 
 
 ####### INPUTS #######

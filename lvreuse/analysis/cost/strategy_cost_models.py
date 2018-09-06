@@ -13,7 +13,7 @@ from lvreuse.cost.indirect_ops import indirect_ops_cost
 from lvreuse.data.propellants import propellant_cost_list
 from lvreuse.data.vehicle_cpf_data import ariane5G, falcon9, atlasV, deltaIV, electron, antares230
 
-
+    
 def get_prod_dist(element):
     """Get the production CER parameter distributions from an element.
 
@@ -74,7 +74,7 @@ def get_props_cost(vehicle_props_dict):
     """Get the cost of propellants for a vehicle.
 
     Arguments:
-        vehicle_props_dict: dictionary specifiying propellants and there respective masses in g, 
+        vehicle_props_dict: dictionary specifiying propellants and there respective masses in kg, 
             i.e. {'propellant': mass}
 
     Returns:
@@ -96,6 +96,28 @@ class VehicleArchitecture(object):
                  num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type,
                  vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list, 
                  dev_cost_unc_list):
+        """Create a vehicle architecture for cost analysis.
+
+        Arguments:
+            launch_vehicle: instance of the LaunchVehicle class describing launch vehicle
+            vehicle_prod_nums_list: list of consecutive vehicle production numbers to consider
+            vehicle_launch_nums_list: list of consecutive flight numbers to evaluate
+            num_engines_dict: dictionary mapping engine/booster element names to the number of 
+            identical units per vehicle, i.e. {element_name: num_identical_units}
+            f8_dict: dictionary mapping element names to their respective country productivity 
+                correction factor, i.e. {element_name: f8_value}
+            fv (positive scalar): cost factor for impact of launch vehicle type [units: dimensionless].
+            fc (positive scalar): cost factor for impact of assembly and integration mode 
+                [units: dimensionless]. 
+            sum_QN: sum of vehicle stage type factors Q, see vehicle class for more info
+            launch_provider_type: letter designation indicating the launch provider type
+            vehicle_props_dict: dictionary specifiying propellants and there respective masses in kg, 
+                i.e. {'propellant': mass}
+            prod_cost_facs_unc_list: list of Rhodium uncertainty objects specifying production cost uncertainties
+            ops_cost_unc_list: list of Rhodium uncertainty objects specifying operations cost uncertainties
+            dev_cost_unc_list: list of Rhodium uncertainty objects specifying development cost uncertainties
+        """
+
         self.launch_vehicle = launch_vehicle
         self.vehicle_prod_nums_list = vehicle_prod_nums_list
         self.vehicle_launch_nums_list = vehicle_launch_nums_list
@@ -111,7 +133,7 @@ class VehicleArchitecture(object):
         self.dev_cost_unc_list = dev_cost_unc_list
         self.uncertainties = []
         self.cost_model = rdm.Model(self.evaluate_cost)
-
+        
     def setup_cost_model(self):
 
         self.cost_model.parameters = [rdm.Parameter(u.name) for u in self.uncertainties]
@@ -227,11 +249,22 @@ class TwoLiquidStageTwoEngine(VehicleArchitecture):
 class OneSolidOneLiquid(VehicleArchitecture):
     """Two stage vehicle, first stage liquid with one engine type, second stage solid."""
 
-    def __init__(self, launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list, num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type, vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list, dev_cost_unc_list):
-        super(OneSolidOneLiquid, self).__init__(launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list, num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type, vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list, dev_cost_unc_list)
+    def __init__(self, launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list,
+                 num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type,
+                 vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list,
+                 dev_cost_unc_list):
+        super(OneSolidOneLiquid, self).__init__(launch_vehicle, vehicle_prod_nums_list,
+                                                vehicle_launch_nums_list, num_engines_dict,
+                                                f8_dict, fv, fc, sum_QN, launch_provider_type,
+                                                vehicle_props_dict, prod_cost_facs_unc_list,
+                                                ops_cost_unc_list, dev_cost_unc_list)
         self.uncertainties += prod_cost_facs_unc_list
-        self.uncertainties += [unc for element in self.launch_vehicle.element_list for unc in get_prod_dist(element)]
         self.uncertainties += ops_cost_unc_list
+        self.uncertainties += dev_cost_unc_list
+        self.uncertainties += [unc for element in self.launch_vehicle.element_list for unc in
+                               get_prod_dist(element)]
+        self.uncertainties += [unc for element in self.launch_vehicle.element_list for unc in
+                               get_dev_dist(element)]
         self.setup_cost_model()
 
 
@@ -268,7 +301,7 @@ class OneSolidOneLiquid(VehicleArchitecture):
         props_cost = get_props_cost(self.vehicle_props_dict)
 
         direct_ops_cost = ground_ops + mission_ops + props_cost + fees + insurance + recovery_cost
-        indir_ops_cost = indirect_ops_cost(launch_rate=launch_rate, launch_provider_type = self.launch_provider_type)
+        indir_ops_cost = indirect_ops_cost(launch_rate=launch_rate, launch_provider_type=self.launch_provider_type)
 
         refurb_cost = self.launch_vehicle.total_refurbishment_cost(ops_cost_factors, element_map)
 
@@ -276,18 +309,36 @@ class OneSolidOneLiquid(VehicleArchitecture):
 
         cost_per_flight = prod_cost_per_flight + ops_cost_per_flight
 
-        return (prod_cost_per_flight, ops_cost_per_flight, cost_per_flight)
+        dev_cost = self.launch_vehicle.vehicle_development_cost(veh_cost_factors, element_map)
+
+        frac_dev_cost = dev_cost * frac_dev_paid
+
+        dev_cost_per_flight = frac_dev_cost/num_program_flights
+
+        price_per_flight = (prod_cost_per_flight + ops_cost_per_flight)*profit_multiplier + dev_cost_per_flight
+
+        return (prod_cost_per_flight, ops_cost_per_flight, cost_per_flight, dev_cost, price_per_flight)
 
 
 class TwoLiquidStageTwoEngineWithBooster(VehicleArchitecture):
-    """Two stage vehicle, liquid stages, one type of engine per stage."""
+    """Two stage vehicle, liquid stages, one type of engine per stage, with solid rocket boosters."""
 
-    def __init__(self, launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list, num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type, vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list, dev_cost_unc_list):
-        super(TwoLiquidStageTwoEngineWithBooster, self).__init__(launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list, num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type, vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list, dev_cost_unc_list)
+    def __init__(self, launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list,
+                 num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type,
+                 vehicle_props_dict, prod_cost_facs_unc_list, ops_cost_unc_list,
+                 dev_cost_unc_list):
+        super(TwoLiquidStageTwoEngineWithBooster, self).__init__(launch_vehicle, vehicle_prod_nums_list,
+                                                vehicle_launch_nums_list, num_engines_dict,
+                                                f8_dict, fv, fc, sum_QN, launch_provider_type,
+                                                vehicle_props_dict, prod_cost_facs_unc_list,
+                                                ops_cost_unc_list, dev_cost_unc_list)
         self.uncertainties += prod_cost_facs_unc_list
-        self.uncertainties += [unc for element in self.launch_vehicle.element_list for unc in get_prod_dist(element)]
-        self.uncertainties += [unc for element in self.launch_vehicle.element_list for unc in get_dev_dist(element)]
         self.uncertainties += ops_cost_unc_list
+        self.uncertainties += dev_cost_unc_list
+        self.uncertainties += [unc for element in self.launch_vehicle.element_list for unc in
+                               get_prod_dist(element)]
+        self.uncertainties += [unc for element in self.launch_vehicle.element_list for unc in
+                               get_dev_dist(element)]
         self.setup_cost_model()
 
     def evaluate_cost(self, f0_prod_veh=1.0, f0_dev_veh = 1.0, f6_veh=1.0, f7_veh=1.0, f9_veh=1.0,
@@ -485,12 +536,6 @@ def demo():
     plt.ylabel('Cost [WYr]')
     plt.xlabel('Launch vehicle')
 
-    plt.scatter(0, 314, marker='+', color='red', zorder=10) # atlas, from rocketbuilder
-    """plt.scatter(1, 553, marker='+', color='red', zorder=10) # delta
-    plt.scatter(2, 177, marker='+', color='red', zorder=10) # falcon 9
-    plt.scatter(3, 244, marker='+', color='red', zorder=10) # antares
-    plt.scatter(4, 485, marker='+', color='red', zorder=10) # ariane 5"""
-
     plt.figure()
     sns.set(style='whitegrid')
     ax = sns.violinplot(data=cost_per_flight)
@@ -498,18 +543,12 @@ def demo():
     plt.ylabel('Cost [WYr]')
     plt.xlabel('Launch vehicle')
 
-    plt.scatter(0, 314, marker='+', color='red', zorder=10) # atlas, from rocketbuilder
     """
+    plt.scatter(0, 314, marker='+', color='red', zorder=10) # atlas
     plt.scatter(1, 553, marker='+', color='red', zorder=10) # delta
     plt.scatter(2, 177, marker='+', color='red', zorder=10) # falcon 9
     plt.scatter(3, 244, marker='+', color='red', zorder=10) # antares
     plt.scatter(4, 485, marker='+', color='red', zorder=10) # ariane 5"""
-
-    """
-    plt.scatter(1, 177, marker='+', color='red', zorder=10) # falcon 9
-    plt.scatter(2, 553, marker='+', color='red', zorder=10) # delta
-    # plt.scatter(3, 229, marker='+', color='red', zorder=10) # antares
-    plt.scatter(3, 485, marker='+', color='red', zorder=10) # ariane 5"""
 
     plt.figure()
     sns.set(style='whitegrid')

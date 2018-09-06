@@ -1,6 +1,14 @@
 import numpy as np
 
 def indirect_ops_cost(launch_rate, launch_provider_type):
+    """Find the indirect operations cost per launch.
+
+    Arguments:
+        launch_rate (positive scalar): launch rate [units: launches/year]
+        launch_provider_type: letter designation indicating the launch provider type
+
+    Returns:
+        Indirect operations cost per flight [units: Work-Year]"""
 
     ioc_data = {'A': [65, 49, 42, 38, 35, 33, 31, 30, 29, 27, 26, 25],
                 'B': [45, 34, 29, 27, 24, 23, 22, 21, 20, 19, 18, 17],

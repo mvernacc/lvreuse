@@ -133,47 +133,20 @@ class LaunchVehicle(object):
 
         return C_rec
 
-    def vehicle_refurbishment_cost(self, ops_cost_factors, vehicle_cost_factors, element_map):
-        """Find refurbishment cost for vehicle.
+    def element_refurb_cost(self, element_name, ops_cost_factors, element_map):
+        """Find refurbishment cost for an element.
 
         Arguments:
+            element_name: name attribute of element
             ops_cost_factors: instance of OperationsCostFactors class describing the operations-specific cost fators
-            vehicle_cost_factors: instance of VehicleCostFactors class describing the vehicle-specific cost factors
             element_map: dictionary mapping element names to CER values, element-specific cost factors, 
                 and number of identical elements per vehicle i.e. {element_name: [CER_vals, 
                 element_cost_factors, num_elements_per_vehicle]}
 
         Returns:
-            Vehicle refurbishment cost [units: Work Year]"""
+            Element refurbishment cost [units: Work Year]"""
 
-        TFU = self.average_vehicle_production_cost(vehicle_cost_factors, [1], element_map)
-
-        vehicle_refurb_cost = ops_cost_factors.f5_vehicle * TFU
-
-        return vehicle_refurb_cost
-
-    def engines_refurbishment_cost(self, ops_cost_factors, engine_element, element_map):
-        """Find refurbishment cost for engine.
-
-        Arguments:
-            ops_cost_factors: instance of OperationsCostFactors class describing the operations-specific cost fators
-            engine_element: instance of LaunchVehicleElement class or subclass describing the relavant engine
-            element_map: dictionary mapping element names to CER values, element-specific cost factors, 
-                and number of identical elements per vehicle i.e. {element_name: [CER_vals, 
-                element_cost_factors, num_elements_per_vehicle]}            
-
-        Returns:
-            Engine refurbishment cost [units: Work Year]"""
-
-        CER_vals, element_cost_factors, n = element_map[engine_element.name]
-        TFU = engine_element.average_element_production_cost(CER_vals, element_cost_factors, [1])
-
-        engines_refurb_cost = n * ops_cost_factors.f5_engine * TFU
-        
-        return engines_refurb_cost
-
-    def element_refurb_cost(self, element_name, ops_cost_factors, element_map):
-
+        # search for element in element list with the specified element name, end search once found
         element_refurb = next(element for element in self.element_list if element.name == element_name)
 
         CER_vals, element_cost_factors, n = element_map[element_name]
@@ -185,6 +158,16 @@ class LaunchVehicle(object):
         return element_refurb_cost
 
     def total_refurbishment_cost(self, ops_cost_factors, element_map):
+        """Find total refurbishment cost for a particular vehicle.
+
+        Arguments:
+            ops_cost_factors: instance of OperationsCostFactors class describing the operations-specific cost fators
+            element_map: dictionary mapping element names to CER values, element-specific cost factors, 
+                and number of identical elements per vehicle i.e. {element_name: [CER_vals, 
+                element_cost_factors, num_elements_per_vehicle]}
+
+        Returns:
+            Total refurbishment cost [units: Work Year]"""
 
         refurb_cost = 0
         for element_name in ops_cost_factors.f5_dict:

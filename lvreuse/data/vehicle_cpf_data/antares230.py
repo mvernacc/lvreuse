@@ -1,4 +1,4 @@
-"""Cost per flight model for Delta IV rocket."""
+"""Cost per flight model for Antares 230 rocket."""
 import math
 import matplotlib.pyplot as plt
 import rhodium as rdm
