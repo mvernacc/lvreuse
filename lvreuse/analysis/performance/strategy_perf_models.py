@@ -17,12 +17,17 @@ from lvreuse.data import launch_vehicles
 
 g_0 = 9.81
 
-Technology = namedtuple('Technology', ['fuel', 'cycle', 'stage', 'uncertainties'])
+Technology = namedtuple('Technology',
+                       ['fuel', 'oxidizer', 'of_mass_ratio',
+                       'cycle', 'n_engines', 'stage', 'uncertainties'])
 
 kero_GG_boost_tech = Technology(
     fuel='kerosene',
+    oxidizer='O2',
+    of_mass_ratio=2.3,
     cycle='gas generator',
     stage='booster',
+    n_engines=9,
     uncertainties=[
         rdm.TriangularUncertainty('c_1', min_value=264.6 * g_0, mode_value=287.9 * g_0, max_value=305.4 * g_0),
         rdm.TriangularUncertainty('E_1', min_value=0.055, mode_value=0.060, max_value=0.065),
@@ -31,8 +36,11 @@ kero_GG_boost_tech = Technology(
 
 kero_GG_upper_tech = Technology(
     fuel='kerosene',
+    oxidizer='O2',
+    of_mass_ratio=2.3,
     cycle='gas generator',
     stage='upper',
+    n_engines=1,
     uncertainties=[
         rdm.TriangularUncertainty('c_2', min_value=335.2 * g_0, mode_value=345.0 * g_0, max_value=348.0 * g_0),
         rdm.TriangularUncertainty('E_2', min_value=0.040, mode_value=0.050, max_value=0.060),
@@ -41,8 +49,11 @@ kero_GG_upper_tech = Technology(
 
 H2_SC_boost_tech = Technology(
     fuel='H2',
+    oxidizer='O2',
+    of_mass_ratio=6.0,
     cycle='staged combustion',
     stage='booster',
+    n_engines=9,
     uncertainties=[
         rdm.TriangularUncertainty('c_1', min_value=369.5 * g_0, mode_value=398.1 * g_0, max_value=418.7 * g_0),
         rdm.TriangularUncertainty('E_1', min_value=0.11, mode_value=0.12, max_value=0.13),
@@ -51,19 +62,29 @@ H2_SC_boost_tech = Technology(
 
 H2_SC_upper_tech = Technology(
     fuel='H2',
+    oxidizer='O2',
+    of_mass_ratio=6.0,
     cycle='staged combustion',
     stage='upper',
+    n_engines=1,
     uncertainties=[
         rdm.TriangularUncertainty('c_2', min_value=444.9 * g_0, mode_value=458.0 * g_0, max_value=462.0 * g_0),
         rdm.TriangularUncertainty('E_2', min_value=0.080, mode_value=0.085, max_value=0.090),
     ]
     )
 
+"""Defines a launch mission: taking a payload to an orbit.
 
-Mission = namedtuple('Mission', ['name', 'dv'])
+Attributes:
+    name (str): Orbit name.
+    dv (scalar): Delta-v (incl losses) required to reach the target orbit
+        [units: meter second**-1].
+    m_payload (scalar): Payload mass [units: kilogram].
+"""
+Mission = namedtuple('Mission', ['name', 'dv', 'm_payload'])
 
-LEO = Mission('LEO', 9.5e3)
-GTO = Mission('GTO', 12e3)
+LEO = Mission('LEO', 9.5e3, 10e3)
+GTO = Mission('GTO', 12e3, 5e3)
 
 # Common uncertainties
 # Downrange distance at stage separation - model coefficient [units: meter**-1 second**2].
@@ -162,8 +183,9 @@ class PropulsiveLaunchSite(Strategy):
 
     def evaluate_performance(self, c_1, c_2, E_1, E_2, a,
                        dv_entry, landing_m_A, landing_accel, f_ss):
-        return propulsive_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
-                                       dv_entry, landing_m_A, landing_accel, f_ss)[0]
+        results = propulsive_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
+                                       dv_entry, landing_m_A, landing_accel, f_ss)
+        return results.pi_star
 
 
 class WingedPoweredLaunchSite(Strategy):
@@ -182,8 +204,9 @@ class WingedPoweredLaunchSite(Strategy):
 
     def evaluate_performance(self, c_1, c_2, E_1, E_2, a,
                        I_sp_ab, v_cruise, lift_drag, f_ss):
-        return winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
-                                           I_sp_ab, v_cruise, lift_drag, f_ss)[0]
+        results = winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
+                                           I_sp_ab, v_cruise, lift_drag, f_ss)
+        return results.pi_star
 
 
 class WingedPoweredLaunchSitePartial(Strategy):
@@ -203,8 +226,10 @@ class WingedPoweredLaunchSitePartial(Strategy):
 
     def evaluate_performance(self, c_1, c_2, E_1, E_2, a,
                        I_sp_ab, v_cruise, lift_drag, f_ss, z_m):
-        return winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
-                                           I_sp_ab, v_cruise, lift_drag, f_ss, z_m)[0]
+        results = winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
+                                           I_sp_ab, v_cruise, lift_drag, f_ss, z_m)
+        return results.pi_star
+
 
 class PropulsiveDownrange(Strategy):
 
