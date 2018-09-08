@@ -2,7 +2,7 @@
 from lvreuse.constants import g_0
 
 
-def booster_engine_mass(m_0, n_engines=1, propellant=None, tw=None, accel=15.):
+def booster_engine_mass(m_0, n_engines=1, propellant=None, tw=None, accel=2.):
     """Estimate the mass of booster (1st stage) engines.
 
     Arguments:
@@ -13,7 +13,7 @@ def booster_engine_mass(m_0, n_engines=1, propellant=None, tw=None, accel=15.):
             typical value for engines using that propellant. 
         tw (scalar): Engine thrust (sea level)/weight ratio [units: dimensionless].
              If given, overrides effect of `propellant`.
-        accel (scalar): Liftoff acceleration [units: meter second**-1].
+        accel (scalar): Liftoff vertical acceleration [units: meter second**-1].
 
     Returns:
         scalar: Engine mass (per engine) [units: kilogram].
@@ -25,8 +25,8 @@ def booster_engine_mass(m_0, n_engines=1, propellant=None, tw=None, accel=15.):
         if 'H2' in propellant:
             tw = 50    # Typical value for H2/O2 engines
         if 'kero' in propellant:
-            tw = 75    # Typical value for kero/O2 engines
-    thrust = m_0 * accel
+            tw = 80    # Typical value for kero/O2 engines
+    thrust = m_0 * (accel + g_0)
     engine_mass = thrust / (tw * g_0 * n_engines)
     return engine_mass
 

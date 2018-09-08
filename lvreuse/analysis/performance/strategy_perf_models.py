@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 import rhodium as rdm
 
 from lvreuse.performance import payload_fixed_stages
-from lvreuse.performance.unavail_mass import unavail_mass
+from lvreuse.performance.unavail_mass import unavail_mass, inert_masses
 from lvreuse.performance.landing_dv import landing_dv
 from lvreuse.performance.launch_site_return import (propulsive_ls_perf,
                                                     winged_powered_ls_perf)
@@ -102,8 +102,6 @@ I_sp_ab_uncert = rdm.TriangularUncertainty('I_sp_ab', min_value=3200, mode_value
 v_cruise_uncert = rdm.TriangularUncertainty('v_cruise', min_value=100, mode_value=200, max_value=300)
 # Winged recovery vehicle L/D [units: dimensionless]
 lift_drag_uncert = rdm.TriangularUncertainty('lift_drag', min_value=4, mode_value=6, max_value=8)
-# Engine pod mass / booster inert mass $z_m$ for partial recovery strategies [units: dimensionless].
-z_m_uncert = rdm.UniformUncertainty('z_m', min_value=0.15, mode_value=0.25, max_value=0.35)
 
 class Strategy(object):
     __metaclass__ = abc.ABCMeta
@@ -142,6 +140,29 @@ class Strategy(object):
     def evaluate_performance(self):
         pass
 
+    def get_z_m_engine_pod(self, E_1):
+        """Estimate the mass of an engines-only recovery pod, relative to
+            the baseline mass of the first stage.
+
+        Returns:
+            scalar: z_m = (engines-only recovery pod mass)
+                / (stage 1 baseline inert mass) [units: dimensionless].
+        """
+        # Engine mass (per engine), as a fraction of gross liftoff mass
+        m_eng = masses.booster_engine_mass(1, n_engines=self.tech_1.n_engines,
+                                             propellant=self.tech_1.fuel + '/' + self.tech_1.oxidizer)
+        # First stage baseline inert mass, as a fraction of gross liftoff mass
+        # (approx)
+        m_inert_1 = (1 - self.y - 0.02) * E_1
+
+        # Engine mass (total), as a fraction of first stage baseline inert mass
+        z_m = (m_eng * self.tech_1.n_engines) / m_inert_1
+
+        # Add a few percent to z_m to account for thrust structure, etc
+        z_m += 0.05
+
+        return z_m
+
     def get_masses(self, pi_star, a, E_1, E_2):
         # Gross liftoff mass [units: kilogram].
         m_0 = self.mission.m_payload / pi_star
@@ -150,7 +171,7 @@ class Strategy(object):
         # Stage 2 wet mass [units: kilogram].
         m_2 = self.y / (1 + self.y) * (m_0 - self.mission.m_payload)
         # Stage inert masses [units: kilogram].
-        m_inert_1 = m_1 / (1 + (1 - a) * (1 - E_1) / E_1)
+        m_inert_1 = inert_masses(m_1, a, z_m=1, E_1=E_1)[0]
         m_inert_2 = E_2 * m_2
         # Stage engine masses [units: kilogram].
         m_eng_1 = masses.booster_engine_mass(m_0, n_engines=self.tech_1.n_engines,
@@ -158,6 +179,7 @@ class Strategy(object):
         m_eng_2 = masses.upper_engine_mass(m_2 + self.mission.m_payload,
                                            n_engines=self.tech_2.n_engines,
                                            propellant=self.tech_2.fuel + '/' + self.tech_2.oxidizer)
+        print((m_eng_1 * self.tech_1.n_engines) / m_inert_1)
 
         # Stage propellant masses [units: kilogram].
         m_p_1 = m_1 - m_inert_1
@@ -200,8 +222,8 @@ class StrategyNoPropulsion(Strategy):
         super(StrategyNoPropulsion, self).__init__(landing_method, recovery_location,
                                                    portion_recovered, tech_1, tech_2, mission)
 
-    def evaluate_performance(self, c_1, c_2, E_1, E_2, a, z_m=1):
-        e_1 = unavail_mass(a, P=0, z_m=z_m, E_1=E_1)
+    def evaluate_performance(self, c_1, c_2, E_1, E_2, a):
+        e_1 = unavail_mass(a, P=0, z_m=1, E_1=E_1)
         pi_star = payload_fixed_stages(c_1, c_2, e_1, E_2, self.y, self.mission.dv)
         return (pi_star, e_1)
 
@@ -270,7 +292,7 @@ class WingedPoweredLaunchSite(Strategy):
         # Stage 2 wet mass [units: kilogram].
         m_2 = self.y / (1 + self.y) * (m_0 - self.mission.m_payload)
         # Stage inert masses [units: kilogram].
-        m_inert_1 = m_1 / (1 + (1 - a) * (1 - E_1) / E_1)
+        m_inert_1 = inert_masses(m_1, a, z_m=1, E_1=E_1)[0]
         m_inert_2 = E_2 * m_2
         # Stage rocekt engine masses [units: kilogram].
         m_eng_1 = masses.booster_engine_mass(m_0, n_engines=self.tech_1.n_engines,
@@ -280,7 +302,7 @@ class WingedPoweredLaunchSite(Strategy):
                                            propellant=self.tech_2.fuel + '/' + self.tech_2.oxidizer)
         # Stage 1 air-breathing engine mass [units: kilogram].
         # Model: air-breathing engines typiclaly make up 15-20% of the mass of
-        # winged, powered vehicles. 
+        # winged, powered vehicles.
         m_ab_engine = m_inert_1 * 0.17 / self.n_ab_engines
         # Stage propellant masses [units: kilogram].
         m_p_1 = m_1 - m_inert_1
@@ -328,18 +350,77 @@ class WingedPoweredLaunchSitePartial(Strategy):
             I_sp_ab_uncert,
             v_cruise_uncert,
             lift_drag_uncert,
-            z_m_uncert,
         ]
+        self.n_ab_engines = 2    #  Number of air breathing engines for recovery.
         self.setup_model()
 
     def evaluate_performance(self, c_1, c_2, E_1, E_2, a,
-                       I_sp_ab, v_cruise, lift_drag, f_ss, z_m):
+                       I_sp_ab, v_cruise, lift_drag, f_ss):
+        z_m = self.get_z_m_engine_pod(E_1)
         results = winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
                                            I_sp_ab, v_cruise, lift_drag, f_ss, z_m)
         return (results.pi_star, results.e_1)
 
-    def get_masses(self, pi_star, e_1, e_2):
-        raise NotImplementedError()
+    def get_masses(self, pi_star, a, E_1, E_2):
+        z_m = self.get_z_m_engine_pod(E_1)
+        # Gross liftoff mass [units: kilogram].
+        m_0 = self.mission.m_payload / pi_star
+        # Stage 1 wet mass [units: kilogram].
+        m_1 = 1 / (1 + self.y) * (m_0 - self.mission.m_payload)
+        # Stage 2 wet mass [units: kilogram].
+        m_2 = self.y / (1 + self.y) * (m_0 - self.mission.m_payload)
+        # Stage 1 inert mass [units: kilogram].
+        # and Stage 1 recovered inert mass (e.g. winged engine pod) [units: kilogram]
+        m_inert_1, m_inert_recov_1 = inert_masses(m_1, a, z_m, E_1)
+        # Stage 1 disposed inert mass [units: kilogram].
+        # e.g. tanks
+        m_dispose_1 = m_inert_1 - m_inert_recov_1
+        # Stage 2 inert mass [units: kilogram].
+        m_inert_2 = E_2 * m_2
+        # Stage rocekt engine masses [units: kilogram].
+        m_eng_1 = masses.booster_engine_mass(m_0, n_engines=self.tech_1.n_engines,
+                                             propellant=self.tech_1.fuel + '/' + self.tech_1.oxidizer)
+        m_eng_2 = masses.upper_engine_mass(m_2 + self.mission.m_payload,
+                                           n_engines=self.tech_2.n_engines,
+                                           propellant=self.tech_2.fuel + '/' + self.tech_2.oxidizer)
+        # Stage 1 air-breathing engine mass [units: kilogram].
+        # Model: air-breathing engines typiclaly make up 15-20% of the mass of
+        # winged, powered vehicles. 
+        m_ab_engine = m_inert_recov_1 * 0.17 / self.n_ab_engines
+        # Stage propellant masses [units: kilogram].
+        m_p_1 = m_1 - m_inert_1
+        m_fuel_1 = 1 / (1 + self.tech_1.of_mass_ratio) * m_p_1
+        m_oxidizer_1 = m_p_1 - m_fuel_1
+        m_p_2 = m_2 - m_inert_2
+        m_fuel_2 = 1 / (1 + self.tech_2.of_mass_ratio) * m_p_2
+        m_oxidizer_2 = m_p_2 - m_fuel_2
+
+        mass_dict = {
+            'm0': m_0,
+            's1': m_inert_recov_1 - (m_eng_1 * self.tech_1.n_engines) \
+                - (m_ab_engine * self.n_ab_engines),
+            's2': m_inert_2 - (m_eng_2 * self.tech_2.n_engines),
+            'e1': m_eng_1,
+            'e2': m_eng_2,
+            'ab': m_ab_engine,
+            'dispose1': m_dispose_1,
+        }
+
+        if self.tech_1.fuel == self.tech_2.fuel:
+            mass_dict[self.tech_1.fuel] = m_fuel_1 + m_fuel_2
+        else:
+            mass_dict[self.tech_1.fuel] = m_fuel_1
+            mass_dict[self.tech_2.fuel] = m_fuel_2
+        if self.tech_1.oxidizer == self.tech_2.oxidizer:
+            mass_dict[self.tech_1.oxidizer] = m_oxidizer_1 + m_oxidizer_2
+        else:
+            mass_dict[self.tech_1.oxidizer] = m_oxidizer_1
+            mass_dict[self.tech_2.oxidizer] = m_oxidizer_2
+
+        for key in mass_dict:
+            assert mass_dict[key] > 0
+
+        return mass_dict
 
 
 class PropulsiveDownrange(Strategy):
@@ -396,12 +477,72 @@ class ParachutePartial(StrategyNoPropulsion):
         self.y = y
         self.uncertainties += [
             rdm.TriangularUncertainty('a', min_value=0.15, mode_value=0.17, max_value=0.19),
-            z_m_uncert,
         ]
         self.setup_model()
 
-    def get_masses(self, pi_star, e_1, e_2):
-        raise NotImplementedError()
+    def evaluate_performance(self, c_1, c_2, E_1, E_2, a):
+        z_m = self.get_z_m_engine_pod(E_1)
+        e_1 = unavail_mass(a, P=0, z_m=z_m, E_1=E_1)
+        pi_star = payload_fixed_stages(c_1, c_2, e_1, E_2, self.y, self.mission.dv)
+        return (pi_star, e_1)
+
+    def get_masses(self, pi_star, a, E_1, E_2):
+        z_m = self.get_z_m_engine_pod(E_1)
+        # Gross liftoff mass [units: kilogram].
+        m_0 = self.mission.m_payload / pi_star
+        # Stage 1 wet mass [units: kilogram].
+        m_1 = 1 / (1 + self.y) * (m_0 - self.mission.m_payload)
+        # Stage 2 wet mass [units: kilogram].
+        m_2 = self.y / (1 + self.y) * (m_0 - self.mission.m_payload)
+        # Stage 1 inert mass [units: kilogram].
+        # and Stage 1 recovered inert mass (e.g. winged engine pod) [units: kilogram]
+        m_inert_1, m_inert_recov_1 = inert_masses(m_1, a, z_m, E_1)
+        # Stage 1 disposed inert mass [units: kilogram].
+        # e.g. tanks
+        m_dispose_1 = m_inert_1 - m_inert_recov_1
+        # Stage 2 inert mass [units: kilogram].
+        m_inert_2 = E_2 * m_2
+        # Stage rocekt engine masses [units: kilogram].
+        m_eng_1 = masses.booster_engine_mass(m_0, n_engines=self.tech_1.n_engines,
+                                             propellant=self.tech_1.fuel + '/' + self.tech_1.oxidizer)
+        m_eng_2 = masses.upper_engine_mass(m_2 + self.mission.m_payload,
+                                           n_engines=self.tech_2.n_engines,
+                                           propellant=self.tech_2.fuel + '/' + self.tech_2.oxidizer)
+
+        # Stage propellant masses [units: kilogram].
+        m_p_1 = m_1 - m_inert_1
+        m_fuel_1 = 1 / (1 + self.tech_1.of_mass_ratio) * m_p_1
+        m_oxidizer_1 = m_p_1 - m_fuel_1
+        m_p_2 = m_2 - m_inert_2
+        m_fuel_2 = 1 / (1 + self.tech_2.of_mass_ratio) * m_p_2
+        m_oxidizer_2 = m_p_2 - m_fuel_2
+
+        print((m_eng_1 * self.tech_1.n_engines) / m_inert_1)
+
+        mass_dict = {
+            'm0': m_0,
+            's1': m_inert_recov_1 - (m_eng_1 * self.tech_1.n_engines),
+            's2': m_inert_2 - (m_eng_2 * self.tech_2.n_engines),
+            'e1': m_eng_1,
+            'e2': m_eng_2,
+            'dispose1': m_dispose_1,
+        }
+
+        if self.tech_1.fuel == self.tech_2.fuel:
+            mass_dict[self.tech_1.fuel] = m_fuel_1 + m_fuel_2
+        else:
+            mass_dict[self.tech_1.fuel] = m_fuel_1
+            mass_dict[self.tech_2.fuel] = m_fuel_2
+        if self.tech_1.oxidizer == self.tech_2.oxidizer:
+            mass_dict[self.tech_1.oxidizer] = m_oxidizer_1 + m_oxidizer_2
+        else:
+            mass_dict[self.tech_1.oxidizer] = m_oxidizer_1
+            mass_dict[self.tech_2.oxidizer] = m_oxidizer_2
+
+        for key in mass_dict:
+            assert mass_dict[key] > 0
+
+        return mass_dict
 
 
 def demo():
