@@ -2,7 +2,7 @@
 import os.path
 from lvreuse.cost.elements import CryoLH2TurboFed, ExpendableBallisticStageLH2, \
     ExpendableBallisticStageStorable, StorableTurboFed, ReusableBallisticStageLH2, \
-    VTOStageFlybackVehicle, TurboJetEngine
+    VTOStageFlybackVehicle, TurboJetEngine, ReusableBallisticStageStorable
 from lvreuse.cost.vehicle import LaunchVehicle
 
 
@@ -36,9 +36,9 @@ def construct_launch_vehicle(stage_type, prop_choice, portion_reused, ab_rec, nu
         stage1_list = [stage1, stage1_engine]
 
     elif stage_type == 'ballistic' and prop_choice == 'H2' and portion_reused == 'partial':
-        stage1_rec = ReusableBallisticStageLH2(name='s1', m=masses_dict['s1'])
-        stage1_disp = ExpendableBallisticStageLH2(name='d1', m=masses_dict['d1'])
-        stage1_engine = CryoLH2TurboFed(name='e1', m=masses_dict['e1'])
+        stage1_rec = ReusableBallisticStageLH2(name='s1', m=0)
+        stage1_disp = ExpendableBallisticStageLH2(name='d1', m=0)
+        stage1_engine = CryoLH2TurboFed(name='e1', m=0)
         stage1_list = [stage1_rec, stage1_disp, stage1_engine]
 
     elif stage_type == 'ballistic' and prop_choice == 'kerosene' and portion_reused == 'none':
@@ -47,12 +47,12 @@ def construct_launch_vehicle(stage_type, prop_choice, portion_reused, ab_rec, nu
         stage1_list = [stage1, stage1_engine]
 
     elif stage_type == 'ballistic' and prop_choice == 'kerosene' and portion_reused == 'full':
-        stage1 = ReusableBallisticStageLH2(name='s1', m=0)
+        stage1 = ReusableBallisticStageStorable(name='s1', m=0)
         stage1_engine = StorableTurboFed(name='e1', m=0)
         stage1_list = [stage1, stage1_engine]
 
     elif stage_type == 'ballistic' and prop_choice == 'kerosene' and portion_reused == 'partial':
-        stage1_rec = ReusableBallisticStageLH2(name='s1', m=0)
+        stage1_rec = ReusableBallisticStageStorable(name='s1', m=0)
         stage1_disp = ExpendableBallisticStageStorable(name='d1', m=0)
         stage1_engine = StorableTurboFed(name='e1', m=0)
         stage1_list = [stage1_rec, stage1_disp, stage1_engine]
