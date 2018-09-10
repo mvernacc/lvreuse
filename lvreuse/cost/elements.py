@@ -186,8 +186,8 @@ class TurboJetEngine(LaunchVehicleElement):
         self.dev_a, self.dev_x, self.prod_a, self.prod_x = [1380., 0.295, 2.29, 0.545]
         self.dev_a_conf_int = [462.492874820969, 3640.1151895792027]
         self.dev_x_conf_int = [0.16479322, 0.43652455]
-        self.prod_a_conf_int = [3.200280413229723e-05, 90664.04883039849]
-        self.prod_x_conf_int = [0, 1] # [-0.80539725, 1.96446499]
+        self.prod_a_conf_int = [1.484, 3.021]
+        self.prod_x_conf_int = [0.5125299122673098, 0.6584429840182615]
 
 
 class RamjetEngine(LaunchVehicleElement):
