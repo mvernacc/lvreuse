@@ -275,6 +275,8 @@ class VTOStageFlybackVehicle(LaunchVehicleElement):
         self.dev_a, self.dev_x, self.prod_a, self.prod_x = [1462., 0.325, 0.357, 0.762]
         self.dev_a_conf_int = [135.34253464446792, 15336.623033405793]
         self.dev_x_conf_int = [0.10541958, 0.5443403]
+        self.prod_a_conf_int = [0.015709606576835202, 7.404601456158159]
+        self.prod_x_conf_int = [0.46690223, 1] #[0.46690223, 1.06472216]
 
     def element_development_cost(self, CER_vals, element_cost_factors):
 
