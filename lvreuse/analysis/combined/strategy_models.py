@@ -18,7 +18,7 @@ from lvreuse.performance import masses
 from lvreuse.constants import g_0
 import lvreuse.cost as cost
 from lvreuse.analysis.cost import strategy_cost_models
-from lvreuse.analysis.combined import contruct_launch_vehicle
+from lvreuse.analysis.combined.construct_launch_vehicle import construct_launch_vehicle
 
 Technology = namedtuple('Technology',
                        ['fuel', 'oxidizer', 'of_mass_ratio',
@@ -87,9 +87,9 @@ Attributes:
 Mission = namedtuple('Mission', ['name', 'dv', 'm_payload'])
 
 LEO = Mission('LEO', 9.5e3, 10e3)
-GTO = Mission('GTO', 12e3, 5e3)
+GTO = Mission('GTO', 12e3, 10e3)
 
-# Common uncertainties
+# Common uncertainties - performance
 # Downrange distance at stage separation - model coefficient [units: meter**-1 second**2].
 f_ss_uncert = rdm.TriangularUncertainty('f_ss', min_value=0.01, mode_value=0.02, max_value=0.03)
 # Entry burn delta-v for propulsive recovery [units: meter second**-1].
@@ -104,6 +104,55 @@ I_sp_ab_uncert = rdm.TriangularUncertainty('I_sp_ab', min_value=3200, mode_value
 v_cruise_uncert = rdm.TriangularUncertainty('v_cruise', min_value=100, mode_value=200, max_value=300)
 # Winged recovery vehicle L/D [units: dimensionless]
 lift_drag_uncert = rdm.TriangularUncertainty('lift_drag', min_value=4, mode_value=6, max_value=8)
+
+# Common uncertainties - cost
+prod_cost_uncerts = [
+    # Learning factors for serial production/operations.
+    rdm.TriangularUncertainty('p_s1', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('p_e1', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('p_s2', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('p_e2', min_value=0.75, mode_value=0.8, max_value=0.85),
+    # System management factor for vehicle production
+    rdm.TriangularUncertainty('f0_prod_veh', min_value=1.02, mode_value=1.025, max_value=1.03),
+    # Subcontractor cost factor - these values assume only 20% of the project is subcontracted
+    rdm.TriangularUncertainty('f9_veh', min_value=1.01, mode_value=1.02, max_value=1.03),
+    # cost reduction factor by past experience, technical progress and application of cost engineering
+    rdm.TriangularUncertainty('f10_s1', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('f10_e1', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('f10_s2', min_value=0.75, mode_value=0.8, max_value=0.85),
+    rdm.TriangularUncertainty('f10_e2', min_value=0.75, mode_value=0.8, max_value=0.85),
+    # cost reduction factor by independent development without government contracts' requirements and customer interference
+    rdm.TriangularUncertainty('f11_s1', min_value=0.45, mode_value=0.5, max_value=0.55),
+    rdm.TriangularUncertainty('f11_e1', min_value=0.45, mode_value=0.5, max_value=0.55),
+    rdm.TriangularUncertainty('f11_s2', min_value=0.45, mode_value=0.5, max_value=0.55),
+    rdm.TriangularUncertainty('f11_e2', min_value=0.45, mode_value=0.5, max_value=0.55),
+]
+ops_cost_uncerts = [
+    rdm.TriangularUncertainty('launch_rate', min_value=10, mode_value=15, max_value=20),
+    rdm.TriangularUncertainty('p_ops', min_value=0.8, mode_value=0.85, max_value=0.9),
+    rdm.TriangularUncertainty('insurance', min_value=1, mode_value=2, max_value=3),
+    # cost reduction factor by independent development without government contracts' requirements and customer interference
+    rdm.TriangularUncertainty('f11_ops', min_value=0.45, mode_value=0.5, max_value=0.55),
+]
+dev_cost_uncerts = [
+    # systems engineering/integration factor for vehicle development
+    rdm.TriangularUncertainty('f0_dev_veh', min_value=1.03**2, mode_value=1.04**2, max_value=1.05**2),
+    rdm.TriangularUncertainty('num_program_flights', min_value=100, mode_value=120, max_value=150),
+    # Development standard factors for 2nd stage -  assumes 2nd stage is a variant of an existing system
+    rdm.TriangularUncertainty('f1_s2', min_value=0.3, mode_value=0.4, max_value=0.5),
+    rdm.TriangularUncertainty('f1_e2', min_value=0.3, mode_value=0.4, max_value=0.5),
+]
+vehicle_prod_nums_list = list(range(20, 60))
+vehicle_launch_nums_list = vehicle_prod_nums_list
+# country productivity correction factor as defined by TRANSCOST 8.2 p. 25
+f8_dict = {'s1': 1.0, 'e1': 1.0, 's2': 1.0, 'e2': 1.0, 'veh': 1.0, 'ops': 1.0}
+# Assembly and integration cost factor, assuming horizontal assembly and checkout, transport to pad, erection.
+fc = 0.7
+# Launch provider type (see Transcost 8.2 pg 173).
+# Type C assumes the launch service provider and the launch vehicle
+# manufacturer are the same company, and that only a small portion of the
+# work is subcontracted.
+launch_provider_type = 'C'
 
 class Strategy(object):
     __metaclass__ = abc.ABCMeta
@@ -124,7 +173,7 @@ class Strategy(object):
         self.y = y
 
         # Construct LaunchVehicle Object for cost modeling
-        if landing_method == 'winged'
+        if landing_method == 'winged':
             stage_type = 'winged'
         else:
             stage_type = 'ballistic'
@@ -147,9 +196,9 @@ class Strategy(object):
             rdm.Response('pi_star', rdm.Response.MAXIMIZE),
             rdm.Response('e_1', rdm.Response.MAXIMIZE),
             rdm.Response('prod_cost_per_flight', rdm.Response.MAXIMIZE),
-            rdm.Response('ops_cost', rdm.Response.MAXIMIZE),
-            rdm.Response('dev_cost', rdm.Response.MAXIMIZE),
+            rdm.Response('ops_cost_per_flight', rdm.Response.MAXIMIZE),
             rdm.Response('cost_per_flight', rdm.Response.MAXIMIZE),
+            rdm.Response('dev_cost', rdm.Response.MAXIMIZE),
             rdm.Response('price_per_flight', rdm.Response.MAXIMIZE),
         ]
 
@@ -202,7 +251,6 @@ class Strategy(object):
         m_eng_2 = masses.upper_engine_mass(m_2 + self.mission.m_payload,
                                            n_engines=self.tech_2.n_engines,
                                            propellant=self.tech_2.fuel + '/' + self.tech_2.oxidizer)
-        print((m_eng_1 * self.tech_1.n_engines) / m_inert_1)
 
         # Stage propellant masses [units: kilogram].
         m_p_1 = m_1 - m_inert_1
@@ -254,20 +302,46 @@ class StrategyNoPropulsion(Strategy):
 class Expendable(Strategy):
 
     def __init__(self, tech_1, tech_2, mission, y=0.20):
-        super(Expendable, self).__init__('expendable', 'N/A', 'none', tech_1, tech_2, mission, y)
-        
+        super(Expendable, self).__init__('expendable', 'N/A', 'N/A', 'none',
+                                         tech_1, tech_2, mission, y)
         # Cost model stuff
-        self.cost_model = cost.TwoLiquidStageTwoEngine(
-            launch_vehicle=
+        # Create propellant dictionary needed by cost model
+        propellants = set([tech_1.fuel, tech_1.oxidizer, tech_2.fuel, tech_2.oxidizer])
+        vehicle_props_dict = {}
+        for name in propellants:
+            vehicle_props_dict[name] = 0
+
+        dev_cost_stage_1_uncerts = [
+            # Development standard factors for first stage.
+            # For expendable, assume this is a standard project w state-of-the-art technology.
+            rdm.TriangularUncertainty('f1_s1', min_value=0.9, mode_value=1.0, max_value=1.1),
+            rdm.TriangularUncertainty('f1_e1', min_value=0.9, mode_value=1.0, max_value=1.1),
+        ]
+
+        self.cost_model = strategy_cost_models.TwoLiquidStageTwoEngine(
+            launch_vehicle=self.launch_vehicle,
+            vehicle_prod_nums_list=vehicle_prod_nums_list,
+            vehicle_launch_nums_list=vehicle_launch_nums_list,
+            num_engines_dict={'e1': tech_1.n_engines, 'e2': tech_2.n_engines},
+            f8_dict=f8_dict,
+            fv=(1.0 if tech_1.fuel == 'H2' else 0.8),
+            fc=fc,  
+            sum_QN=2 * 0.4,
+            launch_provider_type=launch_provider_type,
+            vehicle_props_dict=vehicle_props_dict,
+            prod_cost_facs_unc_list=prod_cost_uncerts,
+            ops_cost_unc_list=ops_cost_uncerts,
+            dev_cost_unc_list=dev_cost_uncerts + dev_cost_stage_1_uncerts,
             )
+        self.uncertainties += self.cost_model.uncertainties
         self.setup_model()
 
-    def evaluate(self, c_1, c_2, E_1, E_2, ):
+    def evaluate(self, c_1, c_2, E_1, E_2, **kwargs):
         pi_star = payload_fixed_stages(c_1, c_2, E_1, E_2, self.y, self.mission.dv)
-
-        element_masses = self.get_masses(pi_star, a, E_1, E_2)
-
-        return (pi_star, E_1)
+        element_masses = self.get_masses(pi_star, a=0, E_1=E_1, E_2=E_2)
+        self.cost_model.update_masses(element_masses)
+        cost_results = self.cost_model.evaluate_cost(**kwargs)
+        return (pi_star, E_1, *cost_results)
 
 
 class PropulsiveLaunchSite(Strategy):
@@ -546,8 +620,6 @@ class ParachutePartial(StrategyNoPropulsion):
         m_fuel_2 = 1 / (1 + self.tech_2.of_mass_ratio) * m_p_2
         m_oxidizer_2 = m_p_2 - m_fuel_2
 
-        print((m_eng_1 * self.tech_1.n_engines) / m_inert_1)
-
         mass_dict = {
             'm0': m_0,
             's1': m_inert_recov_1 - (m_eng_1 * self.tech_1.n_engines),
@@ -575,9 +647,7 @@ class ParachutePartial(StrategyNoPropulsion):
 
 
 def demo():
-    strats = [Expendable, PropulsiveLaunchSite,
-                WingedPoweredLaunchSite, WingedPoweredLaunchSitePartial,
-                PropulsiveDownrange, WingedGlider, Parachute, ParachutePartial]
+    strats = [Expendable,]
 
     for tech_1, tech_2 in zip([kero_GG_boost_tech, H2_SC_boost_tech],
                               [kero_GG_upper_tech, H2_SC_upper_tech]):
@@ -589,16 +659,19 @@ def demo():
             for strat in strats:
                 strat_instance = strat(tech_1, tech_2, mission)
                 name = strat.__name__
-                res = strat_instance.sample_perf_model(nsamples=100)
+                res = strat_instance.sample_model(nsamples=1000)
                 res = res.as_dataframe()
                 results[name] = res
                 xticks.append('{:s}\n{:s}'.format(strat_instance.landing_method,
                                                   strat_instance.portion_recovered))
 
             pi_star = {}
+            cost_per_flight = {}
             for strat_name in results:
                 pi_star[strat_name] = results[strat_name]['pi_star']
+                cost_per_flight[strat_name] = results[strat_name]['cost_per_flight']
             pi_star = pandas.DataFrame(pi_star)
+            cost_per_flight = pandas.DataFrame(cost_per_flight)
 
             sns.set(style='whitegrid')
 
@@ -637,6 +710,14 @@ def demo():
             plt.tight_layout()
             plt.savefig(os.path.join('plots', 'strategy_perf_{:s}_{:s}.png'.format(
                 mission.name, tech_1.fuel)))
+
+            plt.figure()
+            ax = sns.violinplot(data=cost_per_flight)
+            plt.title('Cost distributions for {:s} mission'.format(mission.name)
+                + '\nstage 1: {:s} {:s} tech.,'.format(tech_1.fuel, tech_1.cycle)
+                + ' stage 2: {:s} {:s} tech.'.format(tech_2.fuel, tech_2.cycle))
+            plt.ylabel('Cost per flight [WYr]')
+
     plt.show()
 
 

@@ -12,7 +12,7 @@ from lvreuse.cost.cost_factors import ElementCostFactors, VehicleCostFactors, Op
 from lvreuse.cost.indirect_ops import indirect_ops_cost
 from lvreuse.data.propellants import propellant_cost_list
 from lvreuse.data.vehicle_cpf_data import ariane5G, falcon9, atlasV, deltaIV, electron, antares230
-
+from lvreuse.cost.elements import VTOStageFlybackVehicle
     
 def get_prod_dist(element):
     """Get the production CER parameter distributions from an element.
