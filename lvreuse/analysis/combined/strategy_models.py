@@ -153,6 +153,13 @@ fc = 0.7
 # manufacturer are the same company, and that only a small portion of the
 # work is subcontracted.
 launch_provider_type = 'C'
+reuse_cost_uncerts = [
+    # Reusable vehicle lifetime
+    rdm.TriangularUncertainty('num_reuses', min_value=5, mode_value=10, max_value=25),
+    # Refurbishment cost factors
+    rdm.TriangularUncertainty('f5_e1', min_value=0.5e-2, mode_value=1e-2, max_value=3e-2),
+    rdm.TriangularUncertainty('f5_s1', min_value=0.008e-2, mode_value=1e-2, max_value=2.3e-2),
+]
 
 class Strategy(object):
     __metaclass__ = abc.ABCMeta
@@ -347,9 +354,8 @@ class Expendable(Strategy):
 class PropulsiveLaunchSite(Strategy):
 
     def __init__(self, tech_1, tech_2, mission, y=0.20):
-        super(PropulsiveLaunchSite, self).__init__('propulsive', 'launch site', 'full',
-                                                   tech_1, tech_2, mission)
-        self.y = y
+        super(PropulsiveLaunchSite, self).__init__('propulsive', 'rocket', 'launch site', 'full',
+                                                   tech_1, tech_2, mission, y)
         self.uncertainties += [
             rdm.TriangularUncertainty('a', min_value=0.09, mode_value=0.14, max_value=0.19),
             f_ss_uncert,
@@ -357,20 +363,54 @@ class PropulsiveLaunchSite(Strategy):
             landing_m_A_large_uncert,
             landing_accel_uncert,
         ]
+
+        # Cost model stuff
+        # Create propellant dictionary needed by cost model
+        propellants = set([tech_1.fuel, tech_1.oxidizer, tech_2.fuel, tech_2.oxidizer])
+        vehicle_props_dict = {}
+        for name in propellants:
+            vehicle_props_dict[name] = 0
+
+        dev_cost_stage_1_uncerts = [
+            # Development standard factors for first stage.
+            # For propulsive landing, rocket return to launch site, assume this is "new technical and/or operational features".
+            rdm.TriangularUncertainty('f1_s1', min_value=1.1, mode_value=1.15, max_value=1.2),
+            rdm.TriangularUncertainty('f1_e1', min_value=1.1, mode_value=1.15, max_value=1.2),
+        ]
+
+        self.cost_model = strategy_cost_models.TwoLiquidStageTwoEngine(
+            launch_vehicle=self.launch_vehicle,
+            vehicle_prod_nums_list=vehicle_prod_nums_list,
+            vehicle_launch_nums_list=vehicle_launch_nums_list,
+            num_engines_dict={'e1': tech_1.n_engines, 'e2': tech_2.n_engines},
+            f8_dict=f8_dict,
+            fv=(1.0 if tech_1.fuel == 'H2' else 0.8),
+            fc=fc,  
+            sum_QN=1.0 + 0.4,
+            launch_provider_type=launch_provider_type,
+            vehicle_props_dict=vehicle_props_dict,
+            prod_cost_facs_unc_list=prod_cost_uncerts,
+            ops_cost_unc_list=ops_cost_uncerts,
+            dev_cost_unc_list=dev_cost_uncerts + dev_cost_stage_1_uncerts,
+            )
+        self.uncertainties += self.cost_model.uncertainties
+        self.uncertainties += reuse_cost_uncerts
         self.setup_model()
 
-    def evaluate_performance(self, c_1, c_2, E_1, E_2, a,
-                       dv_entry, landing_m_A, landing_accel, f_ss):
+    def evaluate(self, c_1, c_2, E_1, E_2, a,
+                       dv_entry, landing_m_A, landing_accel, f_ss, **kwargs):
         results = propulsive_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
                                        dv_entry, landing_m_A, landing_accel, f_ss)
-        return (results.pi_star, results.e_1)
+        element_masses = self.get_masses(results.pi_star, a=a, E_1=E_1, E_2=E_2)
+        self.cost_model.update_masses(element_masses)
+        cost_results = self.cost_model.evaluate_cost(**kwargs)
+        return (results.pi_star, results.e_1, *cost_results)
 
 
 class WingedPoweredLaunchSite(Strategy):
     def __init__(self, tech_1, tech_2, mission, y=0.20):
-        super(WingedPoweredLaunchSite, self).__init__('winged powered', 'launch site', 'full',
-                                                      tech_1, tech_2, mission)
-        self.y = y
+        super(WingedPoweredLaunchSite, self).__init__('winged', 'air-breathing', 'launch site', 'full',
+                                                      tech_1, tech_2, mission, y)
         self.uncertainties += [
             rdm.TriangularUncertainty('a', min_value=0.490, mode_value=0.574, max_value=0.650),
             f_ss_uncert,
@@ -379,13 +419,49 @@ class WingedPoweredLaunchSite(Strategy):
             lift_drag_uncert,
         ]
         self.n_ab_engines = 4    #  Number of air breathing engines for recovery.
+        # Cost model stuff
+        # Create propellant dictionary needed by cost model
+        propellants = set([tech_1.fuel, tech_1.oxidizer, tech_2.fuel, tech_2.oxidizer])
+        vehicle_props_dict = {}
+        for name in propellants:
+            vehicle_props_dict[name] = 0
+
+        dev_cost_stage_1_uncerts = [
+            # Development standard factors for first stage.
+            # For winged landing, air-breathing return to launch site, assume this is "new concept
+            # approach, involving new techniques and new technologies" for the stage, and
+            # "new technical and/or operational features" for the engines.
+            rdm.TriangularUncertainty('f1_s1', min_value=1.3, mode_value=1.35, max_value=1.4),
+            rdm.TriangularUncertainty('f1_e1', min_value=1.1, mode_value=1.15, max_value=1.2),
+        ]
+
+        self.cost_model = strategy_cost_models.TwoLiquidStageTwoEnginePlusAirbreathing(
+            launch_vehicle=self.launch_vehicle,
+            vehicle_prod_nums_list=vehicle_prod_nums_list,
+            vehicle_launch_nums_list=vehicle_launch_nums_list,
+            num_engines_dict={'e1': tech_1.n_engines, 'e2': tech_2.n_engines, 'ab': self.n_ab_engines},
+            f8_dict=f8_dict,
+            fv=(1.0 if tech_1.fuel == 'H2' else 0.8),
+            fc=fc,  
+            sum_QN=1.0 + 0.4,
+            launch_provider_type=launch_provider_type,
+            vehicle_props_dict=vehicle_props_dict,
+            prod_cost_facs_unc_list=prod_cost_uncerts,
+            ops_cost_unc_list=ops_cost_uncerts,
+            dev_cost_unc_list=dev_cost_uncerts + dev_cost_stage_1_uncerts,
+            )
+        self.uncertainties += self.cost_model.uncertainties
+        self.uncertainties += reuse_cost_uncerts
         self.setup_model()
 
-    def evaluate_performance(self, c_1, c_2, E_1, E_2, a,
-                       I_sp_ab, v_cruise, lift_drag, f_ss):
+    def evaluate(self, c_1, c_2, E_1, E_2, a,
+                       I_sp_ab, v_cruise, lift_drag, f_ss, **kwargs):
         results = winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
                                            I_sp_ab, v_cruise, lift_drag, f_ss)
-        return (results.pi_star, results.e_1)
+        element_masses = self.get_masses(results.pi_star, a=a, E_1=E_1, E_2=E_2)
+        self.cost_model.update_masses(element_masses)
+        cost_results = self.cost_model.evaluate_cost(**kwargs)
+        return (results.pi_star, results.e_1, *cost_results)
 
     def get_masses(self, pi_star, a, E_1, E_2):
         # Gross liftoff mass [units: kilogram].
@@ -397,14 +473,14 @@ class WingedPoweredLaunchSite(Strategy):
         # Stage inert masses [units: kilogram].
         m_inert_1 = inert_masses(m_1, a, z_m=1, E_1=E_1)[0]
         m_inert_2 = E_2 * m_2
-        # Stage rocekt engine masses [units: kilogram].
+        # Stage rocket engine masses [units: kilogram].
         m_eng_1 = masses.booster_engine_mass(m_0, n_engines=self.tech_1.n_engines,
                                              propellant=self.tech_1.fuel + '/' + self.tech_1.oxidizer)
         m_eng_2 = masses.upper_engine_mass(m_2 + self.mission.m_payload,
                                            n_engines=self.tech_2.n_engines,
                                            propellant=self.tech_2.fuel + '/' + self.tech_2.oxidizer)
         # Stage 1 air-breathing engine mass [units: kilogram].
-        # Model: air-breathing engines typiclaly make up 15-20% of the mass of
+        # Model: air-breathing engines typically make up 15-20% of the mass of
         # winged, powered vehicles.
         m_ab_engine = m_inert_1 * 0.17 / self.n_ab_engines
         # Stage propellant masses [units: kilogram].
@@ -455,14 +531,51 @@ class WingedPoweredLaunchSitePartial(Strategy):
             lift_drag_uncert,
         ]
         self.n_ab_engines = 2    #  Number of air breathing engines for recovery.
+
+        # Cost model stuff
+        # Create propellant dictionary needed by cost model
+        propellants = set([tech_1.fuel, tech_1.oxidizer, tech_2.fuel, tech_2.oxidizer])
+        vehicle_props_dict = {}
+        for name in propellants:
+            vehicle_props_dict[name] = 0
+
+        dev_cost_stage_1_uncerts = [
+            # Development standard factors for first stage.
+            # For winged landing, air-breathing return to launch site, assume this is "new concept
+            # approach, involving new techniques and new technologies" for the stage, and
+            # "new technical and/or operational features" for the engines.
+            rdm.TriangularUncertainty('f1_s1', min_value=1.3, mode_value=1.35, max_value=1.4),
+            rdm.TriangularUncertainty('f1_e1', min_value=1.1, mode_value=1.15, max_value=1.2),
+        ]
+
+        self.cost_model = strategy_cost_models.TwoLiquidStagePartialPlusAirbreathing(
+            launch_vehicle=self.launch_vehicle,
+            vehicle_prod_nums_list=vehicle_prod_nums_list,
+            vehicle_launch_nums_list=vehicle_launch_nums_list,
+            num_engines_dict={'e1': tech_1.n_engines, 'e2': tech_2.n_engines, 'ab': self.n_ab_engines},
+            f8_dict=f8_dict,
+            fv=(1.0 if tech_1.fuel == 'H2' else 0.8),
+            fc=fc,  
+            sum_QN=1.0 + 0.4 + 0.4,
+            launch_provider_type=launch_provider_type,
+            vehicle_props_dict=vehicle_props_dict,
+            prod_cost_facs_unc_list=prod_cost_uncerts,
+            ops_cost_unc_list=ops_cost_uncerts,
+            dev_cost_unc_list=dev_cost_uncerts + dev_cost_stage_1_uncerts,
+            )
+        self.uncertainties += self.cost_model.uncertainties
+        self.uncertainties += reuse_cost_uncerts
         self.setup_model()
 
     def evaluate_performance(self, c_1, c_2, E_1, E_2, a,
-                       I_sp_ab, v_cruise, lift_drag, f_ss):
+                       I_sp_ab, v_cruise, lift_drag, f_ss, **kwargs):
         z_m = self.get_z_m_engine_pod(E_1)
         results = winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
                                            I_sp_ab, v_cruise, lift_drag, f_ss, z_m)
-        return (results.pi_star, results.e_1)
+        element_masses = self.get_masses(results.pi_star, a=a, E_1=E_1, E_2=E_2)
+        self.cost_model.update_masses(element_masses)
+        cost_results = self.cost_model.evaluate_cost(**kwargs)
+        return (results.pi_star, results.e_1, *cost_results)
 
     def get_masses(self, pi_star, a, E_1, E_2):
         z_m = self.get_z_m_engine_pod(E_1)
@@ -480,14 +593,14 @@ class WingedPoweredLaunchSitePartial(Strategy):
         m_dispose_1 = m_inert_1 - m_inert_recov_1
         # Stage 2 inert mass [units: kilogram].
         m_inert_2 = E_2 * m_2
-        # Stage rocekt engine masses [units: kilogram].
+        # Stage rocket engine masses [units: kilogram].
         m_eng_1 = masses.booster_engine_mass(m_0, n_engines=self.tech_1.n_engines,
                                              propellant=self.tech_1.fuel + '/' + self.tech_1.oxidizer)
         m_eng_2 = masses.upper_engine_mass(m_2 + self.mission.m_payload,
                                            n_engines=self.tech_2.n_engines,
                                            propellant=self.tech_2.fuel + '/' + self.tech_2.oxidizer)
         # Stage 1 air-breathing engine mass [units: kilogram].
-        # Model: air-breathing engines typiclaly make up 15-20% of the mass of
+        # Model: air-breathing engines typically make up 15-20% of the mass of
         # winged, powered vehicles. 
         m_ab_engine = m_inert_recov_1 * 0.17 / self.n_ab_engines
         # Stage propellant masses [units: kilogram].
@@ -647,7 +760,7 @@ class ParachutePartial(StrategyNoPropulsion):
 
 
 def demo():
-    strats = [Expendable,]
+    strats = [Expendable, PropulsiveLaunchSite, WingedPoweredLaunchSite, WingedPoweredLaunchSitePartial]
 
     for tech_1, tech_2 in zip([kero_GG_boost_tech, H2_SC_boost_tech],
                               [kero_GG_upper_tech, H2_SC_upper_tech]):
