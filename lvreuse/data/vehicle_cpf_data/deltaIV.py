@@ -44,5 +44,5 @@ delta_fc = 0.85
 delta_sum_QN = 0.8
 delta_launch_provider_type = 'B'
 
-delta_props_dict = {'LOX':(171086 +17261) * 1.6, 'LH2':(28514 + 3138) * 1.85}
+delta_props_dict = {'O2':(171086 + 17261) * 1.6, 'H2':(28514 + 3138) * 1.85}
 

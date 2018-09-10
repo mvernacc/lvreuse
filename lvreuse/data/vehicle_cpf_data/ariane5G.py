@@ -61,4 +61,4 @@ ariane_fc = 0.85
 ariane_sum_QN = 1.6
 ariane_launch_provider_type = 'A'
 
-ariane_props_dict = {'LH2': 22777 * 1.85, 'LOX': 141222 * 1.6, 'MMH': 3180, 'N2O4': 6520}
+ariane_props_dict = {'H2': 22777 * 1.85, 'O2': 141222 * 1.6, 'MMH': 3180, 'N2O4': 6520}

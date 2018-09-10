@@ -156,6 +156,28 @@ class VehicleArchitecture(object):
         results = rdm.evaluate(self.cost_model, scenarios)
         return results
 
+    def update_masses(self, masses_dict):
+        """Update take-off weight, element masses, and propellant masses."""
+
+        self.launch_vehicle.M0 = masses_dict['m0']/1000. # convert from kg to Mg
+
+        for element in self.launch_vehicle.element_list:
+
+            if isinstance(element, VTOStageFlybackVehicle):
+                owe = masses_dict['s1'] + self.num_engines_dict['e1'] * masses_dict['e1']
+
+                if 'ab' in masses_dict:
+                    owe += self.num_engines_dict['ab'] * masses_dict['ab']
+
+                element.m = owe
+
+            else:
+                element.m = masses_dict[element.name]
+
+        for prop in self.vehicle_props_dict:
+            self.vehicle_props_dict[prop] = masses_dict[prop]
+
+
 
 class TwoLiquidStageTwoEngine(VehicleArchitecture):
     """Two stage vehicle, liquid stages, one type of engine per stage."""
@@ -217,9 +239,10 @@ class TwoLiquidStageTwoEngine(VehicleArchitecture):
                                                                         self.vehicle_prod_nums_list, 
                                                                         element_map)
 
-        prod_cost_per_flight = prod_cost/num_reuses
-
         f5_dict = {'s1': f5_s1, 'e1': f5_e1}
+
+        prod_cost_per_flight = self.launch_vehicle.average_prod_cost_per_flight(f5_dict, element_map, veh_cost_factors, self.vehicle_prod_nums_list, num_reuses)
+
         ops_cost_factors = OperationsCostFactors(f5_dict, self.f8_dict['ops'], f11_ops, self.fv, self.fc, p_ops)
 
         ground_ops = self.launch_vehicle.preflight_ground_ops_cost(launch_rate, ops_cost_factors, self.vehicle_launch_nums_list)
@@ -247,7 +270,7 @@ class TwoLiquidStageTwoEngine(VehicleArchitecture):
 
 
 class TwoLiquidStageTwoEnginePartial(VehicleArchitecture):
-    """Two stage vehicle, liquid stages, one type of engine per stage."""
+    """Two stage vehicle, liquid stages, one type of engine per stage, partial recovery of first stage."""
 
     def __init__(self, launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list,
                  num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type,
@@ -312,9 +335,10 @@ class TwoLiquidStageTwoEnginePartial(VehicleArchitecture):
                                                                         self.vehicle_prod_nums_list, 
                                                                         element_map)
 
-        prod_cost_per_flight = prod_cost/num_reuses
-
         f5_dict = {'s1': f5_s1, 'e1': f5_e1}
+
+        prod_cost_per_flight = self.launch_vehicle.average_prod_cost_per_flight(f5_dict, element_map, veh_cost_factors, self.vehicle_prod_nums_list, num_reuses)
+
         ops_cost_factors = OperationsCostFactors(f5_dict, self.f8_dict['ops'], f11_ops, self.fv, self.fc, p_ops)
 
         ground_ops = self.launch_vehicle.preflight_ground_ops_cost(launch_rate, ops_cost_factors, self.vehicle_launch_nums_list)
@@ -382,7 +406,7 @@ class TwoLiquidStageTwoEnginePlusAirbreathing(VehicleArchitecture):
         e1_CER_vals = CERValues(dev_a=dev_a_e1, dev_x=dev_x_e1, prod_a=prod_a_e1, prod_x=prod_x_e1)
         s2_CER_vals = CERValues(dev_a=dev_a_s2, dev_x=dev_x_s2, prod_a=prod_a_s2, prod_x=prod_x_s2)
         e2_CER_vals = CERValues(dev_a=dev_a_e2, dev_x=dev_x_e2, prod_a=prod_a_e2, prod_x=prod_x_e2)
-        ab_CER_vals = CERValues(dev_a=dev_a_ab, dev_x=dev_a_ab, prod_a=prod_a_ab, prod_x=prod_a_ab)
+        ab_CER_vals = CERValues(dev_a=dev_a_ab, dev_x=dev_x_ab, prod_a=prod_a_ab, prod_x=prod_x_ab)
 
         s1_cost_factors = ElementCostFactors(f1=f1_s1, f2=f2_s1, f3=f3_s1, f8=self.f8_dict['s1'],
                                              f10=f10_s1, f11=f11_s1, p=p_s1)
@@ -407,10 +431,10 @@ class TwoLiquidStageTwoEnginePlusAirbreathing(VehicleArchitecture):
         prod_cost = self.launch_vehicle.average_vehicle_production_cost(veh_cost_factors, 
                                                                         self.vehicle_prod_nums_list, 
                                                                         element_map)
-
-        prod_cost_per_flight = prod_cost/num_reuses
-
         f5_dict = {'s1': f5_s1, 'e1': f5_e1, 'ab': f5_ab}
+
+        prod_cost_per_flight = self.launch_vehicle.average_prod_cost_per_flight(f5_dict, element_map, veh_cost_factors, self.vehicle_prod_nums_list, num_reuses)
+
         ops_cost_factors = OperationsCostFactors(f5_dict, self.f8_dict['ops'], f11_ops, self.fv, self.fc, p_ops)
 
         ground_ops = self.launch_vehicle.preflight_ground_ops_cost(launch_rate, ops_cost_factors, self.vehicle_launch_nums_list)
@@ -439,7 +463,7 @@ class TwoLiquidStageTwoEnginePlusAirbreathing(VehicleArchitecture):
 
 class TwoLiquidStagePartialPlusAirbreathing(VehicleArchitecture):
     """Two stage vehicle, liquid stages, one rocket engine and one airbreathing engine on first stage, 
-    one engine on second stage."""
+    one engine on second stage, partial recovery of first stage."""
 
     def __init__(self, launch_vehicle, vehicle_prod_nums_list, vehicle_launch_nums_list,
                  num_engines_dict, f8_dict, fv, fc, sum_QN, launch_provider_type,
@@ -481,7 +505,7 @@ class TwoLiquidStagePartialPlusAirbreathing(VehicleArchitecture):
         s2_CER_vals = CERValues(dev_a=dev_a_s2, dev_x=dev_x_s2, prod_a=prod_a_s2, prod_x=prod_x_s2)
         e2_CER_vals = CERValues(dev_a=dev_a_e2, dev_x=dev_x_e2, prod_a=prod_a_e2, prod_x=prod_x_e2)
         d1_CER_vals = CERValues(dev_a=dev_a_d1, dev_x=dev_x_d1, prod_a=prod_a_d1, prod_x=prod_x_d1)
-        ab_CER_vals = CERValues(dev_a=dev_a_ab, dev_x=dev_a_ab, prod_a=prod_a_ab, prod_x=prod_a_ab)
+        ab_CER_vals = CERValues(dev_a=dev_a_ab, dev_x=dev_x_ab, prod_a=prod_a_ab, prod_x=prod_x_ab)
 
         s1_cost_factors = ElementCostFactors(f1=f1_s1, f2=f2_s1, f3=f3_s1, f8=self.f8_dict['s1'],
                                              f10=f10_s1, f11=f11_s1, p=p_s1)
@@ -510,9 +534,11 @@ class TwoLiquidStagePartialPlusAirbreathing(VehicleArchitecture):
                                                                         self.vehicle_prod_nums_list, 
                                                                         element_map)
 
-        prod_cost_per_flight = prod_cost/num_reuses
 
         f5_dict = {'s1': f5_s1, 'e1': f5_e1, 'ab': f5_ab}
+
+        prod_cost_per_flight = self.launch_vehicle.average_prod_cost_per_flight(f5_dict, element_map, veh_cost_factors, self.vehicle_prod_nums_list, num_reuses)
+
         ops_cost_factors = OperationsCostFactors(f5_dict, self.f8_dict['ops'], f11_ops, self.fv, self.fc, p_ops)
 
         ground_ops = self.launch_vehicle.preflight_ground_ops_cost(launch_rate, ops_cost_factors, self.vehicle_launch_nums_list)
@@ -584,9 +610,10 @@ class OneSolidOneLiquid(VehicleArchitecture):
 
         prod_cost = self.launch_vehicle.average_vehicle_production_cost(veh_cost_factors, self.vehicle_prod_nums_list, element_map)
 
-        prod_cost_per_flight = prod_cost/num_reuses
-
         f5_dict = {'s1': f5_s1, 'e1': f5_e1}
+
+        prod_cost_per_flight = self.launch_vehicle.average_prod_cost_per_flight(f5_dict, element_map, veh_cost_factors, self.vehicle_prod_nums_list, num_reuses)
+
         ops_cost_factors = OperationsCostFactors(f5_dict, self.f8_dict['ops'], f11_ops, self.fv, self.fc, p_ops)
 
         ground_ops = self.launch_vehicle.preflight_ground_ops_cost(launch_rate, ops_cost_factors, self.vehicle_launch_nums_list)
@@ -671,9 +698,10 @@ class TwoLiquidStageTwoEngineWithBooster(VehicleArchitecture):
 
         prod_cost = self.launch_vehicle.average_vehicle_production_cost(veh_cost_factors, self.vehicle_prod_nums_list, element_map)
 
-        prod_cost_per_flight = prod_cost/num_reuses
-
         f5_dict = {'s1': f5_s1, 'e1': f5_e1}
+
+        prod_cost_per_flight = self.launch_vehicle.average_prod_cost_per_flight(f5_dict, element_map, veh_cost_factors, self.vehicle_prod_nums_list, num_reuses)
+
         ops_cost_factors = OperationsCostFactors(f5_dict, self.f8_dict['ops'], f11_ops, self.fv, self.fc, p_ops)
 
         ground_ops = self.launch_vehicle.preflight_ground_ops_cost(launch_rate, ops_cost_factors, self.vehicle_launch_nums_list)

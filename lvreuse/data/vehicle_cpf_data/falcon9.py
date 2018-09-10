@@ -64,4 +64,4 @@ falcon_fc = 0.7
 falcon_sum_QN = 0.8
 falcon_launch_provider_type = 'C'
 
-falcon_props_dict = {'RP-1': 90234, 'LOX': 197904 * 1.6} # volumes from spaceflight101.net
+falcon_props_dict = {'kerosene': 90234, 'O2': 197904 * 1.6} # volumes from spaceflight101.net

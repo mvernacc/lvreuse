@@ -63,6 +63,6 @@ atlas_fc = 0.85
 atlas_sum_QN = 0.8
 atlas_launch_provider_type = 'B'
 
-atlas_props_dict = {'RP-1': 76370, 'LOX': (207729 + 17625) * 1.6, 'LH2': 3204 * 1.85} # including boil-off
+atlas_props_dict = {'kerosene': 76370, 'O2': (207729 + 17625) * 1.6, 'H2': 3204 * 1.85} # including boil-off
 
 reference_cpf = 314
