@@ -220,6 +220,9 @@ class Strategy(object):
             rdm.Response('cost_per_flight', rdm.Response.MAXIMIZE),
             rdm.Response('dev_cost', rdm.Response.MAXIMIZE),
             rdm.Response('price_per_flight', rdm.Response.MAXIMIZE),
+            rdm.Response('stage1_avg_prod_cost_per_flight', rdm.Response.MAXIMIZE),
+            rdm.Response('stage2_avg_prod_cost_per_flight', rdm.Response.MAXIMIZE),
+            rdm.Response('veh_int_checkout_per_flight', rdm.Response.MAXIMIZE),        
         ]
 
     def sample_model(self, nsamples=1000):
