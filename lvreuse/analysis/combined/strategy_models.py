@@ -86,6 +86,7 @@ Attributes:
 """
 Mission = namedtuple('Mission', ['name', 'dv', 'm_payload'])
 
+LEO_smallsat = Mission('LEO', 9.5e3, 100)
 LEO = Mission('LEO', 9.5e3, 10e3)
 GTO = Mission('GTO', 12e3, 10e3)
 
@@ -928,7 +929,7 @@ def demo():
     for tech_1, tech_2 in zip([kero_GG_boost_tech, H2_SC_boost_tech],
                               [kero_GG_upper_tech, H2_SC_upper_tech]):
         # for mission in [LEO]:
-        for mission in [LEO, GTO]:
+        for mission in [LEO, LEO_smallsat, GTO]:
             plt.figure(figsize=(10, 6))
             
             results = {}
@@ -998,7 +999,12 @@ def demo():
                 + '\nstage 1: {:s} {:s} tech.,'.format(tech_1.fuel, tech_1.cycle)
                 + ' stage 2: {:s} {:s} tech.'.format(tech_2.fuel, tech_2.cycle))
             plt.ylabel('Cost per flight [WYr]')
-            y_upper = 300 if mission.name == 'LEO' else 550
+            y_upper = 550
+            if mission.name == 'LEO':
+                if m_payload > 1000:
+                    y_upper = 300
+                else:
+                    y_upper = 50
             plt.ylim([0, y_upper])
 
             ax.set_xticklabels(xticks)
@@ -1009,8 +1015,8 @@ def demo():
             plt.text(x=4, y=0.0, s='Downrange recovery')
 
             plt.tight_layout()
-            plt.savefig(os.path.join('plots', 'strategy_cost_{:s}_{:s}.png'.format(
-                mission.name, tech_1.fuel)))
+            plt.savefig(os.path.join('plots', 'strategy_cost_{:s}_{:s}_pld{:.0f}.png'.format(
+                mission.name, tech_1.fuel, mission.m_payload)))
 
     plt.show()
 
