@@ -63,7 +63,8 @@ atlas_v_401 = LaunchVehicle(
     )
 
 # Data from http://www.spacelaunchreport.com/falcon9ft.html
-# Falcon 9 v1.2 (Block 3)
+# Falcon 9 v1.2 (Block 3), which reports LEO as a 185 km altitude circular orbit
+# at 28.5 deg inclination, w/ launch from 28.5 deg latitude.
 # Payload capacity with recovery is max. demonstrated, actual capacity
 # may be somewhat higher.
 f9_b3_e = LaunchVehicle(
@@ -86,7 +87,7 @@ f9_b3_e = LaunchVehicle(
 # Data from http://www.spacelaunchreport.com/delta4.html
 # Delta 9040 with 4 meter second stage
 # Payload data from https://www.ulalaunch.com/docs/default-source/evolution/delta-iv-launch-vehicle-growth-options-to-support-nasas-space-exploration-vision.pdf
-# Figure 1
+# Figure 1, which reports LEO as a 407 km altitude circular orbit at 28.7 deg inclination, w/ launch from 28.7 deg latitude.
 delta_iv_m = LaunchVehicle(
     name='Delta IV Medium',
     masses={

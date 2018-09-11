@@ -2,7 +2,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-from lvreuse.analysis.performance.strategy_perf_models import LEO, GTO
+from lvreuse.data.missions import LEO, GTO
 from lvreuse.performance import payload_fixed_stages
 from lvreuse.data import launch_vehicles
 

@@ -16,6 +16,7 @@ from lvreuse.performance.launch_site_return import (propulsive_ls_perf,
 from lvreuse.data import launch_vehicles
 from lvreuse.performance import masses
 from lvreuse.constants import g_0
+from lvreuse.data.missions import LEO, GTO
 
 
 Technology = namedtuple('Technology',
@@ -73,19 +74,6 @@ H2_SC_upper_tech = Technology(
         rdm.TriangularUncertainty('E_2', min_value=0.080, mode_value=0.085, max_value=0.090),
     ]
     )
-
-"""Defines a launch mission: taking a payload to an orbit.
-
-Attributes:
-    name (str): Orbit name.
-    dv (scalar): Delta-v (incl losses) required to reach the target orbit
-        [units: meter second**-1].
-    m_payload (scalar): Payload mass [units: kilogram].
-"""
-Mission = namedtuple('Mission', ['name', 'dv', 'm_payload'])
-
-LEO = Mission('LEO', 9.5e3, 10e3)
-GTO = Mission('GTO', 12e3, 5e3)
 
 # Common uncertainties
 # Downrange distance at stage separation - model coefficient [units: meter**-1 second**2].

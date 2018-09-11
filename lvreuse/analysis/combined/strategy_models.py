@@ -19,6 +19,7 @@ from lvreuse.constants import g_0
 import lvreuse.cost as cost
 from lvreuse.analysis.cost import strategy_cost_models
 from lvreuse.analysis.combined.construct_launch_vehicle import construct_launch_vehicle
+from lvreuse.data.missions import LEO, LEO_smallsat, GTO
 
 Technology = namedtuple('Technology',
                        ['fuel', 'oxidizer', 'of_mass_ratio',
@@ -76,19 +77,6 @@ H2_SC_upper_tech = Technology(
     ]
     )
 
-"""Defines a launch mission: taking a payload to an orbit.
-
-Attributes:
-    name (str): Orbit name.
-    dv (scalar): Delta-v (incl losses) required to reach the target orbit
-        [units: meter second**-1].
-    m_payload (scalar): Payload mass [units: kilogram].
-"""
-Mission = namedtuple('Mission', ['name', 'dv', 'm_payload'])
-
-LEO_smallsat = Mission('LEO', 9.5e3, 100)
-LEO = Mission('LEO', 9.5e3, 10e3)
-GTO = Mission('GTO', 12e3, 10e3)
 
 # Common uncertainties - performance
 # Downrange distance at stage separation - model coefficient [units: meter**-1 second**2].

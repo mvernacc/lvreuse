@@ -2,11 +2,12 @@
 
 import rhodium as rdm
 import strategy_perf_models
+from lvreuse.data.missions import LEO
 
 
 tech_1 = strategy_perf_models.kero_GG_boost_tech
 tech_2 = strategy_perf_models.kero_GG_upper_tech
-mission = strategy_perf_models.LEO
+mission = LEO
 
 print('Mission: {:s}'.format(mission.name))
 
