@@ -8,6 +8,7 @@ from lvreuse.performance import payload_fixed_stages
 from lvreuse.performance.launch_site_return import (stage_sep_velocity,
                                                     propulsive_ls_perf,
                                                     winged_powered_ls_perf)
+from lvreuse.data.missions import LEO, GTO
 
 
 def dv_mission_sweep():
@@ -51,8 +52,8 @@ def dv_mission_sweep():
     plt.title('Effect of mission $\\Delta v$ on payload capacity'
         + '\nStage 2 / stage 1 mass ratio $y$={:.2f}, kerosene/O2 tech.'.format(y))
     plt.legend()
-    plt.text(9.5, 0.005, 'LEO', rotation=90)
-    plt.text(12, 0.005, 'GTO', rotation=90)
+    plt.text(LEO.dv * 1e-3, 0.005, 'LEO', rotation=90)
+    plt.text(GTO.dv * 1e-3, 0.005, 'GTO', rotation=90)
     plt.grid(True)
 
     plt.subplot(2, 1, 2, sharex=ax1)

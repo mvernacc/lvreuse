@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 
 from lvreuse.performance import payload_fixed_stages
 from lvreuse.data import launch_vehicles
+from lvreuse.data.missions import LEO, GTO
 
 
 def main():
@@ -50,21 +51,19 @@ def plot_payload(technology, axes, which_column):
     e_1_max = 0.40
 
     # Plot payload capacity vs 1st stage unavail mass
-    for dv_mission in [9.5e3, 12e3]:
-        pi_star_expend = payload_fixed_stages(c_1, c_2, E_1, E_2, y, dv_mission)
+    for mission in [LEO, GTO]:
+        pi_star_expend = payload_fixed_stages(c_1, c_2, E_1, E_2, y, mission.dv)
         e_1 = np.linspace(E_1, e_1_max)
         pi_star = np.zeros(e_1.shape)
         for i in range(len(e_1)):
-            pi_star[i] = payload_fixed_stages(c_1, c_2, e_1[i], E_2, y, dv_mission)
+            pi_star[i] = payload_fixed_stages(c_1, c_2, e_1[i], E_2, y, mission.dv)
 
         plt.sca(axes[0, which_column])
-        plt.plot(e_1, pi_star, label='$\\Delta v_* = {:.1f}$ km/s'.format(
-            dv_mission * 1e-3))
+        plt.plot(e_1, pi_star, label='{:s}'.format(mission.name))
 
         plt.sca(axes[1, which_column])
         plt.plot(e_1, pi_star / pi_star_expend,
-                 label='$\\Delta v_* = {:.1f}$ km/s'.format(
-            dv_mission * 1e-3))
+                 label='{:s}'.format(mission.name))
 
     if technology == 'kerosene':
         # Plot actual r_p values for Falcon 9
@@ -86,7 +85,7 @@ def plot_payload(technology, axes, which_column):
     plt.title('{:s} technology\n'.format(technology)
               + '$y = {:.2f}$, '.format(y)
               + '$c_1/g_0$={:.0f} s, $c_2/g_0$={:.0f} s, $E_1$={:.2f}, $E_2$={:.2f}'.format(
-                c_1 / g_0, c_2 / g_0, E_1, E_2))
+                  c_1 / g_0, c_2 / g_0, E_1, E_2))
     plt.legend()
     plt.xlim(E_1, e_1_max)
     plt.ylim([0, 0.05])
@@ -97,7 +96,7 @@ def plot_payload(technology, axes, which_column):
     plt.grid(True)
     plt.legend()
     plt.xlim(E_1, e_1_max)
-    plt.ylim([0,1])
+    plt.ylim([0, 1])
 
 
 if __name__ == '__main__':
