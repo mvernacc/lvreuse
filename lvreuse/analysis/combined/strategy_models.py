@@ -168,7 +168,10 @@ reuse_cost_ab_uncerts = [
 ]
 # Learning factor for disposed stage 1 tank (partial reuse strats)
 p_d1 = rdm.TriangularUncertainty('p_d1', min_value=0.75, mode_value=0.8, max_value=0.85)
-
+# Recovery cost [WYr] for launch site recovery
+recov_cost_launch_site = rdm.TriangularUncertainty('recovery_cost', min_value=0.5, mode_value=0.7, max_value=1.0)
+# Recovery cost [WYr] for downrange recovery
+recov_cost_downrange = rdm.TriangularUncertainty('recovery_cost', min_value=1, mode_value=1.5, max_value=2)
 
 class Strategy(object):
     __metaclass__ = abc.ABCMeta
@@ -187,6 +190,16 @@ class Strategy(object):
         self.model = rdm.Model(self.evaluate)
         self.mission = mission
         self.y = y
+
+        if recovery_location == 'launch site':
+            self.uncertainties += [recov_cost_launch_site]
+        elif recovery_location == 'downrange':
+            self.uncertainties += [recov_cost_downrange]
+        elif recovery_location == 'N/A':
+            pass
+        else:
+            raise ValueError('Invalid recovery recovery_location "{:s}"'.format(
+                recovery_location))
 
         # Construct LaunchVehicle Object for cost modeling
         if landing_method == 'winged':
