@@ -998,7 +998,8 @@ def demo():
                 + '\nstage 1: {:s} {:s} tech.,'.format(tech_1.fuel, tech_1.cycle)
                 + ' stage 2: {:s} {:s} tech.'.format(tech_2.fuel, tech_2.cycle))
             plt.ylabel('Cost per flight [WYr]')
-            plt.ylim([0, 400])
+            y_upper = 300 if mission.name == 'LEO' else 550
+            plt.ylim([0, y_upper])
 
             ax.set_xticklabels(xticks)
             plt.xticks(rotation=30)
