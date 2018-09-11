@@ -2,7 +2,8 @@
 import os.path
 from lvreuse.cost.elements import CryoLH2TurboFed, ExpendableBallisticStageLH2, \
     ExpendableBallisticStageStorable, StorableTurboFed, ReusableBallisticStageLH2, \
-    VTOStageFlybackVehicle, TurboJetEngine, ReusableBallisticStageStorable
+    VTOStageFlybackVehicle, TurboJetEngine, ReusableBallisticStageStorable, \
+    ExpendableTank
 from lvreuse.cost.vehicle import LaunchVehicle
 
 
@@ -37,7 +38,7 @@ def construct_launch_vehicle(stage_type, prop_choice, portion_reused, ab_rec, nu
 
     elif stage_type == 'ballistic' and prop_choice == 'H2' and portion_reused == 'partial':
         stage1_rec = ReusableBallisticStageLH2(name='s1', m=0)
-        stage1_disp = ExpendableBallisticStageLH2(name='d1', m=0)
+        stage1_disp = ExpendableTank(name='d1', m=0)
         stage1_engine = CryoLH2TurboFed(name='e1', m=0)
         stage1_list = [stage1_rec, stage1_disp, stage1_engine]
 
@@ -53,7 +54,7 @@ def construct_launch_vehicle(stage_type, prop_choice, portion_reused, ab_rec, nu
 
     elif stage_type == 'ballistic' and prop_choice == 'kerosene' and portion_reused == 'partial':
         stage1_rec = ReusableBallisticStageStorable(name='s1', m=0)
-        stage1_disp = ExpendableBallisticStageStorable(name='d1', m=0)
+        stage1_disp = ExpendableTank(name='d1', m=0)
         stage1_engine = StorableTurboFed(name='e1', m=0)
         stage1_list = [stage1_rec, stage1_disp, stage1_engine]
 
@@ -70,14 +71,14 @@ def construct_launch_vehicle(stage_type, prop_choice, portion_reused, ab_rec, nu
 
     elif stage_type == 'winged' and prop_choice == 'H2' and portion_reused == 'partial' and ab_rec:
         stage1_rec = VTOStageFlybackVehicle(name='s1', m=0)
-        stage1_disp = ExpendableBallisticStageLH2(name='d1', m=0)
+        stage1_disp = ExpendableTank(name='d1', m=0)
         stage1_rocket_engine = CryoLH2TurboFed(name='e1', m=0)
         stage1_ab_engine = TurboJetEngine(name='ab', m=0)
         stage1_list = [stage1_rec, stage1_disp, stage1_rocket_engine, stage1_ab_engine]
 
     elif stage_type == 'winged' and prop_choice == 'H2' and portion_reused == 'partial' and not ab_rec:
         stage1_rec = VTOStageFlybackVehicle(name='s1', m=0)
-        stage1_disp = ExpendableBallisticStageLH2(name='d1', m=0)
+        stage1_disp = ExpendableTank(name='d1', m=0)
         stage1_rocket_engine = CryoLH2TurboFed(name='e1', m=0)
         stage1_list = [stage1_rec, stage1_disp, stage1_rocket_engine]
 
@@ -94,14 +95,14 @@ def construct_launch_vehicle(stage_type, prop_choice, portion_reused, ab_rec, nu
 
     elif stage_type == 'winged' and prop_choice == 'kerosene' and portion_reused == 'partial' and ab_rec:
         stage1_rec = VTOStageFlybackVehicle(name='s1', m=0)
-        stage1_disp = ExpendableBallisticStageStorable(name='d1', m=0)
+        stage1_disp = ExpendableTank(name='d1', m=0)
         stage1_rocket_engine = StorableTurboFed(name='e1', m=0)
         stage1_ab_engine = TurboJetEngine(name='ab', m=0)
         stage1_list = [stage1_rec, stage1_disp, stage1_rocket_engine, stage1_ab_engine]
 
     elif stage_type == 'winged' and prop_choice == 'kerosene' and portion_reused == 'partial' and not ab_rec:
         stage1_rec = VTOStageFlybackVehicle(name='s1', m=0)
-        stage1_disp = ExpendableBallisticStageStorable(name='d1', m=0)
+        stage1_disp = ExpendableTank(name='d1', m=0)
         stage1_rocket_engine = StorableTurboFed(name='e1', m=0)
         stage1_list = [stage1_rec, stage1_disp, stage1_rocket_engine]
 
