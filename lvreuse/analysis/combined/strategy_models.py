@@ -1001,7 +1001,7 @@ def demo():
             plt.ylabel('Cost per flight [WYr]')
             y_upper = 550
             if mission.name == 'LEO':
-                if m_payload > 1000:
+                if mission.m_payload > 1000:
                     y_upper = 300
                 else:
                     y_upper = 50
