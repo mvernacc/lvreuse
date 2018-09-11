@@ -209,7 +209,8 @@ class TwoLiquidStageTwoEngine(VehicleArchitecture):
                       f10_e1=1.0, f11_e1=1.0, p_e1=1.0, prod_a_e1=1.0, prod_x_e1=1.0,
                       f10_s2=1.0, f11_s2=1.0, p_s2=1.0, prod_a_s2=1.0, prod_x_s2=1.0,
                       f10_e2=1.0, f11_e2=1.0, p_e2=1.0, prod_a_e2=1.0, prod_x_e2=1.0,
-                      f5_s1=0, f5_e1=0, f11_ops=1.0, p_ops=1.0, num_reuses = 1,
+                      f5_s1=0, f5_e1=0, f11_ops=1.0, p_ops=1.0,
+                      num_reuses_s1=1, num_reuses_e1=1,
                       num_program_flights=1, profit_multiplier=1.0, launch_rate=None, fees=0,
                       insurance=0, recovery_cost=0, frac_dev_paid=1.0):
 
@@ -240,8 +241,9 @@ class TwoLiquidStageTwoEngine(VehicleArchitecture):
                                                                         element_map)
 
         f5_dict = {'s1': f5_s1, 'e1': f5_e1}
+        element_reuses_dict = {'s1': num_reuses_s1, 'e1': num_reuses_e1}
 
-        prod_cost_per_flight = self.launch_vehicle.average_prod_cost_per_flight(f5_dict, element_map, veh_cost_factors, self.vehicle_prod_nums_list, num_reuses)
+        prod_cost_per_flight = self.launch_vehicle.average_prod_cost_per_flight(element_reuses_dict, element_map, veh_cost_factors, self.vehicle_prod_nums_list)
 
         ops_cost_factors = OperationsCostFactors(f5_dict, self.f8_dict['ops'], f11_ops, self.fv, self.fc, p_ops)
 
@@ -301,7 +303,8 @@ class TwoLiquidStageTwoEnginePartial(VehicleArchitecture):
                       f10_s2=1.0, f11_s2=1.0, p_s2=1.0, prod_a_s2=1.0, prod_x_s2=1.0,
                       f10_e2=1.0, f11_e2=1.0, p_e2=1.0, prod_a_e2=1.0, prod_x_e2=1.0,
                       f10_d1=1.0, f11_d1=1.0, p_d1=1.0, prod_a_d1=1.0, prod_x_d1=1.0,
-                      f5_s1=0, f5_e1=0, f11_ops=1.0, p_ops=1.0, num_reuses = 1,
+                      f5_s1=0, f5_e1=0, f11_ops=1.0, p_ops=1.0,
+                      num_reuses_s1=1, num_reuses_e1=1,
                       num_program_flights=1, profit_multiplier=1.0, launch_rate=None, fees=0,
                       insurance=0, recovery_cost=0, frac_dev_paid=1.0):
 
@@ -336,8 +339,8 @@ class TwoLiquidStageTwoEnginePartial(VehicleArchitecture):
                                                                         element_map)
 
         f5_dict = {'s1': f5_s1, 'e1': f5_e1}
-
-        prod_cost_per_flight = self.launch_vehicle.average_prod_cost_per_flight(f5_dict, element_map, veh_cost_factors, self.vehicle_prod_nums_list, num_reuses)
+        element_reuses_dict = {'s1': num_reuses_s1, 'e1': num_reuses_e1}
+        prod_cost_per_flight = self.launch_vehicle.average_prod_cost_per_flight(element_reuses_dict, element_map, veh_cost_factors, self.vehicle_prod_nums_list)
 
         ops_cost_factors = OperationsCostFactors(f5_dict, self.f8_dict['ops'], f11_ops, self.fv, self.fc, p_ops)
 
@@ -398,7 +401,8 @@ class TwoLiquidStageTwoEnginePlusAirbreathing(VehicleArchitecture):
                       f10_s2=1.0, f11_s2=1.0, p_s2=1.0, prod_a_s2=1.0, prod_x_s2=1.0,
                       f10_e2=1.0, f11_e2=1.0, p_e2=1.0, prod_a_e2=1.0, prod_x_e2=1.0,
                       f10_ab=1.0, f11_ab=1.0, p_ab=1.0, prod_a_ab=1.0, prod_x_ab=1.0,
-                      f5_s1=0, f5_e1=0, f5_ab=0, f11_ops=1.0, p_ops=1.0, num_reuses = 1,
+                      f5_s1=0, f5_e1=0, f5_ab=0, f11_ops=1.0, p_ops=1.0,
+                      num_reuses_s1=1, num_reuses_e1=1, num_reuses_ab=1,
                       num_program_flights=1, profit_multiplier=1.0, launch_rate=None, fees=0,
                       insurance=0, recovery_cost=0, frac_dev_paid=1.0):
 
@@ -432,8 +436,9 @@ class TwoLiquidStageTwoEnginePlusAirbreathing(VehicleArchitecture):
                                                                         self.vehicle_prod_nums_list, 
                                                                         element_map)
         f5_dict = {'s1': f5_s1, 'e1': f5_e1, 'ab': f5_ab}
+        element_reuses_dict = {'s1': num_reuses_s1, 'e1': num_reuses_e1, 'ab': num_reuses_ab}
 
-        prod_cost_per_flight = self.launch_vehicle.average_prod_cost_per_flight(f5_dict, element_map, veh_cost_factors, self.vehicle_prod_nums_list, num_reuses)
+        prod_cost_per_flight = self.launch_vehicle.average_prod_cost_per_flight(element_reuses_dict, element_map, veh_cost_factors, self.vehicle_prod_nums_list)
 
         ops_cost_factors = OperationsCostFactors(f5_dict, self.f8_dict['ops'], f11_ops, self.fv, self.fc, p_ops)
 
@@ -496,7 +501,8 @@ class TwoLiquidStagePartialPlusAirbreathing(VehicleArchitecture):
                       f10_e2=1.0, f11_e2=1.0, p_e2=1.0, prod_a_e2=1.0, prod_x_e2=1.0,
                       f10_d1=1.0, f11_d1=1.0, p_d1=1.0, prod_a_d1=1.0, prod_x_d1=1.0,
                       f10_ab=1.0, f11_ab=1.0, p_ab=1.0, prod_a_ab=1.0, prod_x_ab=1.0,
-                      f5_s1=0, f5_e1=0, f5_ab=0, f11_ops=1.0, p_ops=1.0, num_reuses = 1,
+                      f5_s1=0, f5_e1=0, f5_ab=0, f11_ops=1.0, p_ops=1.0,
+                      num_reuses_s1=1, num_reuses_e1=1, num_reuses_ab=1,
                       num_program_flights=1, profit_multiplier=1.0, launch_rate=None, fees=0,
                       insurance=0, recovery_cost=0, frac_dev_paid=1.0):
 
@@ -536,8 +542,9 @@ class TwoLiquidStagePartialPlusAirbreathing(VehicleArchitecture):
 
 
         f5_dict = {'s1': f5_s1, 'e1': f5_e1, 'ab': f5_ab}
+        element_reuses_dict = {'s1': num_reuses_s1, 'e1': num_reuses_e1, 'ab': num_reuses_ab}
 
-        prod_cost_per_flight = self.launch_vehicle.average_prod_cost_per_flight(f5_dict, element_map, veh_cost_factors, self.vehicle_prod_nums_list, num_reuses)
+        prod_cost_per_flight = self.launch_vehicle.average_prod_cost_per_flight(element_reuses_dict, element_map, veh_cost_factors, self.vehicle_prod_nums_list)
 
         ops_cost_factors = OperationsCostFactors(f5_dict, self.f8_dict['ops'], f11_ops, self.fv, self.fc, p_ops)
 

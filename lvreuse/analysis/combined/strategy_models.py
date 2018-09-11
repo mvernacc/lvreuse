@@ -155,10 +155,16 @@ fc = 0.7
 launch_provider_type = 'C'
 reuse_cost_uncerts = [
     # Reusable vehicle lifetime
-    rdm.TriangularUncertainty('num_reuses', min_value=5, mode_value=10, max_value=25),
+    # rdm.TriangularUncertainty('num_reuses', min_value=5, mode_value=10, max_value=25),
+    rdm.TriangularUncertainty('num_reuses_e1', min_value=5, mode_value=10, max_value=25),
+    rdm.TriangularUncertainty('num_reuses_s1', min_value=5, mode_value=10, max_value=25),
     # Refurbishment cost factors
     rdm.TriangularUncertainty('f5_e1', min_value=0.5e-2, mode_value=1e-2, max_value=3e-2),
     rdm.TriangularUncertainty('f5_s1', min_value=0.008e-2, mode_value=1e-2, max_value=2.3e-2),
+]
+reuse_cost_ab_uncerts = [
+    rdm.TriangularUncertainty('num_reuses_ab', min_value=100, mode_value=700, max_value=1000),
+    rdm.TriangularUncertainty('f5_ab', min_value=0.001e-2, mode_value=0.1e-2, max_value=0.5e-2),
 ]
 # Learning factor for disposed stage 1 tank (partial reuse strats)
 p_d1 = rdm.TriangularUncertainty('p_d1', min_value=0.75, mode_value=0.8, max_value=0.85)
@@ -451,7 +457,7 @@ class WingedPoweredLaunchSite(Strategy):
             num_engines_dict={'e1': tech_1.n_engines, 'e2': tech_2.n_engines, 'ab': self.n_ab_engines},
             f8_dict=f8_dict,
             fv=(1.0 if tech_1.fuel == 'H2' else 0.8),
-            fc=fc,  
+            fc=fc,
             sum_QN=1.0 + 0.4,
             launch_provider_type=launch_provider_type,
             vehicle_props_dict=vehicle_props_dict,
@@ -461,6 +467,7 @@ class WingedPoweredLaunchSite(Strategy):
             )
         self.uncertainties += self.cost_model.uncertainties
         self.uncertainties += reuse_cost_uncerts
+        self.uncertainties += reuse_cost_ab_uncerts
         self.setup_model()
 
     def evaluate(self, c_1, c_2, E_1, E_2, a,
@@ -489,9 +496,9 @@ class WingedPoweredLaunchSite(Strategy):
                                            n_engines=self.tech_2.n_engines,
                                            propellant=self.tech_2.fuel + '/' + self.tech_2.oxidizer)
         # Stage 1 air-breathing engine mass [units: kilogram].
-        # Model: air-breathing engines typically make up 15-20% of the mass of
+        # Model: air-breathing engines typically make up 10% of the mass of
         # winged, powered vehicles.
-        m_ab_engine = m_inert_1 * 0.17 / self.n_ab_engines
+        m_ab_engine = m_inert_1 * 0.10 / self.n_ab_engines
         # Stage propellant masses [units: kilogram].
         m_p_1 = m_1 - m_inert_1
         m_fuel_1 = 1 / (1 + self.tech_1.of_mass_ratio) * m_p_1
@@ -573,6 +580,7 @@ class WingedPoweredLaunchSitePartial(Strategy):
             )
         self.uncertainties += self.cost_model.uncertainties
         self.uncertainties += reuse_cost_uncerts
+        self.uncertainties += reuse_cost_ab_uncerts
         self.setup_model()
 
     def evaluate(self, c_1, c_2, E_1, E_2, a,
@@ -898,16 +906,16 @@ class ParachutePartial(StrategyNoPropulsion):
 
 
 def demo():
-    # strats = [Expendable, PropulsiveLaunchSite,
-    #     WingedPoweredLaunchSite, WingedPoweredLaunchSitePartial,
-    #     PropulsiveDownrange, WingedGlider, Parachute, ParachutePartial]
+    strats = [Expendable, PropulsiveLaunchSite,
+        WingedPoweredLaunchSite, WingedPoweredLaunchSitePartial,
+        PropulsiveDownrange, WingedGlider, Parachute, ParachutePartial]
 
-    strats = [Expendable, ParachutePartial]
+    # strats = [Expendable, WingedPoweredLaunchSite]
 
     for tech_1, tech_2 in zip([kero_GG_boost_tech, H2_SC_boost_tech],
                               [kero_GG_upper_tech, H2_SC_upper_tech]):
-        for mission in [LEO]:
-        # for mission in [LEO, GTO]:
+        # for mission in [LEO]:
+        for mission in [LEO, GTO]:
             plt.figure(figsize=(10, 6))
             
             results = {}
@@ -916,10 +924,11 @@ def demo():
                 strat_instance = strat(tech_1, tech_2, mission)
                 name = strat.__name__
                 res = strat_instance.sample_model(nsamples=100)
+                print('finished ' + name)
                 res = res.as_dataframe()
-                print(res)
                 results[name] = res
-                xticks.append('{:s}\n{:s}'.format(strat_instance.landing_method,
+                xticks.append('{:s}\n{:s}\n{:s}'.format(strat_instance.landing_method,
+                                                  strat_instance.recovery_prop_method,
                                                   strat_instance.portion_recovered))
 
             pi_star = {}
@@ -968,14 +977,26 @@ def demo():
             plt.savefig(os.path.join('plots', 'strategy_perf_{:s}_{:s}.png'.format(
                 mission.name, tech_1.fuel)))
 
-            plt.figure()
-            ax = sns.violinplot(data=cost_per_flight)
-            ax.set_xticklabels(xticks)
+            plt.figure(figsize=(10, 6))
+            ax = sns.violinplot(data=cost_per_flight, cut=0)
+
             plt.title('Cost distributions for {:s} mission'.format(mission.name)
+                + ', {:.1f} Mg payload'.format(mission.m_payload * 1e-3)
                 + '\nstage 1: {:s} {:s} tech.,'.format(tech_1.fuel, tech_1.cycle)
                 + ' stage 2: {:s} {:s} tech.'.format(tech_2.fuel, tech_2.cycle))
             plt.ylabel('Cost per flight [WYr]')
-            plt.ylim([0, plt.ylim()[1]])
+            plt.ylim([0, 400])
+
+            ax.set_xticklabels(xticks)
+            plt.xticks(rotation=30)
+            plt.axvline(x=0.5, color='grey')
+            plt.text(x=1, y=0.0, s='Launch site recovery')
+            plt.axvline(x=3.5, color='grey')
+            plt.text(x=4, y=0.0, s='Downrange recovery')
+
+            plt.tight_layout()
+            plt.savefig(os.path.join('plots', 'strategy_cost_{:s}_{:s}.png'.format(
+                mission.name, tech_1.fuel)))
 
     plt.show()
 
