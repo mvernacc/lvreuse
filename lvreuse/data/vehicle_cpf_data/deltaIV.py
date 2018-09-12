@@ -15,7 +15,7 @@ stage2_engine = CryoLH2TurboFed("e2", 277) # RL-10B-2, from Wikipedia
 
 delta_elements = [core, core_engine, stage2, stage2_engine]
 
-deltaIV_medium = LaunchVehicle(name='deltaIV_medium', M0=1257, N=2, element_list=delta_elements) # mass from Isakowitz
+deltaIV_medium = LaunchVehicle(name='deltaIV_medium', M0=257, N=2, element_list=delta_elements) # mass from Isakowitz
 delta_engines_dict = {'e1': 1, 'e2': 1}
 delta_f8_dict = {'s1': 1.0, 'e1': 1.0, 's2': 1.0, 'e2': 1.0, 'veh': 1.0, 'ops': 1.0}
 delta_uncertainty_list = [
@@ -32,9 +32,21 @@ delta_uncertainty_list = [
 ]
 
 delta_ops_uncertainty_list = [
-    rdm.TriangularUncertainty('launch_rate', min_value=3, mode_value=3.5, max_value=4),
+    rdm.TriangularUncertainty('launch_rate', min_value=3, mode_value=4, max_value=5),
     rdm.TriangularUncertainty('p_ops', min_value=0.8, mode_value=0.85, max_value=0.9),
     rdm.TriangularUncertainty('insurance', min_value=1, mode_value=2, max_value=3),
+]
+
+delta_dev_uncertainty_list = [
+    rdm.TriangularUncertainty('f2_s1', min_value=0.9, mode_value=1.0, max_value=1.1), # guess
+    rdm.TriangularUncertainty('f2_s2', min_value=0.9, mode_value=1.0, max_value=1.1), # guess
+    rdm.TriangularUncertainty('f3_s1', min_value=1.0, mode_value=1.1, max_value=1.2), # transcost p. 111
+    rdm.TriangularUncertainty('f3_e1', min_value=1.0, mode_value=1.1, max_value=1.2), # guess
+    rdm.TriangularUncertainty('f3_s2', min_value=1.0, mode_value=1.1, max_value=1.2), # guess
+    rdm.TriangularUncertainty('f3_e2', min_value=1.0, mode_value=1.1, max_value=1.2), # guess
+    rdm.TriangularUncertainty('f0_dev_veh', min_value=1.03**2, mode_value=1.04**2, max_value=1.05**2),
+    rdm.TriangularUncertainty('num_program_flights', min_value=100, mode_value=120, max_value=150),
+    rdm.TriangularUncertainty('profit_multiplier', min_value=1.05, mode_value=1.07, max_value=1.09),
 ]
 
 delta_prod_nums = range(27, 38)
