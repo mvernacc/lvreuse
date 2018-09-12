@@ -1,0 +1,42 @@
+\documentclass[conf]{new-aiaa}
+%\documentclass[journal]{new-aiaa} for journal papers
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage[version=4]{mhchem}
+\usepackage{siunitx}
+\usepackage{longtable,tabularx}
+\usepackage{footnote}
+\usepackage{mhchem}
+\usepackage{physics}
+\usepackage{array,makecell,booktabs}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+\usepackage[super]{nth}
+\makesavenoteenv{tabular}
+\setlength\LTleft{0pt}
+
+\graphicspath{{figures/}}
+
+\begin{document}
+
+\section{Discussion}
+
+\subsection{Strategy CpF Estimates}
+violin plots of strategy cpfs
+cpf varies with technology choice, mission, large uncertainties with winged vehicles
+
+\subsection{Effect of Number of Reuses and Launch Rate}
+stack plot with reuse sweep- show why cost declines with number of reuses
+cpf vs. reuse plot with varying launch rate curves - shows significant decrease in cost with increasing launch rate for low launch rates
+cpf vs. reuse plot for different strategies 
+
+\subsection{Effect of Launch Vehicle Size}
+reuse doesn't make sense for smaller vehicles - costs not dominated by hardware cost
+
+\subsection{Paying off development costs}
+npv plot
+
+\bibliography{first_stage_recovery}
+
+\end{document}
