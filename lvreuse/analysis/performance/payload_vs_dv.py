@@ -1,4 +1,6 @@
 """Plot payload vs delta-v to target orbit."""
+import os.path
+
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -50,7 +52,10 @@ def main():
     plt.ylim([0, plt.ylim()[1]])
     plt.grid(True)
     plt.legend()
-    plt.title('Payload capacity vs $\\Delta v$')
+    plt.title('Payload performance vs. $\\Delta v$')
+    plt.text(11.1, 0.026, '$\\mathrm{H_2} / \\mathrm{O_2}$', color='C0')
+    plt.text(10, 0.017, 'kerosene$/ \\mathrm{O_2}$', color='C1')
+    plt.savefig(os.path.join('plots', 'payload_vs_dv.png'), dpi=200)
     plt.show()
 
 if __name__ == '__main__':
