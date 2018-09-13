@@ -80,8 +80,8 @@ def plot_contours_ap():
         plt.clabel(cs, inline=1, fontsize=10)
         host_ax.set_ylim([0, max(P)])
 
-        host_ax.set_xlabel('Recov. h/w mass ratio $a = m_{rh,1}/(m_{rh,1} + m_{hv,1})$ [-]')
-        host_ax.set_ylabel('Propulsion exponent $P$ [-]')
+        host_ax.set_xlabel('Hardware factor $H = m_{hr,1}/(m_{hr,1} + m_{hv,1})$ [-]')
+        host_ax.set_ylabel('Propellant Factor $P$ [-]')
         plt.title("Unavailable mass ratio $\\epsilon_1'$\n"
                   + 'for {:s} ($E_1$={:.2f}, $z_m$={:.2f})'.format(
                       case.name, case.E_1, case.z_m))
@@ -106,7 +106,8 @@ def plot_contours_ap():
         plt.savefig(os.path.join(
             'plots',
             'unavail_mass_{:s}.png'.format(
-            case.name.replace(' ', '_').replace(',', ''))))
+            case.name.replace(' ', '_').replace(',', ''))),
+            dpi=200)
 
 
 if __name__ == '__main__':
