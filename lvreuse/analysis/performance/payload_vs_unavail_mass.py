@@ -1,3 +1,5 @@
+import os.path
+
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -14,7 +16,7 @@ def main():
     plt.suptitle("Effect of $\\epsilon_1'$ on payload capacity")
     plt.tight_layout()
     plt.subplots_adjust(top=0.90)
-    plt.savefig('payload.png')
+    plt.savefig(os.path.join('plots', 'payload_vs_unavail_mass.png'))
     plt.show()
 
 
@@ -84,7 +86,7 @@ def plot_payload(technology, axes, which_column):
     plt.grid(True)
     plt.title('{:s} technology\n'.format(technology)
               + '$y = {:.2f}$, '.format(y)
-              + '$c_1/g_0$={:.0f} s, $c_2/g_0$={:.0f} s, $E_1$={:.2f}, $E_2$={:.2f}'.format(
+              + '$I_{{sp,1}}$={:.0f} s, $I_{{sp,2}}$={:.0f} s, $E_1$={:.2f}, $E_2$={:.2f}'.format(
                   c_1 / g_0, c_2 / g_0, E_1, E_2))
     plt.legend()
     plt.xlim(E_1, e_1_max)
@@ -92,7 +94,7 @@ def plot_payload(technology, axes, which_column):
 
     plt.sca(axes[1, which_column])
     plt.xlabel("1st stage unavail. mass fraction $\\epsilon_1'$ [-]")
-    plt.ylabel('Payload factor $r_p = \\pi_*^{\\mathrm{recov}}/\\pi_*^{\\mathrm{expend}}$ [-]')
+    plt.ylabel('Reuse/expend payload ratio $\\pi_*^{\\mathrm{recov}}/\\pi_*^{\\mathrm{expend}}$ [-]')
     plt.grid(True)
     plt.legend()
     plt.xlim(E_1, e_1_max)
