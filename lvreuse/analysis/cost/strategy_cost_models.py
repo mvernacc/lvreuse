@@ -2,6 +2,7 @@ import abc
 import os.path
 import math
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 import rhodium as rdm
 import seaborn as sns
 import pandas
@@ -279,7 +280,8 @@ class TwoLiquidStageTwoEngine(VehicleArchitecture):
         price_per_flight = (prod_cost_per_flight + ops_cost_per_flight)*profit_multiplier + dev_cost_per_flight
 
         return (prod_cost_per_flight, ops_cost_per_flight, cost_per_flight, dev_cost, price_per_flight, 
-                stage1_avg_prod_cost_per_flight, stage2_avg_prod_cost_per_flight, veh_int_checkout_per_flight)
+                stage1_avg_prod_cost_per_flight, stage2_avg_prod_cost_per_flight, veh_int_checkout_per_flight,
+                props_cost, refurb_cost)
 
 
 class TwoLiquidStageTwoEnginePartial(VehicleArchitecture):
@@ -383,7 +385,8 @@ class TwoLiquidStageTwoEnginePartial(VehicleArchitecture):
         price_per_flight = (prod_cost_per_flight + ops_cost_per_flight)*profit_multiplier + dev_cost_per_flight
 
         return (prod_cost_per_flight, ops_cost_per_flight, cost_per_flight, dev_cost, price_per_flight, 
-                stage1_avg_prod_cost_per_flight, stage2_avg_prod_cost_per_flight, veh_int_checkout_per_flight)
+                stage1_avg_prod_cost_per_flight, stage2_avg_prod_cost_per_flight, veh_int_checkout_per_flight,
+                props_cost, refurb_cost)
 
 class TwoLiquidStageTwoEnginePlusAirbreathing(VehicleArchitecture):
     """Two stage vehicle, liquid stages, one rocket engine and one airbreathing engine on first stage, 
@@ -486,7 +489,8 @@ class TwoLiquidStageTwoEnginePlusAirbreathing(VehicleArchitecture):
         price_per_flight = (prod_cost_per_flight + ops_cost_per_flight)*profit_multiplier + dev_cost_per_flight
 
         return (prod_cost_per_flight, ops_cost_per_flight, cost_per_flight, dev_cost, price_per_flight, 
-                stage1_avg_prod_cost_per_flight, stage2_avg_prod_cost_per_flight, veh_int_checkout_per_flight)
+                stage1_avg_prod_cost_per_flight, stage2_avg_prod_cost_per_flight, veh_int_checkout_per_flight,
+                props_cost, refurb_cost)
 
 class TwoLiquidStagePartialPlusAirbreathing(VehicleArchitecture):
     """Two stage vehicle, liquid stages, one rocket engine and one airbreathing engine on first stage, 
@@ -597,7 +601,8 @@ class TwoLiquidStagePartialPlusAirbreathing(VehicleArchitecture):
         price_per_flight = (prod_cost_per_flight + ops_cost_per_flight)*profit_multiplier + dev_cost_per_flight
 
         return (prod_cost_per_flight, ops_cost_per_flight, cost_per_flight, dev_cost, price_per_flight, 
-                stage1_avg_prod_cost_per_flight, stage2_avg_prod_cost_per_flight, veh_int_checkout_per_flight)
+                stage1_avg_prod_cost_per_flight, stage2_avg_prod_cost_per_flight, veh_int_checkout_per_flight,
+                props_cost, refurb_cost)
 
 class OneSolidOneLiquid(VehicleArchitecture):
     """Two stage vehicle, first stage liquid with one engine type, second stage solid."""
@@ -683,7 +688,8 @@ class OneSolidOneLiquid(VehicleArchitecture):
         price_per_flight = (prod_cost_per_flight + ops_cost_per_flight)*profit_multiplier + dev_cost_per_flight
 
         return (prod_cost_per_flight, ops_cost_per_flight, cost_per_flight, dev_cost, price_per_flight, 
-                stage1_avg_prod_cost_per_flight, stage2_avg_prod_cost_per_flight, veh_int_checkout_per_flight)
+                stage1_avg_prod_cost_per_flight, stage2_avg_prod_cost_per_flight, veh_int_checkout_per_flight,
+                props_cost, refurb_cost)
 
 class TwoLiquidStageTwoEngineWithBooster(VehicleArchitecture):
     """Two stage vehicle, liquid stages, one type of engine per stage, with solid rocket boosters."""
@@ -778,7 +784,8 @@ class TwoLiquidStageTwoEngineWithBooster(VehicleArchitecture):
         price_per_flight = (prod_cost_per_flight + ops_cost_per_flight)*profit_multiplier + dev_cost_per_flight
 
         return (prod_cost_per_flight, ops_cost_per_flight, cost_per_flight, dev_cost, price_per_flight, 
-                stage1_avg_prod_cost_per_flight, stage2_avg_prod_cost_per_flight, veh_int_checkout_per_flight)
+                stage1_avg_prod_cost_per_flight, stage2_avg_prod_cost_per_flight, veh_int_checkout_per_flight,
+                props_cost, refurb_cost)
 
 atlasV_401_architecture = TwoLiquidStageTwoEngine(
     launch_vehicle=atlasV.atlasV_401,
@@ -869,7 +876,7 @@ ariane5G_architecture = TwoLiquidStageTwoEngineWithBooster(
 
 def demo():
 
-    vehicles = [atlasV_401_architecture, ariane5G_architecture, falcon9_block3_architecture, deltaIV_40_architecture]
+    vehicles = [atlasV_401_architecture, ariane5G_architecture, deltaIV_40_architecture, falcon9_block3_architecture]
 
     results = {}
     xticks = []
@@ -884,6 +891,7 @@ def demo():
 
     """sa_results = rdm.sa(ariane5G_architecture.avg_prod_cost_model, "cost")
     print(sa_results)"""
+    wyr_conversion = .3674
 
     prod_cost_per_flight = {}
     ops_cost_per_flight = {}
@@ -903,14 +911,15 @@ def demo():
     price_per_flight = pandas.DataFrame(price_per_flight)
 
 
-    plt.figure()
+    plt.figure(figsize=(10, 6))
     sns.set(style='whitegrid')
     ax = sns.violinplot(data=prod_cost_per_flight)
     plt.title('Current production cost')
     plt.ylabel('Cost [WYr]')
     plt.xlabel('Launch vehicle')
 
-    plt.figure()
+
+    plt.figure(figsize=(10, 6))
     sns.set(style='whitegrid')
     ax = sns.violinplot(data=cost_per_flight)
     plt.title('Cost per flight')
@@ -918,21 +927,36 @@ def demo():
     plt.xlabel('Launch vehicle')
 
     plt.scatter(0, 314, marker='+', color='red', zorder=10) # atlas
-    plt.scatter(3, 553, marker='+', color='red', zorder=10) # delta
-    plt.scatter(2, 177, marker='+', color='red', zorder=10) # falcon 9
+    plt.scatter(2, 553, marker='+', color='red', zorder=10) # delta
+    plt.scatter(3, 177, marker='+', color='red', zorder=10) # falcon 9
     plt.scatter(1, 485, marker='+', color='red', zorder=10) # ariane 5
     
-    plt.figure()
+    plt.figure(figsize=(10, 6))
     sns.set(style='whitegrid')
-    ax = sns.violinplot(data=price_per_flight)
+    data=price_per_flight.multiply(wyr_conversion)
+    ax = sns.violinplot(data=data)
+    ax.set_ylim(0, 450)
+    ax.set_ylabel('Price [Million US Dollars in 2018]')
+
     plt.title('Price per flight')
-    plt.ylabel('Price [WYr]')
     plt.xlabel('Launch vehicle')
 
-    plt.scatter(0, 314, marker='+', color='red', zorder=10) # atlas
-    plt.scatter(3, 553, marker='+', color='red', zorder=10) # delta, astronautix, 133million in 2004
-    plt.scatter(2, 177, marker='+', color='red', zorder=10) # falcon 9
-    plt.scatter(1, 485, marker='+', color='red', zorder=10) # ariane 5
+    plt.scatter(0, 314*wyr_conversion, s=50, color='red', zorder=10) # atlas
+    plt.scatter(1, 485*wyr_conversion, s=50, color='red', zorder=10) # ariane 5
+    plt.scatter(3, 177*wyr_conversion, s=50, color='red', zorder=10) # falcon 9
+    plt.scatter(2, 460*wyr_conversion, s=50, color='red', zorder=10) # delta, astronautix, 133million in 2004
+
+    ax1 = ax.twinx()
+    ax1.set_ylabel('Price [WYr]')
+    ax1.set_ylim(0, 450/wyr_conversion)
+    ax1.grid(False)
+
+    legend_item = [Line2D([0], [0], marker='o', color='w', label='Actual price per flight',
+                   markerfacecolor='red', markersize=10)]
+    ax.legend(handles=legend_item)
+    plt.tight_layout()
+
+    plt.savefig(os.path.join('plots', 'vehicle_ppf_validation.png'))
 
     plt.show()
 

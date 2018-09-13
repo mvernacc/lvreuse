@@ -119,6 +119,16 @@ solid_stage_dev = CER_data(
     y_data=[2993.22, 4844.46]
 )
 
+turbo_jet_all_below_prod = CER_data(
+    x_data=[187.38162, 1290.0204, 1443.9116, 1787.7832, 1884.8981, 2095.7703, 2303.168, 3698.4336, 4346.118, 4804.7666, 4272.1006],
+    y_data=[10.008444, 24.772371, 25.318735, 38.22354, 38.702423, 28.229467, 26.293213, 36.075928, 22.403793, 73.99452, 95.35567]
+)
+
+winged_1st_stage_prod = CER_data(
+    x_data=[6537.2363, 17714.002, 20694.492, 75930.51, 98510.62],
+    y_data=[297.0308, 464.01562, 858.6604, 1978.3668, 2171.1013]
+)
+
 """solid_booster_dev = CER_data(
     x_data=[11436.089, 31271.062, 36586.43, 39327.535, 63267.285, 86835.17],
     y_data=[3172.8008, 5036.0806, 5734.68, 5796.9756, 9284.008, 12238.791]
@@ -133,4 +143,4 @@ CER_data_list = [SRM_dev, turbo_fed_dev, pressure_fed_dev, air_breathing_dev, li
                     winged_orbital_vehicles_dev, advanced_aircraft_dev, flyback_booster_dev,
                     crewed_ballistic_reentry_capsule_dev, crewed_space_system, SRM_strap_on_prod,
                     liquid_storable_prod, liquid_cryo_prod, storable_ballistic_stage_prod,
-                    cryo_ballistic_stage_prod, turbojet_prod, strap_on_dev]
+                    cryo_ballistic_stage_prod, turbojet_prod, strap_on_dev, winged_1st_stage_prod, turbo_jet_all_below_prod]

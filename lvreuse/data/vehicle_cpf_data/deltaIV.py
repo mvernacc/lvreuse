@@ -15,7 +15,7 @@ stage2_engine = CryoLH2TurboFed("e2", 277) # RL-10B-2, from Wikipedia
 
 delta_elements = [core, core_engine, stage2, stage2_engine]
 
-deltaIV_medium = LaunchVehicle(name='deltaIV_medium', M0=257, N=2, element_list=delta_elements) # mass from Isakowitz
+deltaIV_medium = LaunchVehicle(name='Delta IV Medium (4,0)', M0=257, N=2, element_list=delta_elements) # mass from Isakowitz
 delta_engines_dict = {'e1': 1, 'e2': 1}
 delta_f8_dict = {'s1': 1.0, 'e1': 1.0, 's2': 1.0, 'e2': 1.0, 'veh': 1.0, 'ops': 1.0}
 delta_uncertainty_list = [

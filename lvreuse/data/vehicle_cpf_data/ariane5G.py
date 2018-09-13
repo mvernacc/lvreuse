@@ -17,7 +17,7 @@ aestus_engine = StorablePressureFed("e2", 111)
 
 ariane5_element_list =  [SRB, core_vehicle, vulcain_engine, stage2, aestus_engine]
 
-ariane5G = LaunchVehicle(name="ariane5G", M0=746, N=4, element_list=ariane5_element_list)
+ariane5G = LaunchVehicle(name="Ariane 5G", M0=746, N=4, element_list=ariane5_element_list)
 ariane_engines_dict = {'e1': 1, 'e2': 1, 'b1': 2}
 ariane_f8_dict = {'s1': 0.86, 'e1': 0.86, 's2':0.86, 'e2': 0.77, 'b1': 0.86, 'veh': 0.86, 'ops': 0.86}
 
