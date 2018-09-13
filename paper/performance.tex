@@ -212,7 +212,7 @@ We estimate $H$ by examining the mass breakdowns of detailed design studies for 
     \end{tabular}
 \end{table}
 
-We do no estimate $P$ directly; rather we assume distributions on the factors determining $P$. For propulsive landing, these are the $\Delta v$ of the entry burn (which could be \SIrange{0}{1000}{\meter\per\second}), and the $\Delta v$ of the landing burn (which depends on the stage's ballistic coefficient and the landing burn acceleration) [Figure \ref{fig:propulsive_landing}]. For winged stages with air-breathing propulsion, these factors are the lift/drag ratio (4 to 8), air breathing engine specific impulse (\SIrange{3200}{4000}{\second}), and cruise speed (\SIrange{100}{300}{\meter\per\second}) during the powered cruise portion of the return trajectory [Figure \ref{fig:flyback_trajectory}].
+We do not estimate $P$ directly; rather we assume distributions on the factors determining $P$. For propulsive landing, these are the $\Delta v$ of the entry burn (which could be \SIrange{0}{1000}{\meter\per\second}), and the $\Delta v$ of the landing burn (which depends on the stage's ballistic coefficient and the landing burn acceleration) [Figure \ref{fig:propulsive_landing}]. For winged stages with air-breathing propulsion, these factors are the lift/drag ratio (4 to 8), air breathing engine specific impulse (\SIrange{3200}{4000}{\second}), and cruise speed (\SIrange{100}{300}{\meter\per\second}) during the powered cruise portion of the return trajectory [Figure \ref{fig:flyback_trajectory}].
 
 For launch site recovery there is a further wrinkle - the stage separation velocity $v_{ss}$ depends on the unavailable mass ($v_ss$ decreases as $\epsilon_1'$ increases). But for return-to-launch-site strategies, the recovery propellant factor $P$ (and therefore $\epsilon_1'$) depends on $v_{ss}$. Thus, for return-to-launch-site strategies, we solve simultaneously for $\pi_*, \epsilon_1'$ and $P$. For rocket propelled return, we compute the impulsive $\Delta v$ needed to place the stage on a ballistic trajectory to the launch site, plus gravity losses. For air-breathing return, we use the Berguet range equation. In both cases, we model the downrange distance at stage separation as $R = f_{ss} v_{ss}^2$, where $f_{ss}$ is an uncertain coefficient, whose dispersion is calibrated to data from actual launches and detailed trajectory simulations.
 
@@ -240,11 +240,22 @@ These estimates are summarized in Figure \ref{fig:unavail_mass_contours} TODO
 
 
 \subsection{Payload fraction estimates for recovery strategies}
-TODO
+The distributions of payload performance resulting from this model are shown in Figures \ref{fig:strategy_perf_kerosene} and \ref{fig:strategy_perf_H2}. Across all technology choices and missions, the parachute landing strategies have little impact on payload performance, and their difference from the expendable performance is small compared to the range of uncertainty. The winged, air-breathing partial recovery; propulsive downrange landing, and winged glider downrange landing have slightly lower payload performance than expendable, and are almost indistinguishable from each other.  Propulsive landing at the launch site has the worst payload performance; with kerosene on a GTO mission the payload mass fraction is unacceptably low.
+
+These payload mass fraction estimates allow us to predict the mass of the launch vehicle required to lift a payload into a target orbit. In the next section, we develop a model that uses the launch vehicle masses, along with other factors, to estimate system cost.
+
 \begin{figure}[hbt!]
     \centering
-    \includegraphics[width=\textwidth]{../../lvreuse/analysis/combined/plots/strategy_perf_LEO_kerosene}
-    \caption{\label{fig:strategy_perf_LEO_kerosene} Distributions of payload performance for expendable launch vehicles and various first stage recovery strategies. Reported payload performance for Falcon 9 block 3 is shown for comparison}.
+    \includegraphics[width=\textwidth]{strategy_perf_annotated/LEO_kero}
+    \includegraphics[width=\textwidth]{strategy_perf_annotated/GTO_kero}
+    \caption{\label{fig:strategy_perf_kerosene} Distributions of payload performance for various first stage recovery strategies with kerosene technology. Reported payload performance for Falcon 9 block 3 is shown for comparison.}
+\end{figure}
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=\textwidth]{strategy_perf_annotated/LEO_H2}
+    \includegraphics[width=\textwidth]{strategy_perf_annotated/GTO_H2}
+    \caption{\label{fig:strategy_perf_H2} Distributions of payload performance for various first stage recovery strategies with \ce{H2} technology.}
 \end{figure}
 
 \bibliography{first_stage_recovery}
