@@ -52,6 +52,9 @@ def main():
     handles, labels = ax.get_legend_handles_labels()
     ax.legend(handles[::-1], labels[::-1])
     plt.tight_layout()
+
+    plt.savefig(os.path.join('plots', 'expendable_cost_breakdown.png'))
+
     plt.show()
 
 if __name__ == '__main__':
