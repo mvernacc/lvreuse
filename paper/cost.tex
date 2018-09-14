@@ -30,9 +30,13 @@ The cost and performance models are linked through the launch vehicle element ma
 
 The TRANSCOST model considers three separate cost areas for launch vehicles: development, production, and operations costs \cite{transcost}. The cost per flight of a launch vehicle is the cost paid by the launch service provider for each flight, which includes production and operations costs only. The price per flight is the price paid by a customer to the launch service provider. This includes production and operations costs, as well as profit for the launch service provider and a potential development amortization charge. It should be noted, however, that typically development costs are funded by government contracts or third party investors, such as for the TODO launch vehicles [TODO citation]. In these cases, a development amortization charge is not included as part of the price per flight.
 
-It is interesting to look at the breakdown of costs in the cost per flight of a launch vehicle. Consider a two stage fully expendable launch vehicle utilizing kerosene and liquid oxygen propellants to carry a 10,000 kg payload to LEO. The cost per flight breakdown for such a launch vehicle can be seen in Figure {TODO fig reference}. 
+It is interesting to look at the breakdown of costs in the cost per flight of a launch vehicle. Consider a two stage fully expendable launch vehicle utilizing kerosene and liquid oxygen propellants to carry a 10,000 kg payload to LEO. The cost per flight breakdown for such a launch vehicle can be seen in Fig. \ref{fig:expendable_cost_breakdown}. 
 
-TODO not-a-pie chart here
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{../../lvreuse/analysis/combined/plots/expendable_cost_breakdown}
+    \caption{\label{fig:expendable_cost_breakdown} Cost per flight breakdown for two stage fully expendable vehicle.}
+\end{figure}
 
 For this launch strategy -- and similarly for most fully expendable launch vehicle strategies -- the cost per flight is dominated by the first stage production costs. These large first stage production costs motivate strategies for first stage reusability, which would allow the first stage production cost to be amortized over a number of flights, therefore potentially reducing the total cost per flight. 
 
@@ -41,6 +45,12 @@ quantification of uncertainty - CER data extraction/confidence bounds
 \subsection{Validation of Cost Model}
 
 In order to validate the TRANSCOST model, the prices per flight for several current launch vehicles were evaluated with the model and compared to their actual advertised launch prices. As with the performance model, uncertainty in the cost model is accounted for using Monte Carlo methods. Credible range estimates for various cost parameters are used to establish parameter distributions. These distributions are then sampled to evaluate the cost model, generating a collection of cost model outputs that represent a range of credible cost estimates.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=\textwidth]{../../lvreuse/analysis/cost/plots/vehicle_ppf_validation}
+    \caption{\label{fig:vehicle_ppf_validation} TODO caption.}
+\end{figure}
 
 \bibliography{first_stage_recovery}
 

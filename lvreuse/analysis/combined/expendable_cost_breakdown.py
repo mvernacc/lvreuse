@@ -26,9 +26,9 @@ def main():
     refurb_cost = results[11]
     cpf = results[4]
 
-    width = 0.02
+    width = 0.1
 
-    plt.figure(figsize=(4,4))
+    plt.figure(figsize=(7,4))
     ax = plt.subplot(1,1,1)
 
     plt.bar(0, s1_e1_prod_cost_per_flight, width, align='edge', label='Stage 1 Production')
@@ -44,13 +44,14 @@ def main():
         top=False,         # ticks along the top edge are off
         labelbottom=False) # labels along the bottom edge are off 
 
-    plt.title('Cost breakdown for \n expandable vehicle')
+    plt.title('Cost breakdown for expendable vehicle')
     plt.ylabel('Cost [WYr]')
     plt.xlim(0, width)
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
     handles, labels = ax.get_legend_handles_labels()
-    ax.legend(handles[::-1], labels[::-1])
+    ax.legend(handles=handles[::-1], labels=labels[::-1], loc='center left', bbox_to_anchor=(1, 0.5))
+
     plt.tight_layout()
 
     plt.savefig(os.path.join('plots', 'expendable_cost_breakdown.png'))
