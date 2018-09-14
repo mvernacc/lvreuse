@@ -28,7 +28,7 @@ The cost and performance models are linked through the launch vehicle element ma
 
 \subsection{Cost Model Description}
 
-The TRANSCOST model considers three separate cost areas for launch vehicles: development, production, and operations costs \cite{transcost}. The cost per flight of a launch vehicle is the cost paid by the launch service provider for each flight, which includes production and operations costs only. The price per flight is the price paid by a customer to the launch service provider. This includes production and operations costs, as well as profit for the launch service provider and a potential development amortization charge. It should be noted, however, that typically development costs are funded by government contracts or third party investors, such as for the TODO launch vehicles [TODO citation]. In these cases, a development amortization charge is not included as part of the price per flight.
+The TRANSCOST model considers three separate cost areas for launch vehicles: development, production, and operations costs \cite{transcost}. The cost per flight of a launch vehicle is the cost paid by the launch service provider for each flight, which includes production and operations costs only. The price per flight is the price paid by a customer to the launch service provider. This includes production and operations costs, as well as profit for the launch service provider and a potential development amortization charge. It should be noted, however, that typically a large part of development costs are funded by government contracts, such as for the Falcon 9 and Ariane 5 launch vehicles \cite{NASAspaceX, ESAAriane5}. In these cases, a development amortization charge is substantially reduced or not included as part of the price per flight.
 
 It is interesting to look at the breakdown of costs in the cost per flight of a launch vehicle. Consider a two stage fully expendable launch vehicle utilizing kerosene and liquid oxygen propellants to carry a 10,000 kg payload to LEO. The cost per flight breakdown for such a launch vehicle can be seen in Figure \ref{fig:expendable_cost_breakdown}. 
 
@@ -54,9 +54,7 @@ Four launch vehicles were used to evaluate the TRANSCOST model: Atlas V 401, Ari
     \caption{\label{fig:vehicle_ppf_validation} Distributions of price per flight estimates for several launch vehicles. Available actual price per flight information is included for comparison.}
 \end{figure}
 
-The price estimate distributions for these four vehicles all perform well, capturing the actual price per flight near the mode of the distribution. 
-
-This lends credibility to the cost estimates for the various first stage reuse strategies. 
+The price estimate distributions for these four vehicles are all reasonable, capturing the actual price per flight near the mode of the distribution. The distribution for Falcon 9 is predictably lower than the others, accounting for its high launch rate and SpaceX's lean manufacturing practices with minimal overhead costs. We see a slightly broader distribution of costs for the Delta IV launch vehicle, likely due to a few reasons. First, its use of the modern RS-68 engine on the first stage -- which has few similar reference projects for fitting of historical data -- requires a relatively broad confidence interval to characterize the CER coefficients. Second, the sensitivity of the launch vehicle costs to its learning factor is larger since the Delta IV is earlier in its program life than the other launch vehicles. These estimates lend credibility to the cost per flight estimates for the various first stage reuse strategies to be shown. 
 
 \bibliography{first_stage_recovery}
 
