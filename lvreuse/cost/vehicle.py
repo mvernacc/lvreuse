@@ -213,3 +213,44 @@ class LaunchVehicle(object):
         avg_vehicle_prod_cost = vehicle_cost_factors.f0_prod**self.N * sum_prod_cost * \
                                     vehicle_cost_factors.f9
         return avg_vehicle_prod_cost 
+
+    def average_portion_prod_cost_per_flight(self, element_reuses_dict, element_map, vehicle_cost_factors, vehicle_prod_nums_list, selected_element_names_list):
+        """Find the average per flight production cost for a portion of a launch vehicle.
+
+        Arguments:
+            element_reuses_dict: dictionary that maps element names to their number of reuses, use 1 for expendable components,
+                i.e. {element_name: num_reuses}
+            element_map: dictionary mapping element names to CER values, element-specific cost factors, 
+                and number of identical elements per vehicle i.e. {element_name: [CER_vals, 
+                element_cost_factors, num_elements_per_vehicle]}
+            vehicle_prod_nums_list: list of consecutive vehicle production numbers to consider
+            selected_element_names_list: list selected element names to determine production costs for
+
+        Returns:
+            Average production cost per flight for selected portion of launch vehicle [units: WYr]
+        """
+
+        sum_portion_prod_cost = 0
+
+        for element_name in selected_element_names_list:
+
+            element = next(element for element in self.element_list if element.name == element_name)
+            CER_vals, element_cost_factors, n = element_map[element.name]
+
+            if element.name in element_reuses_dict and element_reuses_dict[element.name] > 1:
+                num_reuses = element_reuses_dict[element.name]
+                element_prod_nums_list = range(math.ceil(vehicle_prod_nums_list[0]/num_reuses) * n - n + 1,
+                                               math.ceil(vehicle_prod_nums_list[-1]/num_reuses) * n + 1)
+                element_prod_cost = element.average_element_production_cost(CER_vals, element_cost_factors, element_prod_nums_list)
+                sum_portion_prod_cost += n * element_prod_cost / num_reuses
+
+            else:
+                element_prod_nums_list = range(vehicle_prod_nums_list[0] * n - n + 1,
+                                               vehicle_prod_nums_list[-1] * n + 1)
+                element_prod_cost = element.average_element_production_cost(CER_vals, element_cost_factors, element_prod_nums_list)
+                sum_portion_prod_cost += n * element_prod_cost
+
+        portion_prod_cost = sum_portion_prod_cost * vehicle_cost_factors.f9
+
+        return portion_prod_cost
+
