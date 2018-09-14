@@ -21,10 +21,21 @@
 \begin{document}
 
 \section{Cost Model}
-Introduce transcost, "top down", introduce CERs, element mass drives cost
-performance model linked with cost model with element masses
+
+The TRANSCOST 8.2 model was implemented to evaluate the costs of different first stage reuse strategies \cite{transcost}. TRANSCOST is a top-down cost estimating model that utilizes historical data for similar projects to estimate the cost of launch vehicle elements. A series of cost estimation relationships (CERs) of the form $C = a M^x$ relate the mass $M$ of launch vehicle elements to their production costs using the empirically fitted parameters $a$ and $x$. Costs of all launch vehicle elements are then summed to determine the total launch vehicle production cost. 
+
+The cost and performance models are linked through the launch vehicle element masses. For a given payload mass, the performance model can estimate the mass of launch vehicle elements for various first stage reuse strategies. These masses are then used with the cost model to estimate the production cost and cost per flight of those strategies. 
 
 \subsection{Cost Model Description}
+
+The TRANSCOST model considers three separate cost areas for launch vehicles: development, production, and operations costs \cite{transcost}. The cost per flight of a launch vehicle is the cost paid by the launch service provider for each flight, which includes production and operations costs only. The price per flight is the price paid by a customer to the launch service provider. This includes production and operations costs, as well as profit for the launch service provider and a potential development amortization charge. It should be noted, however, that typically development costs are funded by government contracts or third party investors, such as for the TODO launch vehicles [TODO citation]. In these cases, a development amortization charge is not included as part of the price per flight.
+
+It is interesting to look at the breakdown of costs in the cost per flight of a launch vehicle. Consider a two stage fully expendable launch vehicle utilizing kerosene and liquid oxygen propellants to carry a 10,000 kg payload to LEO. 
+
+TODO not-a-pie chart here
+
+
+
 (not-a-)pie chart - shows majority of cpf is first stage production
 description of model components: dev, prod, ops
 description of what's included in CPF and PPF (ie we are exluding dev cost)
