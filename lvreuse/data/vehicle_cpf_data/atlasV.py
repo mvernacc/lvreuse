@@ -16,7 +16,7 @@ stage2_engine = CryoLH2TurboFed("e2", 168) # RL-10A
 
 atlas_elements = [core, core_engine, stage2, stage2_engine]
 
-atlasV_401 = LaunchVehicle(name='AtlasV_401', M0=334.5, N=2, element_list=atlas_elements)
+atlasV_401 = LaunchVehicle(name='Atlas V 401', M0=334.5, N=2, element_list=atlas_elements)
 atlasV_engines_dict = {'e1': 1, 'e2': 1}
 atlasV_f8_dict = {'s1': 1.0, 'e1': 1.49, 's2': 1.0, 'e2': 1.0, 'veh': 1.0, 'ops': 1.0}
 atlas_uncertainty_list = [

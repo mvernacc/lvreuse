@@ -15,7 +15,7 @@ stage2_engine = ModernTurboFed("e2", 470) #
 
 falcon_elements = [core, core_engine, stage2, stage2_engine]
 
-falcon9_block3 = LaunchVehicle(name='Falcon9_Block3', M0=459.054, N=2, element_list=falcon_elements) # mass from spaceX website
+falcon9_block3 = LaunchVehicle(name='Falcon 9 Block 3', M0=459.054, N=2, element_list=falcon_elements) # mass from spaceX website
 falcon9_engines_dict = {'e1': 9, 'e2': 1}
 falcon9_f8_dict = {'s1': 1.0, 'e1': 1.0, 's2': 1.0, 'e2': 1.0, 'veh': 1.0, 'ops': 1.0}
 falcon_uncertainty_list = [
