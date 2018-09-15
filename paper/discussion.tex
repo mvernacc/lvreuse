@@ -37,6 +37,24 @@ stack plot with reuse sweep- show why cost declines with number of reuses
 cpf vs. reuse plot with varying launch rate curves - shows significant decrease in cost with increasing launch rate for low launch rates
 cpf vs. reuse plot for different strategies 
 
+In order to look at the breakdown of costs for a launch vehicle with a reusable first stage, we consider a point cost estimate to demonstrate general trends. The following example evaluates a two stage launch vehicle carrying a 10,000 kg payload to LEO using kerosene and liquid oxygen propellants at a launch rate of 15 launches per year. We consider the case of a propulsive downrange landing to recover and reuse the entire first stage. The cost per flight is determined over a range of number of first stage uses. The results of this analysis are shown in Figure \ref{fig:cpf_stackplot_reuses_sweep}.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=\textwidth]{../../lvreuse/analysis/combined/plots/cpf_stackplot_reuses_sweep}
+    \caption{\label{fig:cpf_stackplot_reuses_sweep} TODO caption.}
+\end{figure}
+
+Several things should be noticed from the results in Figure \ref{fig:cpf_stackplot_reuses_sweep}. First, the stage one productions costs per flight decrease dramatically as we increase the number of first stage reuses. This result is very intuitive -- as the cost of first stage production is spread over a larger number of flights, the per flight amortization share of the first stage production cost decreases. This leads to a reduction in the cost per flight. However, this trend of decreasing amortization share of first stage production costs is opposed by the refurbishment cost trends. As the number of first stage uses increases, the refurbishment cost per flight also increases. This is due to the fact that more components on the first stage will need inspected or replaced  as the number of reuses increases. 
+
+These opposing trends lead to an interesting result: the total cost per flight trend achieves a minimum value. In the example in Figure \ref{fig:cpf_stackplot_reuses_sweep}, we see a minimum cost per flight around 57 first stage uses. After 57 uses of the first stage, it would be more cost effective to use a new first stage than to continue refurbishing the old one. 
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=\textwidth]{../../lvreuse/analysis/combined/plots/cpf_reuses_sweep_vary_launch_rate}
+    \caption{\label{fig:cpf_reuses_sweep_vary_launch_rate} TODO caption.}
+\end{figure}
+
 \subsection{Effect of Launch Vehicle Size}
 reuse doesn't make sense for smaller vehicles - costs not dominated by hardware cost
 
