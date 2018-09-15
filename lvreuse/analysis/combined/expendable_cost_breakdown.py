@@ -26,6 +26,8 @@ def main():
     refurb_cost = results[11]
     cpf = results[4]
 
+    print('cpf_expendable: ', cpf)
+
     width = 0.1
 
     plt.figure(figsize=(7,4))

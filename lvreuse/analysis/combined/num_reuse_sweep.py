@@ -55,8 +55,8 @@ def main():
                     modes['num_reuses_s1'] = num_reuses[i]
                     modes['num_reuses_e1'] = num_reuses[i]
                     modes['launch_rate'] = min([15 * num_reuses[i], 50])
-                    strat_instance.cost_model.vehicle_prod_nums_list = \
-                        list(range(modes['launch_rate'] * 2, modes['launch_rate'] * 3))
+                    # strat_instance.cost_model.vehicle_prod_nums_list = \
+                        # list(range(modes['launch_rate'] * 2, modes['launch_rate'] * 3))
                     results = strat_instance.evaluate(**modes)
                     cpf[i] = results[4]
                 plt.subplot(1, 2, 2)
