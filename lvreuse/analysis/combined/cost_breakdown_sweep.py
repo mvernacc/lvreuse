@@ -5,16 +5,15 @@ import numpy as np
 
 from lvreuse.analysis.combined import strategy_models
 from lvreuse.analysis.cost.strategy_cost_models import wyr_conversion
-from lvreuse.data.missions import LEO
+from lvreuse.data.missions import LEO, LEO_smallsat
 from num_reuse_sweep import get_mode_values
 
 
 def main():
 
-    mission = LEO
     strat = strategy_models.PropulsiveDownrange
 
-    strat_instance = strat(strategy_models.kero_GG_boost_tech, strategy_models.kero_GG_upper_tech, mission)
+    strat_instance = strat(strategy_models.kero_GG_boost_tech, strategy_models.kero_GG_upper_tech, LEO)
     modes = get_mode_values(strat_instance.uncertainties)
 
     ###
@@ -151,6 +150,60 @@ def main():
     ax1.grid(False)
 
     plt.savefig(os.path.join('plots', 'cpf_stackplot_launch_rate_sweep.png'))
+
+    ### small sat
+
+    strat_instance = strat(strategy_models.kero_GG_boost_tech, strategy_models.kero_GG_upper_tech, LEO_smallsat)
+    modes = get_mode_values(strat_instance.uncertainties)
+
+    num_reuses = np.arange(1, 101)
+    s1_e1_prod_cost_per_flight = np.zeros(len(num_reuses))
+    s2_e2_prod_cost_per_flight = np.zeros(len(num_reuses))
+    veh_int_checkout = np.zeros(len(num_reuses))
+    ops_cost_per_flight = np.zeros(len(num_reuses))
+    prod_cost_per_flight = np.zeros(len(num_reuses))
+    cpf = np.zeros(len(num_reuses))
+    props_cost = np.zeros(len(num_reuses))
+    refurb_cost = np.zeros(len(num_reuses))
+
+    for i in range(len(num_reuses)):
+        modes['num_reuses_s1'] = num_reuses[i]
+        modes['num_reuses_e1'] = num_reuses[i]
+        results = strat_instance.evaluate(**modes)
+        prod_cost_per_flight[i] = results[2]
+        s1_e1_prod_cost_per_flight[i] = results[7]
+        s2_e2_prod_cost_per_flight[i] = results[8]
+        veh_int_checkout[i] = results[9]
+        ops_cost_per_flight[i] = results[3]
+        props_cost[i] = results[10]
+        refurb_cost[i] = results[11]
+        cpf[i] = results[4]
+
+    print('min cpf: ', min(cpf))
+    print('min use num: ', np.argmin(cpf))
+
+    labels = ['Stage 1 Production', 'Stage 2 Production', 'Vehicle Integration and Checkout',
+              'Operations', 'Propellants', 'Refurbishment']
+    plt.figure(figsize=(10, 6))
+    ax = plt.subplot(1, 1, 1)
+    plt.stackplot(num_reuses, s1_e1_prod_cost_per_flight*wyr_conversion, s2_e2_prod_cost_per_flight*wyr_conversion,
+                  veh_int_checkout*wyr_conversion, ops_cost_per_flight*wyr_conversion - props_cost*wyr_conversion - 
+                  refurb_cost*wyr_conversion, props_cost*wyr_conversion, refurb_cost*wyr_conversion, labels=labels)
+    plt.xlabel('Number of 1st stage uses')
+    plt.ylabel('Cost [Million US Dollars in 2018]')
+    plt.title('Cost per flight breakdown')
+    ax.set_xscale('log')
+    ax.set_ylim(0,12)
+    handles, labels = ax.get_legend_handles_labels()
+    ax.legend(handles[::-1], labels[::-1])
+    plt.xlim(1e0, 1e2)
+
+    ax1 = ax.twinx()
+    ax1.set_ylabel('Cost [WYr]')
+    ax1.set_ylim(0, 12/wyr_conversion)
+    ax1.grid(False)
+
+    plt.savefig(os.path.join('plots', 'cpf_stackplot_reuses_sweep_small_sat.png'))
 
     plt.show()
 

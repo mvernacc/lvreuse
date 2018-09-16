@@ -10,7 +10,7 @@ from num_reuse_sweep import get_mode_values
 
 def main():
         
-    mission = LEO
+    mission = LEO_smallsat
     strat = strategy_models.Expendable
 
     strat_instance = strat(strategy_models.kero_GG_boost_tech, strategy_models.kero_GG_upper_tech, mission)

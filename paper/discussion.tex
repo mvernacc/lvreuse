@@ -59,7 +59,7 @@ Additionally, partial reuse strategies do not seem to yield any significant cost
 
 % Maybe include some GTO stuff here if there is room.
 
-\subsection{Effect of number of reuses and launch rate on cost per flight}
+\subsection{Effect of number of reuses and launch rate}
 stack plot with reuse sweep- show why cost declines with number of reuses
 cpf vs. reuse plot with varying launch rate curves - shows significant decrease in cost with increasing launch rate for low launch rates
 cpf vs. reuse plot for different strategies 
@@ -89,9 +89,11 @@ As expected, Figure \ref{fig:cpf_reuses_sweep_vary_launch_rate} shows that the c
 Now that we've established the general trends of the cost per flight with launch rate and number of first stage uses, we consider these trends for varying first stage reuse strategies. Figure \ref{fig:num_reuse_sweep_LEO_kerosene} shows the cost per flight trends for selected strategies over a range of number of first stage uses. We consider two cases in this analysis: 
 
 \begin{itemize}
-  \item First stage reuse has no effect on the vehicle launch rate. The first stage production rate is not the rate-limiting step of the launch rate. In this case, operations or second stage production are likely rate-limiting.
-  \item First stage reuse increases the launch rate. The first stage production is the rate-limiting step for the vehicle launch rate. Increasing the vehicle first stage life increases the launch rate since first stages do not need to be produced as frequently.
+  \item First stage reuse has no effect on the vehicle launch rate. The first stage production rate is not a rate-limiting step of the launch rate. In this case, operations or second stage production are likely rate-limiting.
+  \item First stage reuse increases the launch rate. The first stage production is a rate-limiting step for the vehicle launch rate. Increasing the vehicle first stage life increases the launch rate since first stages do not need to be produced as frequently.
 \end{itemize}
+
+For all strategies, we see a decrease in the cost per flight as the number of first stages uses increases. This result is not surprising -- increasing the launch rate decreases the operations cost per flight. It is interesting though to compare the strategy cost per flight trends with the expected cost range for an  expendable vehicle. For the strategies considered in Figure \ref{fig:num_reuse_sweep_LEO_kerosene}, all but the partial parachute recovery strategy show costs per flight below that of an expendable vehicle for a certain minimum number of reuses. With partial parachute recovery, the high-value hardware reuse savings do not compensate for the additional costs of producing and operating a reusable vehicle. However, the other strategies show potential for significant cost per flight savings with a high enough number of first stage reuses. 
 
 \begin{figure}[hbt!]
     \centering
@@ -99,20 +101,39 @@ Now that we've established the general trends of the cost per flight with launch
     \caption{\label{fig:num_reuse_sweep_LEO_kerosene} TODO caption.}
 \end{figure}
 
+\subsection{Effect of launch vehicle size}
 
+The potential for cost per flight savings of first stage reusability is highly dependent on the payload or vehicle size. In the previous discussion, we considered the case of a 10 Mg payload to LEO. The cost per flight breakdown for this case shown in Figure \ref{fig:cpf_stackplot_reuses_sweep} shows that first stage production costs make up the majority of costs in the expendable case, and that first stage reuse can lead to significant cost per flight savings. However, the cost per flight breakdown looks very different for a smaller payload. 
 
-\subsection{Effect of Launch Vehicle Size}
-reuse doesn't make sense for smaller vehicles - costs not dominated by hardware cost
+Let's consider the case of a small 100 kg payload to LEO. As can be seen in Figure \ref{fig:cpf_stackplot_reuses_sweep_small_sat}, first stage production costs no longer make up the majority of the cost per flight since costs for small launch vehicles are not dominated by hardware costs. Instead, the operations costs make up the majority of the cost per flight. The operations costs per flight are largely independent of vehicle and payload mass, and therefore do not decrease substantially as the payload and vehicle mass decrease. For these reasons, first stage reusability for small launch vehicles is impractical. Amortizing the first stage production costs for a small launch vehicle over a number of flights does not lead to large cost per flight savings since the production costs were already minimal.
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=\textwidth]{../../lvreuse/analysis/combined/plots/cpf_stackplot_reuses_sweep_small_sat}
+    \caption{\label{fig:cpf_stackplot_reuses_sweep_small_sat} TODO caption.}
+\end{figure}
+
+We next consider the cost per kilogram payload per flight over a range of payload masses, as given in Figure \ref{fig:m_payload_sweep_LEO_kerosene}. This plot reveals a trend of decreasing cost per kilogram payload per flight as payload mass -- and therefore vehicle size -- increases. This trend has a few explanations. First, as previously discussed, operations costs are largely independent of payload and vehicle size. Therefore, for smaller launch vehicles, the operations costs per kilogram payload are larger than they would be for a larger launch vehicle. Second, a relatively large portion of the vehicle inert mass for small launch vehicles consists of guidance, navigation, and communications equipment, the mass of which scales only loosely with vehicle size \cite{transcost}. 
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width=\textwidth]{../../lvreuse/analysis/combined/plots/m_payload_sweep_LEO_kerosene}
+    \caption{\label{fig:m_payload_sweep_LEO_kerosene} TODO caption.}
+\end{figure}
 
 \subsection{Paying off development costs}
 
-In our models and discussion so far, we have yet to consider the development costs of reuse strategies. 
+In our models and discussion so far, we have yet to consider the development costs of the reuse strategies. The development costs of reusable launch vehicles can generally be expected to be greater than a similar expendable vehicle. However, the cost per flight savings for reusable vehicles can also be substantial, as shown in Figure \ref{fig:num_reuse_sweep_LEO_kerosene}. These opposing trends lead to an important question: do the cost per flight savings of reusable launch vehicles pay off their increased development costs? 
+
+In order to explore this question, we first define a cost per flight ratio. This will be defined as the ratio between the cost per flight of a vehicle with first stage reuse and the cost per flight of a similar expendable vehicle, and should be in the range [0, 1]. Next we consider the present value of the total savings due to reusability of a launch vehicle over a 20 year timespan with a 20\% discount rate. We evaluate the present value over the full range of cost per flight ratios for selected annual launch rates, and then compare these curves to a credible range of development costs. The results of this analysis are shown in Figure \ref{fig:reuse_npv}. 
 
 \begin{figure}[hbt!]
     \centering
     \includegraphics[width=\textwidth]{reuse_npv}
     \caption{\label{fig:reuse_npv} TODO caption.}
 \end{figure}
+
+For low launch rates, it is unlikely that the development costs could be paid off by the cost per flight savings brought by first stage reusability. The investment in development costs loses value faster than any savings from reuse could compensate for it. However, for launch rates greater than 20 launches per year, first stage reusability does appear to be economically viable. With higher launch rates, we see a lower cost per flight ratio since operations costs decrease with increased launch rate. Additionally, higher launch rates mean the investment in the development costs of the reusable vehicle can be paid off sooner, so the development investment will have lost less value. High launch rates are essential for the economic viability of reusable launch vehicles. 
 
 \bibliography{first_stage_recovery}
 

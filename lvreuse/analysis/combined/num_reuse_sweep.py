@@ -83,7 +83,7 @@ def main():
                 plt.axhspan(ymin=np.percentile(expd_results['cost_per_flight'], 10),
                             ymax=np.percentile(expd_results['cost_per_flight'], 90),
                             color='grey', alpha=0.5)
-                plt.xlabel('Number of reuses of 1st stage [-]')
+                plt.xlabel('Number of uses of 1st stage [-]')
                 plt.ylabel('Cost per flight [WYr]')
                 plt.ylim([0, plt.ylim()[1]])
                 plt.legend()

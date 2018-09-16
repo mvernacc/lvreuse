@@ -151,7 +151,7 @@ class LaunchVehicle(object):
 
         CER_vals, element_cost_factors, n = element_map[element_name]
 
-        f5_specific = ops_cost_factors.f5_dict[element_name] * 2 / 100 * element_reuses_dict[element_name] + 1e-2
+        f5_specific = ops_cost_factors.f5_dict[element_name] * 2 / 100 * element_reuses_dict[element_name] + 0.2e-2
 
         TFU = element_refurb.average_element_production_cost(CER_vals, element_cost_factors, [1])
 
