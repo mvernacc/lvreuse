@@ -17,8 +17,9 @@ def main():
     strat_instance = strat(strategy_models.kero_GG_boost_tech, strategy_models.kero_GG_upper_tech, mission)
     modes = get_mode_values(strat_instance.uncertainties)
 
+    fontsize = 15
+
     results = strat_instance.evaluate(**modes)
-    print(results)
     prod_cost_per_flight = results[2] * wyr_conversion
     s1_e1_prod_cost_per_flight = results[7] * wyr_conversion
     s2_e2_prod_cost_per_flight = results[8] * wyr_conversion
@@ -28,11 +29,9 @@ def main():
     refurb_cost = results[11] * wyr_conversion
     cpf = results[4] * wyr_conversion
 
-    print('cpf_expendable: ', cpf)
-
     width = 0.3
 
-    plt.figure(figsize=(8,4))
+    plt.figure(figsize=(9,5))
     ax = plt.subplot(1,1,1)
 
     plt.bar(0, s1_e1_prod_cost_per_flight, width, align='edge', label='Stage 1 Production')
@@ -48,22 +47,25 @@ def main():
         top=False,         # ticks along the top edge are off
         labelbottom=False) # labels along the bottom edge are off 
 
-    plt.title('Cost per flight breakdown of expendable vehicle for LEO mission, 10.0 Mg payload \n stage 1: kerosene gas generator tech., stage 2: kerosene gas generator tech', loc='left')
-    plt.ylabel('Cost [Million US Dollars in 2018]')
+    plt.title('Cost per flight breakdown of expendable vehicle \n for LEO mission, 10.0 Mg payload \n stage 1: kerosene gas generator tech., \n stage 2: kerosene gas generator tech', loc='left', fontsize=fontsize)
+    plt.ylabel('Cost [Million US Dollars in 2018]', fontsize=fontsize)
     plt.xlim(0, width)
     # ax.spines['right'].set_visible(False)
 
     ax1 = ax.twinx()
-    ax1.set_ylabel('Cost [WYr]')
+    ax1.set_ylabel('Cost [WYr]', fontsize=fontsize)
     ax1.set_ylim(0, ax.get_ylim()[1]/wyr_conversion)
     ax1.grid(False)
 
     ax.spines['top'].set_visible(False)
     ax1.spines['top'].set_visible(False)
 
+    plt.xticks(fontsize=0.8*fontsize)
+    plt.yticks(fontsize=0.8*fontsize)
+    ax1.tick_params(axis='y', labelsize=0.8*fontsize)
 
     handles, labels = ax.get_legend_handles_labels()
-    ax.legend(handles=handles[::-1], labels=labels[::-1], loc='center left', bbox_to_anchor=(1.3, 0.5))
+    ax.legend(handles=handles[::-1], labels=labels[::-1], loc='center left', bbox_to_anchor=(1.4, 0.5), fontsize=0.8*fontsize)
 
     plt.tight_layout()
 
