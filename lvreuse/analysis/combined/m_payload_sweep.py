@@ -6,6 +6,7 @@ import numpy as np
 
 from lvreuse.analysis.combined import strategy_models
 from lvreuse.data import missions
+from lvreuse.analysis.cost.strategy_cost_models import wyr_conversion
 
 
 def get_mode_values(uncerts):
@@ -47,11 +48,11 @@ def main():
             strat_instance.mission = missions.Mission(
                 mission_default.name, mission_default.dv, m_payload[i])
             results = strat_instance.sample_model(nsamples=100)
-            cpm_high[i] = np.percentile(results['cost_per_flight'], 90) \
+            cpm_high[i] = np.percentile(results['cost_per_flight'], 90) * wyr_conversion \
                 / m_payload[i]
-            cpm_median[i] = np.percentile(results['cost_per_flight'], 50) \
+            cpm_median[i] = np.percentile(results['cost_per_flight'], 50) * wyr_conversion \
                 / m_payload[i]
-            cpm_low[i] = np.percentile(results['cost_per_flight'], 10) \
+            cpm_low[i] = np.percentile(results['cost_per_flight'], 10) * wyr_conversion\
                 / m_payload[i]
         plt.errorbar(
             m_payload * 1e-3 * jitter, cpm_median,
@@ -67,10 +68,16 @@ def main():
                  + ' stage 2: {:s} {:s} tech.'.format(tech_2.fuel, tech_2.cycle))
 
     plt.xlabel('Max. payload mass [Mg]')
-    plt.ylabel('Cost per flight / payload mass [WYr kg^-1]')
+    ax.set_ylabel('Cost per flight / payload mass [Million US Dollars in 2018 kg^-1]')
     plt.legend()
     plt.grid(True, which='major')
     plt.grid(True, which='minor', color=[0.8]*3)
+
+    ax1 = ax.twinx()
+    ax1.set_ylabel('Cost per flight / payload mass [WYr kg^-1]')
+    ax1.set_yscale('log') # , nonposy='clip')
+    ax1.set_ylim(ax.get_ylim()[0]/wyr_conversion, ax.get_ylim()[1]/wyr_conversion)
+    ax1.grid(False)
 
     plt.tight_layout()
     plt.subplots_adjust(top=0.9)
