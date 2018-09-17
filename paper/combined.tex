@@ -21,7 +21,7 @@
 
 \graphicspath{{figures/}}
 
-\title{Strategies for Re-Use of Launch Vehicle First Stages}
+\title{Strategies for reuse of Launch Vehicle First Stages}
 
 \author{Matthew T. Vernacchia \footnote{Research Assistant, Department of Aeronautics and Astronautics, 77 Massachusetts Avenue, AIAA Student Member.}
 and Kelly J. Mathesius  \footnote{Research Assistant, Department of Aeronautics and Astronautics, 77 Massachusetts Avenue, AIAA Student Member.}}
@@ -34,7 +34,7 @@ and Kelly J. Mathesius  \footnote{Research Assistant, Department of Aeronautics 
 \begin{abstract}
 Many strategies have been proposed for recovery and reuse of launch vehicle first stages in an effort to reduce cost per flight and expand access to space. Although a reusable first stage has been operated (Falcon 9) and several others are under development, there is still much debate as to which first stage reuse strategy, if any, is economically worthwhile. To clarify the situation, an analysis was performed of the payload performance and cost of all major first stage recovery strategies, under common assumptions. The analyzed strategies include propulsive landing (downrange or at the launch site), winged stages (air-breathing fly-back to the launch site or downrange glider recovery), and engines-only recovery via parachutes.
 
-This paper establishes a general model to compare the payload capacity and cost per flight of first stage re-use strategies. The payload capacity model is neatly derived from physical first principles and cost estimation uses the TRANSCOST model. Model uncertainty is examined using Monte Carlo techniques, and the sensitivity of cost to various technological and operational factors is assessed.
+This paper establishes a general model to compare the payload capacity and cost per flight of first stage reuse strategies. The payload capacity model is neatly derived from physical first principles and cost estimation uses the TRANSCOST model. Model uncertainty is examined using Monte Carlo techniques, and the sensitivity of cost to various technological and operational factors is assessed.
 
 This study finds that downrange recovery of the full first stage is the cost-dominant strategy, and could have a cost per flight $\frac{1}{3}$ to $\frac{1}{2}$ that of an expandable launch vehicle with equivalent payload capacity. Also, first stage reuse has a smaller impact on payload capacity on lower $\Delta v$ missions (i.e. LEO instead of GTO).  First stage reuse is only worthwhile for larger launch vehicles - the cost of small launch vehicles is dominated by operations and support, not hardware. Finally, the cost savings from reuse can only pay off the development effort if launch rates are high (more than about 20/year). New LEO constellations could provide the high-volume, cost-sensitive launch demand under which reuse is economically worthwhile.
 \end{abstract}
@@ -94,7 +94,7 @@ Partial reuse of multi-stage launch vehicles is a more viable step towards cost 
 
 Despite the recent surge of interest, first stage reuse is not a new idea - proposals were made as early as 1963 \cite{Nexus, SeaDragon}. Since then, a wide range of first stage reuse strategies have been proposed, differing in the manner and location of first stage recovery, and in the portion of the first stage recovered.
 
-Observers of the field, or those embarking on a vehicle development project, may well wonder which, if any, of the first stage recovery strategies can reduce launch costs compared to contemporary expendable launch vehicles. There is still substantial disagreement on the economic merits of reuse amongst industry leaders \cite{Cantrell17, Russell18, Selding16_orbital, Wall15, Selding16_spacex}. The doubts are not without merit: adding reuse capability increases the complexity of a launch vehicle (thus increasing its development and production costs) and decreases its payload capacity. It is not immediately obvious if the savings from reusing first stage hardware outweigh these downsides. Thus, we may wonder: are any of the reuse strategies worthwhile? And if so, which is best suited to a particular segment of the launch market? Answering these questions requires a comparative analysis of the performance and cost of various first stage reuse strategies. While many first stage reuse concepts have been studied individually, there have been few attempts to compare the performance and cost of different first stage reuse strategies under common assumptions.
+Observers of the field, or those embarking on a vehicle development project, may well wonder which, if any, of the first stage recovery strategies can reduce launch costs compared to contemporary expendable launch vehicles. There is still substantial disagreement on the economic merits of reuse amongst industry leaders \cite{Cantrell17, Russell18, Selding16_orbital, Wall15, Selding16_spacex}. The doubts are not without merit: adding reuse capability increases the complexity of a launch vehicle (thus increasing its development and production costs) and decreases its payload capacity. It is not immediately obvious if the savings from reusing first stage hardware outweigh these downsides. Thus, we ask: are any of the reuse strategies worthwhile? And if so, which is best suited to a particular segment of the launch market? Answering these questions requires a comparative analysis of the performance and cost of various first stage reuse strategies. While many first stage reuse concepts have been studied individually, there have been few attempts to compare the performance and cost of different first stage reuse strategies under common assumptions.
 
 This paper attempts to fill that gap by evaluating, under a common framework, the relative merits of all major first stage reuse strategies. First, a taxonomy is developed which classifies first stage reuse strategies according to four architecture choices. Second, the effect of first stage reuse on launch vehicle payload capacity is considered and modeled. The payload performance model is derived from physical first principles and calibrated against historical launch vehicle data. Third, the production and operation costs of each strategy are modeled using TRANSCOST 8.2. This is a high-level set of cost estimating relationships based on system masses, and calibrated against historical data. Finally, the payload performance and cost of several strategies are compared. We identify trade-offs between the strategies, and examine the variation of their performance and cost with propellant choice, the target orbit, payload size, launch rate, and first stage lifetime. We focus our analysis on orbital launch vehicles with two (sequential) stages, using established propulsion and structural technologies.
 
@@ -229,15 +229,15 @@ Clearly, payload performance depends on inert mass fraction and specific impulse
     \item kerosene / \ce{O2} propellants, gas generator cycle, aluminum alloy tanks
 \end{itemize}
 
-These technologies are mature and have had fairly consistent specific impulse and inert mass limits over the past 30 years\footnote{This analysis can easily be extended to new technologies, e.g. \ce{CH4} / \ce{O2} propellants or composite tanks, as the engineering limits on these technologies emerge}. Stages using hydrogen technology have higher $I_{sp}$ but higher feasible inert mass $E$ than those using kerosene. The balance of these effects works out to slightly favor hydrogen in terms of payload performance [Figure \ref{fig:payload_vs_dv}]. Finally, note that the technology choice and reuse strategy are independent - any reuse strategy can conceivably be used with any technology choice.
+These technologies are mature and have had fairly consistent specific impulse and inert mass limits over the past 30 years\footnote{This analysis can easily be extended to new technologies, e.g. \ce{CH4} / \ce{O2} propellants or composite tanks, as the engineering limits on these technologies emerge}. Stages using hydrogen technology have higher $I_{sp}$ but higher feasible inert mass $E$ than those using kerosene. The balance of these effects slightly favors hydrogen in terms of payload performance [Figure \ref{fig:payload_vs_dv}]. Finally, note that the technology choice and reuse strategy are independent - any reuse strategy can conceivably be used with any technology choice.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{../../lvreuse/analysis/performance/plots/payload_vs_dv}
-    \caption{\label{fig:payload_vs_dv} The quick model makes reasonably accurate predictions of the payload capacity of two expendable launch vehicles. Payload performance declines with increasing $\Delta v_*$, and is slightly higher for \ce{H_2} fueled vehicles than for kerosene vehicles.}
+    \caption{\label{fig:payload_vs_dv} The quick model makes reasonable predictions of the payload capacity of two expendable launch vehicles. Payload performance declines with increasing $\Delta v_*$, and is slightly higher for \ce{H_2} fueled vehicles than for kerosene vehicles.}
 \end{figure}
 
-\subsection{How first stage reuse effects performance}
+\subsection{Effects of first stage reuse effects performance}
 So far we have reviewed the factors determining launch vehicle performance. Now we ask, how does first stage reuse change these factors? Two mechanisms are possible:
 
 \begin{itemize}
@@ -269,14 +269,14 @@ Note that all reuse strategies add unavailable mass to the first stage, so we wi
 The effect of first stage unavailable mass on payload performance is shown in Figure \ref{fig:payload_vs_unavail_mass}. The top plots show the overall payload mass fraction as a function of $\epsilon_1'$. The bottom plots show the payload capacity of a vehicle with first stage reuse as a fraction of the payload capacity of an "equivalent" expendable vehicle with the minimum feasible first stage inert mass fraction $E_1$. Note that the same $\epsilon_1'$ causes a larger fractional reduction of payload capacity on higher $\Delta v$ missions.
 
 \subsection{Relating unavailable mass to recovery hardware and propulsion}
-Next, we relate $\epsilon_1'$ to the feasible limit on inert mass ($E_1$) and the extra hardware and propellant needed for recovery.
-It will be helpful to compare the inert mass of the first stage to a "baseline" hardware mass:
+Next, we relate $\epsilon_1'$ to the feasible limit on inert mass fraction ($E_1$) and the extra hardware and propellant needed for recovery.
+It will be helpful to compare the inert mass of the first stage to a "baseline" hardware mass, which we define as:
 
 \begin{equation}
-m_{hb,1} \equiv \frac{E_1}{1 - E_1} m_{p,1}
+m_{hb,1} \equiv \frac{E_1}{1 - E_1} m_{p,1}.
 \end{equation}
 
-i.e. the mass that the first stage would have if it were build to lightest limit feasible for an expendable vehicle. We can think of this as the mass of the baseline hardware that would be present on an expendable first stage, i.e. tanks, rocket engines and thrust structure. In addition to the baseline mass, a reusable stage will have some additional recovery hardware (e.g. wings, landing gear, parachutes) with mass $m_{hr,1}$. Thus, for a reusable stage $m_{inert,1} = m_{hb,1} + m_{hr,1}$.
+This is the mass that the first stage would have if it were build to lightest limit feasible for an expendable vehicle. We can think of this as the mass of the baseline hardware that would be present on an expendable first stage, i.e. tanks, rocket engines and thrust structure. In addition to the baseline mass, a reusable stage will have some additional recovery hardware (e.g. wings, landing gear, parachutes) with mass $m_{hr,1}$. Thus, for a reusable stage $m_{inert,1} = m_{hb,1} + m_{hr,1}$.
 
 Then, we define three new dimensionless variables:
 \begin{itemize}
@@ -338,7 +338,7 @@ We estimate $H$ by examining the mass breakdowns of detailed design studies for 
     \begin{tabular}{l l c c c}
     \hline
      & \multicolumn{3}{c}{Triangular dist. params.} \\
-     & Min & Mode & Max \\
+     Recovery strategy & Min & Mode & Max \\
     \hline
     \hline
     Winged, Glider  & 0.380 & 0.426 & 0.540 \\
@@ -368,7 +368,7 @@ We do not estimate $P$ directly; rather we assume distributions on the factors d
     \caption{\label{fig:flyback_trajectory} Winged landing: trajectory options for launch site and downrange recovery. Portions of the trajectory flown under rocket propulsion are shown as red solid lines; air-breathing propulsion is indicated with blue.}
 \end{figure}
 
-For launch site recovery there is a further wrinkle - the stage separation velocity $v_{ss}$ depends on the unavailable mass ($v_ss$ decreases as $\epsilon_1'$ increases). But for return-to-launch-site strategies, the recovery propellant factor $P$ (and therefore $\epsilon_1'$) depends on $v_{ss}$. Thus, for return-to-launch-site strategies, we solve simultaneously for $\pi_*, \epsilon_1'$ and $P$. For rocket propelled return, we compute the impulsive $\Delta v$ needed to place the stage on a ballistic trajectory to the launch site, plus gravity losses. For air-breathing return, we use the Berguet range equation \footnote{In both cases, we model the downrange distance at stage separation as $R = f_{ss} v_{ss}^2$, where $f_{ss}$ is an uncertain coefficient, whose dispersion is calibrated to data from actual launches and detailed trajectory simulations}.
+For launch site recovery there is additional complexity -- the stage separation velocity $v_{ss}$ depends on the unavailable mass ($v_ss$ decreases as $\epsilon_1'$ increases). But for return-to-launch-site strategies, the recovery propellant factor $P$ (and therefore $\epsilon_1'$) depends on $v_{ss}$. Thus, for return-to-launch-site strategies, we solve simultaneously for $\pi_*, \epsilon_1'$ and $P$. For rocket propelled return, we compute the impulsive $\Delta v$ needed to place the stage on a ballistic trajectory to the launch site, plus gravity losses. For air-breathing return, we use the Berguet range equation \footnote{In both cases, we model the downrange distance at stage separation as $R = f_{ss} v_{ss}^2$, where $f_{ss}$ is an uncertain coefficient, whose dispersion is calibrated to data from actual launches and detailed trajectory simulations}.
 
 The specific impulses and minimum feasible inert mass fractions are also dispersed. Their distributions are based on data from previous launch vehicles and engines \cite{Isakowitz2004, hist_lpre}. 
 
@@ -514,12 +514,12 @@ We next consider some of these cost per flight trends for various first stage re
 \end{figure*}
 
 \begin{itemize}
-  \item First stage reuse has no effect on the vehicle launch rate. The first stage production rate is not a rate-limiting step of the launch rate. In this case, a production and launch rate of 15 vehicles per year. 
+  \item First stage reuse has no effect on the vehicle launch rate. The first stage production rate is not a rate-limiting step of the launch rate. In this case, a production and launch rate of 15 vehicles per year is assumed. 
   \item First stage reuse allows the launch rate to increase beyond the first stage production rate. For illustration, we assume that the first stage production rate is 15 stages per year, and that in this case the launch rate is $min(15 * n_{reuse}, 50)$
 \end{itemize}
 
 
-For all strategies, we see a decrease in the cost per flight as the number of first stage uses increases. This result is not surprising -- increasing the launch rate decreases the operations cost per flight. It is interesting though to compare the strategy cost per flight trends with the cost of an expendable vehicle. For the strategies considered in Figure \ref{fig:num_reuse_sweep_LEO_kerosene}, all but the partial parachute recovery strategy show costs per flight below the 10th percentile of expendable cost per flight estimates above a certain number of reuses. With partial parachute recovery, the high-value hardware reuse savings do not compensate for the additional costs of producing and operating a reusable vehicle. However, the other strategies show potential for significant cost per flight savings with a high enough number of first stage reuses. 
+For all strategies, we see a decrease in the cost per flight as the number of first stage uses increases. This result is not surprising -- increasing the launch rate decreases the operations cost per flight. It is interesting to compare the strategy cost per flight trends with the cost of an expendable vehicle. For the strategies considered in Figure \ref{fig:num_reuse_sweep_LEO_kerosene}, all but the partial parachute recovery strategy show costs per flight below the 10th percentile of expendable cost per flight estimates above a certain number of reuses. With partial parachute recovery, the high-value hardware reuse savings do not compensate for the additional costs of producing and operating a reusable vehicle. However, the other strategies show potential for significant cost per flight savings with a high enough number of first stage reuses. 
 
 \subsection{Effect of launch vehicle size}
 
@@ -568,7 +568,7 @@ This paper has introduced preliminary models for the performance and cost of lau
 
 Winged reuse strategies were found to have very uncertain and likely high costs, and partial reuse strategies did not offer meaningful cost savings. In contrast, downrange propulsive landing offers significant cost savings and is probably the dominant strategy from a cost per flight standpoint. It could plausibly reduce launch costs to $\frac{1}{2}$ to $\frac{1}{3}$ the cost of an expendable vehicle.
 
-Reuse makes most sense for large launch vehicles with high launch rates. A small sizes, the first stage hardware costs are only a small fraction of the cost per flight, so reuse is not particularly helpful. High launch rates (>20/year) are likely required to pay off the development costs of reuse. However, first stage reuse may facilitate higher launch rates if first stage production is the rate limiting step. Further, interest in high-count LEO constellations indicates that the market demand may be sufficient to sustain these high launch rates. Thus, the present analysis indicates that first stage reuse is a viable route to reducing launch costs for medium to heavy lift launch vehicles.
+At small sizes, the first stage hardware costs are only a small fraction of the cost per flight, so reuse is relatively unhelpful. High launch rates (>20/year) are likely required to pay off the development costs of reuse. However, first stage reuse may facilitate higher launch rates if first stage production is the rate limiting step. Further, interest in high-count LEO constellations indicates that the market demand may be sufficient to sustain these high launch rates. Thus, the present analysis indicates that first stage reuse is a viable route to reducing cost per flight for large launch vehicles with high launch rates. 
 
 \bibliography{first_stage_recovery}
 \end{multicols}
