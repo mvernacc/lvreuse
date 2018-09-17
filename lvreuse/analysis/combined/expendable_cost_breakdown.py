@@ -17,7 +17,7 @@ def main():
     strat_instance = strat(strategy_models.kero_GG_boost_tech, strategy_models.kero_GG_upper_tech, mission)
     modes = get_mode_values(strat_instance.uncertainties)
 
-    fontsize = 15
+    fontsize = 17
 
     results = strat_instance.evaluate(**modes)
     prod_cost_per_flight = results[2] * wyr_conversion
@@ -31,7 +31,7 @@ def main():
 
     width = 0.3
 
-    plt.figure(figsize=(9,5))
+    plt.figure(figsize=(10,5))
     ax = plt.subplot(1,1,1)
 
     plt.bar(0, s1_e1_prod_cost_per_flight, width, align='edge', label='Stage 1 Production')
