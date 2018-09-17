@@ -449,7 +449,7 @@ The discussion is organized as follows: the first subsection shows the distribut
 
 \subsection{Strategy cost per flight estimates}
 
-In order to evaluate the cost per flight distributions for various first stage reuse strategies, we again perform a Monte Carlo analysis. This is implemented by evaluating the performance and cost models in sequence, sampling from generic distributions of model input parameters. For a given payload, we first evaluate the required masses of the launch vehicle elements for different reuse strategies using the performance model. Then, those resulting masses are used with the cost model to evaluate the cost per flight of the launch vehicles for each reuse strategy. Some of these cost per flight distributions are shown in Figures \ref{fig:strategy_cost_kerosene} and \ref{fig:strategy_cost_LEO_H2}. 
+In order to evaluate the cost per flight distributions for various first stage reuse strategies, we again perform a Monte Carlo analysis. This is implemented by evaluating the performance and cost models in sequence, sampling from generic distributions of model input parameters. For a given payload, we first evaluate the required masses of the launch vehicle elements for different reuse strategies using the performance model. Then, those resulting masses are used with the cost model to evaluate the cost per flight of the launch vehicles for each reuse strategy. Some of these cost per flight distributions are shown in Figures \ref{fig:strategy_cost_kerosene} and \ref{fig:strategy_cost_H2}. 
 
 \begin{figure*}
     \centering
@@ -462,7 +462,7 @@ In order to evaluate the cost per flight distributions for various first stage r
     \centering
     \includegraphics[width=\textwidth]{strategy_cost_annotated/LEO_H2}
      \includegraphics[width=\textwidth]{strategy_cost_annotated/GTO_H2}
-    \caption{\label{fig:strategy_cost_LEO_H2} Cost per flight distributions for various first stage reuse strategies for hydrogen technology, carrying a 10 ton payload to LEO or GTO.}
+    \caption{\label{fig:strategy_cost_H2} Cost per flight distributions for various first stage reuse strategies for hydrogen technology, carrying a 10 ton payload to LEO or GTO.}
 \end{figure*}
 
 The downrange propulsive landing and parachute strategies for full first stage recovery show very similar distributions with the lowest cost per flight distributions among all the strategies. However, as mentioned previously, parachute recovery of the full first stage is not very feasible for large vehicles. Therefore downrange propulsive landing is the most effective strategy for achieving the lowest cost per flight. 
@@ -475,6 +475,8 @@ It is also interesting to compare the cost per flight distributions for the two 
   \item The cost per kilogram of inert mass for producing a vehicle using hydrogen propellant is greater than that for kerosene. 
   \item The inert mass of a vehicle using hydrogen propellant is generally greater than that of kerosene for a given payload mass.
 \end{itemize}
+
+Launch vehicles for a 10-ton GTO mission show broadly similar trends [bottom plot in Figures \ref{fig:strategy_cost_kerosene}, \ref{fig:strategy_cost_H2}]. Downrange propulsive landing is the dominant strategy. However, with kerosene technology, the cost for launch site propulsive landing is high. This strategy has very low payload capacity when used with kerosene technology [bottom plot in Figure \ref{fig:strategy_perf_kerosene}], so the resulting launch vehicle would be quite large compared to an expendable vehicle, hence the high cost.
 
 Additionally, partial reuse strategies do not seem to yield substantial cost per flight savings relative to full reuse strategies. For these reuse strategies, the extra mass required to make a first stage vehicle partially recoverable does not make up for any cost savings achieved by reusing the high-value components. 
 
