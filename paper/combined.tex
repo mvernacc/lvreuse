@@ -229,13 +229,13 @@ Clearly, payload performance depends on inert mass fraction and specific impulse
     \item kerosene / \ce{O2} propellants, gas generator cycle, aluminum alloy tanks
 \end{itemize}
 
-These technologies are mature and have had fairly consistent specific impulse and inert mass limits over the past 30 years\footnote{This analysis can easily be extended to new technologies, e.g. \ce{CH4} / \ce{O2} propellants or composite tanks, as the engineering limits on these technologies emerge}. Stages using hydrogen technology have higher $I_{sp}$ but higher feasible inert mass $E$ than those using kerosene. The balance of these effects slightly favors hydrogen in terms of payload performance [Figure \ref{fig:payload_vs_dv}]. Finally, note that the technology choice and reuse strategy are independent - any reuse strategy can conceivably be used with any technology choice.
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{../../lvreuse/analysis/performance/plots/payload_vs_dv}
     \caption{\label{fig:payload_vs_dv} The quick model makes reasonable predictions of the payload capacity of two expendable launch vehicles. Payload performance declines with increasing $\Delta v_*$, and is slightly higher for \ce{H_2} fueled vehicles than for kerosene vehicles.}
 \end{figure}
+
+These technologies are mature and have had fairly consistent specific impulse and inert mass limits over the past 30 years\footnote{This analysis can easily be extended to new technologies, e.g. \ce{CH4} / \ce{O2} propellants or composite tanks, as the engineering limits on these technologies emerge}. Stages using hydrogen technology have higher $I_{sp}$ but higher feasible inert mass $E$ than those using kerosene. The balance of these effects slightly favors hydrogen in terms of payload performance [Figure \ref{fig:payload_vs_dv}]. Finally, note that the technology choice and reuse strategy are independent - any reuse strategy can conceivably be used with any technology choice.
 
 \subsection{Effects of first stage reuse effects performance}
 So far we have reviewed the factors determining launch vehicle performance. Now we ask, how does first stage reuse change these factors? Two mechanisms are possible:
@@ -356,6 +356,9 @@ We estimate $H$ by examining the mass breakdowns of detailed design studies for 
 We do not estimate $P$ directly; rather we assume distributions on the factors determining $P$. For propulsive landing, these are the $\Delta v$ of the entry burn (which could be \SIrange{0}{1000}{\meter\per\second}), and the $\Delta v$ of the landing burn (which depends on the stage's ballistic coefficient and the landing burn acceleration) [Figure \ref{fig:propulsive_landing}]. For winged stages with air-breathing propulsion, these factors are the lift/drag ratio (4 to 8), air breathing engine specific impulse (\SIrange{3200}{4000}{\second}), and cruise speed (\SIrange{100}{300}{\meter\per\second}) during the powered cruise portion of the return trajectory [Figure \ref{fig:flyback_trajectory}].
 
 % TODO do we really need these figures here?
+
+For launch site recovery there is additional complexity -- the stage separation velocity $v_{ss}$ depends on the unavailable mass ($v_ss$ decreases as $\epsilon_1'$ increases). But for return-to-launch-site strategies, the recovery propellant factor $P$ (and therefore $\epsilon_1'$) depends on $v_{ss}$. Thus, for return-to-launch-site strategies, we solve simultaneously for $\pi_*, \epsilon_1'$ and $P$. For rocket propelled return, we compute the impulsive $\Delta v$ needed to place the stage on a ballistic trajectory to the launch site, plus gravity losses. For air-breathing return, we use the Berguet range equation \footnote{In both cases, we model the downrange distance at stage separation as $R = f_{ss} v_{ss}^2$, where $f_{ss}$ is an uncertain coefficient, whose dispersion is calibrated to data from actual launches and detailed trajectory simulations}.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{propulsive_landing}
@@ -367,8 +370,6 @@ We do not estimate $P$ directly; rather we assume distributions on the factors d
     \includegraphics[width=0.5\textwidth]{flyback_trajectory_cropped}
     \caption{\label{fig:flyback_trajectory} Winged landing: trajectory options for launch site and downrange recovery. Portions of the trajectory flown under rocket propulsion are shown as red solid lines; air-breathing propulsion is indicated with blue.}
 \end{figure}
-
-For launch site recovery there is additional complexity -- the stage separation velocity $v_{ss}$ depends on the unavailable mass ($v_ss$ decreases as $\epsilon_1'$ increases). But for return-to-launch-site strategies, the recovery propellant factor $P$ (and therefore $\epsilon_1'$) depends on $v_{ss}$. Thus, for return-to-launch-site strategies, we solve simultaneously for $\pi_*, \epsilon_1'$ and $P$. For rocket propelled return, we compute the impulsive $\Delta v$ needed to place the stage on a ballistic trajectory to the launch site, plus gravity losses. For air-breathing return, we use the Berguet range equation \footnote{In both cases, we model the downrange distance at stage separation as $R = f_{ss} v_{ss}^2$, where $f_{ss}$ is an uncertain coefficient, whose dispersion is calibrated to data from actual launches and detailed trajectory simulations}.
 
 The specific impulses and minimum feasible inert mass fractions are also dispersed. Their distributions are based on data from previous launch vehicles and engines \cite{Isakowitz2004, hist_lpre}. 
 
@@ -412,15 +413,19 @@ The cost and performance models are linked through the launch vehicle element ma
 
 The TRANSCOST model considers three separate cost areas for launch vehicles: development, production, and operations costs \cite{transcost}. The cost per flight of a launch vehicle is the cost paid by the launch service provider for each flight, which includes production and operations costs only. The price per flight is the price paid by a customer to the launch service provider. This includes production and operations costs, as well as profit for the launch service provider and a potential development amortization charge. It should be noted, however, that typically a large part of development costs are funded by government contracts, such as for the Falcon 9 and Ariane 5 launch vehicles \cite{NASAspaceX, ESAAriane5}. In these cases, a development amortization charge is substantially reduced or not included as part of the price per flight.
 
+
+
+It is interesting to look at the breakdown of costs in the cost per flight of a typical launch vehicle. Consider a two stage fully expendable launch vehicle utilizing kerosene and liquid oxygen propellants to carry a 10 Mg payload to LEO. The cost per flight breakdown for such a launch vehicle can be seen in Figure \ref{fig:expendable_cost_breakdown}. 
+
+
+
+For this launch strategy -- and similarly for most fully expendable launch vehicle strategies -- the cost per flight is dominated by the first stage production costs. These large first stage production costs motivate first stage reusability, which would allow the first stage production cost to be amortized over a number of flights, therefore potentially reducing the total cost per flight. 
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.63\textwidth]{../../lvreuse/analysis/combined/plots/expendable_cost_breakdown}
     \caption{\label{fig:expendable_cost_breakdown} Cost per flight breakdown for two stage fully expendable vehicle.}
 \end{figure}
-
-It is interesting to look at the breakdown of costs in the cost per flight of a typical launch vehicle. Consider a two stage fully expendable launch vehicle utilizing kerosene and liquid oxygen propellants to carry a 10 Mg payload to LEO. The cost per flight breakdown for such a launch vehicle can be seen in Figure \ref{fig:expendable_cost_breakdown}. 
-
-For this launch strategy -- and similarly for most fully expendable launch vehicle strategies -- the cost per flight is dominated by the first stage production costs. These large first stage production costs motivate first stage reusability, which would allow the first stage production cost to be amortized over a number of flights, therefore potentially reducing the total cost per flight. 
 
 \subsection{Validation of Cost Model}
 
@@ -483,25 +488,28 @@ Additionally, partial reuse strategies do not seem to yield substantial cost per
 \subsection{Effect of number of reuses and launch rate}
 In order to look at the breakdown of costs for a launch vehicle with a reusable first stage, we consider a point cost estimate to demonstrate general trends. The following example evaluates a two stage launch vehicle carrying a 10,000 kg payload to LEO using kerosene and liquid oxygen propellants at a launch rate of 15 launches per year. We consider the case of a propulsive downrange landing to recover and reuse the entire first stage. The cost per flight is determined over a range of number of first stage uses. The results of this analysis are shown in Figure \ref{fig:cpf_stackplot_reuses_sweep}.
 
+
+Several things should be noticed from the results in Figure \ref{fig:cpf_stackplot_reuses_sweep}. First, the stage one productions costs per flight decrease dramatically as we increase the number of first stage reuses. This result is very intuitive -- as the cost of first stage production is spread over a larger number of flights, the per flight amortization share of the first stage production cost decreases. This leads to a reduction in the cost per flight. However, this trend of decreasing amortization share of first stage production costs is opposed by the refurbishment cost trends. As the number of first stage uses increases, the refurbishment cost per flight also increases. This is due to the fact that more components on the first stage will need inspected or replaced  as the number of reuses increases. 
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{../../lvreuse/analysis/combined/plots/cpf_stackplot_reuses_sweep}
     \caption{\label{fig:cpf_stackplot_reuses_sweep} A sweep of cost per flight vs number of first stage reuses for an example downrange propulsive landing strategy. Stage 1 production cost per flight declines as the first stage is reused more times. Refurbishment costs make up a small fraction of the cost per flight, but increase with increasing number of reuses.}
 \end{figure}
 
-Several things should be noticed from the results in Figure \ref{fig:cpf_stackplot_reuses_sweep}. First, the stage one productions costs per flight decrease dramatically as we increase the number of first stage reuses. This result is very intuitive -- as the cost of first stage production is spread over a larger number of flights, the per flight amortization share of the first stage production cost decreases. This leads to a reduction in the cost per flight. However, this trend of decreasing amortization share of first stage production costs is opposed by the refurbishment cost trends. As the number of first stage uses increases, the refurbishment cost per flight also increases. This is due to the fact that more components on the first stage will need inspected or replaced  as the number of reuses increases. 
-
 These opposing trends lead to an interesting result: the total cost per flight trend achieves a minimum value. Under the assumptions used in Figure \ref{fig:cpf_stackplot_reuses_sweep}, the minimum cost per flight occurs near 60 reuses, but the exact location is highly dependent the model parameters, especially refurbishment costs. Generally though, there will be some number of reuses beyond which further reuse is not cost effective.
+
+
+The cost per flight is also affected by the annual launch rate. Although most components of the cost per flight do not vary with launch rate, operations costs are very sensitive to it. Launch operations require a dedicated workforce and facilities, which are underutilized at low launch rates. Therefore we see a higher operations cost per flight at low launch rates. The cost per flight trends with varied launch rates are given in Figure \ref{fig:cpf_reuses_sweep_vary_launch_rate}. 
+
+
+As expected, Figure \ref{fig:cpf_reuses_sweep_vary_launch_rate} shows that the cost per flight is higher at lower launch rates, regardless of the number of first stage reuses. For low launch rates, we see a substantial decrease in the cost per flight for only a modest increase in launch rate. However, for high launch rates, further increases in launch rate do not have a large effect on the cost per flight. For instance, we see a large difference in cost per flight by increasing the launch rate from 3 to 5 launches per year. However, increasing the launch rate from 20 to 40 launches per year yields only minimal cost per flight reductions. 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{../../lvreuse/analysis/combined/plots/cpf_reuses_sweep_vary_launch_rate}
     \caption{\label{fig:cpf_reuses_sweep_vary_launch_rate} The cost per flight vs. number of reuses sweep repeated at several launch rates. Increasing launch rate decreases cost per flight (primarily through lower operational costs) but the benefits diminish past about 20 launches/year.}
 \end{figure}
-
-The cost per flight is also affected by the annual launch rate. Although most components of the cost per flight do not vary with launch rate, operations costs are very sensitive to it. Launch operations require a dedicated workforce and facilities, which are underutilized at low launch rates. Therefore we see a higher operations cost per flight at low launch rates. The cost per flight trends with varied launch rates are given in Figure \ref{fig:cpf_reuses_sweep_vary_launch_rate}. 
-
-As expected, Figure \ref{fig:cpf_reuses_sweep_vary_launch_rate} shows that the cost per flight is higher at lower launch rates, regardless of the number of first stage reuses. For low launch rates, we see a substantial decrease in the cost per flight for only a modest increase in launch rate. However, for high launch rates, further increases in launch rate do not have a large effect on the cost per flight. For instance, we see a large difference in cost per flight by increasing the launch rate from 3 to 5 launches per year. However, increasing the launch rate from 20 to 40 launches per year yields only minimal cost per flight reductions. 
 
 We next consider some of these cost per flight trends for various first stage reuse strategies. Figure \ref{fig:num_reuse_sweep_LEO_kerosene} shows the costs per flight for selected strategies over a range of number of first stage uses. We consider two cases in this analysis: 
 
