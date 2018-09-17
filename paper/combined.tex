@@ -17,6 +17,7 @@
 \usepackage[super]{nth}
 \makesavenoteenv{tabular}
 \setlength\LTleft{0pt} 
+\renewcommand{\floatpagefraction}{.8}%
 
 \graphicspath{{figures/}}
 
@@ -29,6 +30,20 @@ and Kelly J. Mathesius  \footnote{Research Assistant, Department of Aeronautics 
 
 \begin{document}
 \maketitle
+
+\begin{abstract}
+Many strategies have been proposed for recovery of launch vehicle first stage components, all of which incur a reduction in payload capacity in an effort to reduce the cost-per-flight.
+However, there is much debate as to which strategy, if any, can provide sufficient cost savings to justify its associated payload reduction. To clarify the situation, an analysis was performed of the payload penalty and cost of all major first stage recovery strategies under common assumptions. The analyzed strategies include propulsive landing (downrange or at the launch site), winged stages (air-breathing fly-back to the launch site or downrange glider recovery), and engines-only recovery via parachutes.
+
+This paper establishes a general model to compare the payload capacity and cost-per-flight reductions of first stage re-use strategies.
+The payload capacity model is neatly derived from physical first principles; cost estimation uses analogies to similar systems and the TRANSCOST model. For generality, the models are phrased in terms of dimensionless parameters, and the sensitivity of the results to those parameters is explored.
+The sensitivity of payload and cost to various technological and operational factors is also assessed.
+
+This study finds that returning the first stage to the launch site by rocket propulsion incurs the highest payload reduction, at about half the payload capacity of an equivalent expendable system.  Flying a winged stage back to the launch site under air-breathing propulsion has a smaller payload penalty (15 to 45\%), but adding wings and jet engines to the stage increases costs. For downrange recovery, propulsive and glider landing both incur a small payload penalty  (10 to 20\%). Recovery of the engines alone via parachute incurs almost no payload penalty, but only enables cost-per-flight to be reduced by about half. An order-of-magnitude cost reduction requires re-use of the entire first stage, and optimistic assumptions about refurbishment costs and market demand.
+
+Which strategy is `best' depends on the situation of the launch provider and market. Engine-only parachute recovery is perhaps the easiest to implement, and could quickly offer moderate cost savings if development resources are limited. Despite more difficult development, downrange propulsive landing and downrange glider recovery can both achieve lower cost-per-flight and cost-per-kilogram to orbit. Propulsive landing provides operational flexibility - the same vehicle can also return to the launch site in easier missions. If high enough launch rates are foreseen, the operational convenience of launch site recovery may justify the development of an air-breathing fly-back booster.
+
+\end{abstract}
 
 \begin{multicols}{2}
 
@@ -53,26 +68,7 @@ Our modeling approach emphasizes the representation of uncertainty and reproduci
 \section{Classification of first stage reuse strategies}
 Although only two vehicles with recoverable stages have been operated, a wide variety of first stage recovery strategies have been proposed. This section develops a systematic classification of recovery strategies.
 
-First stage recovery strategies can be classified by four high-level choices:
-\begin{enumerate}
-    \item \textit{Recovery location} - The stage may return itself for recovery at the launch site, or may be recovered downrange. Launch site recovery would occur on land. Downrange recovery could occur on a ship, directly in the ocean, on land, or midair with recovered components being caught by an aircraft \cite{Ragab2015, Stappert2017}.
-
-    \item \textit{Recovery propulsion method} - The stage may propel itself to the recovery location by firing its rocket engines or by using additional air-breathing engines. Alternatively, the stage may not use propulsion during recovery, and instead glide or fall to the recovery location.
-
-    \item \textit{Landing method} - The stage may use rocket engines to land vertically (propulsive), land horizontally like an airplane (winged), or land under parachutes.
-
-    \item \textit{Portion of \nth{1} stage recovered} - Some strategies recover the entire first stage, while others propose to only recover a portion containing the higher-value components (e.g. main engines \cite{Ragab2015}).
-\end{enumerate}
-
-In this paper, a "reuse strategy" will denote a combination of answers to these four choices. There are 90 possible choice combinations, of which 36 seem vaguely feasible. Of these, 11 distinct strategies have been operated or proposed (Table \ref{tab:vehicles}). Figure \ref{fig:recov_strat_diagram} illustrates the concept of operations for some of these strategies.
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=1\textwidth]{figures/recovery_options_annotated}
-    \caption{\label{fig:recov_strat_diagram} Many different strategies can be employed to recover and reuse the \nth{1} stage of a launch vehicle.}
-\end{figure*}
-
-\begin{table}[hbt!]
+\begin{table*}
     \caption{\label{tab:vehicles} Examples of first stage reuse strategies.}
     \centering
     \begin{tabular}{p{3.5cm} l p{2cm} p{2cm} p{2cm} p{2cm}}
@@ -98,7 +94,26 @@ In this paper, a "reuse strategy" will denote a combination of answers to these 
         \hline
     \end{tabular}
     \\ * denotes boosters used in parallel staging.
-\end{table}
+\end{table*}
+
+First stage recovery strategies can be classified by four high-level choices:
+\begin{enumerate}
+    \item \textit{Recovery location} - The stage may return itself for recovery at the launch site, or may be recovered downrange. Launch site recovery would occur on land. Downrange recovery could occur on a ship, directly in the ocean, on land, or midair with recovered components being caught by an aircraft \cite{Ragab2015, Stappert2017}.
+
+    \item \textit{Recovery propulsion method} - The stage may propel itself to the recovery location by firing its rocket engines or by using additional air-breathing engines. Alternatively, the stage may not use propulsion during recovery, and instead glide or fall to the recovery location.
+
+    \item \textit{Landing method} - The stage may use rocket engines to land vertically (propulsive), land horizontally like an airplane (winged), or land under parachutes.
+
+    \item \textit{Portion of \nth{1} stage recovered} - Some strategies recover the entire first stage, while others propose to only recover a portion containing the higher-value components (e.g. main engines \cite{Ragab2015}).
+\end{enumerate}
+
+In this paper, a "reuse strategy" will denote a combination of answers to these four choices. There are 90 possible choice combinations, of which 36 seem vaguely feasible. Of these, 11 distinct strategies have been operated or proposed (Table \ref{tab:vehicles}). Figure \ref{fig:recov_strat_diagram} illustrates the concept of operations for some of these strategies.
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=1\textwidth]{figures/recovery_options_annotated}
+    \caption{\label{fig:recov_strat_diagram} Many different strategies can be employed to recover and reuse the \nth{1} stage of a launch vehicle.}
+\end{figure*}
 
 The following sections will estimate the performance and cost per flight of several of the above reuse strategies.
 
@@ -148,8 +163,8 @@ Then, for two-stage vehicles, Tsiolkovsky’s relation can be written as the fol
 % TODO multiline equation align equals signs
 \label{eq:dv_2_stage}
 \Delta v_* &= \Delta v_1 + \Delta v_2 \\
-           &= - I_{sp,1} g_0 \ln \left( \epsilon_1 + (1 - \epsilon_1) \pi_1 \right)
-             - I_{sp,2} g_0 \ln \left( \epsilon_2 + (1 - \epsilon_2) \pi_2 \right)
+           &= - I_{sp,1} g_0 \ln \left( \epsilon_1 + (1 - \epsilon_1) \pi_1 \right) \\
+             & \quad - I_{sp,2} g_0 \ln \left( \epsilon_2 + (1 - \epsilon_2) \pi_2 \right)
 \end{aligned}
 \end{equation}
 
@@ -172,12 +187,6 @@ A given launch vehicle design is represented by the parameters $(I_{sp,1}, I_{sp
 
 To validated the model, calculations were run for the Delta IV Medium and Falcon 9 Block 3 (expendable configuration) launch vehicles [Figure \ref{fig:payload_vs_dv}]. The advertised payload mass fractions for LEO and GTO are shown (crosses) for comparison. The model slightly over-predicts $\pi_*$, likely because it neglects the mass of the payload fairing.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{../../lvreuse/analysis/performance/plots/payload_vs_dv}
-    \caption{\label{fig:payload_vs_dv} The quick model makes reasonably accurate predictions of the payload capacity of two expendable launch vehicles. Payload performance declines with increasing $\Delta v_*$, and is slightly higher for \ce{H_2} fueled vehicles than for kerosene vehicles.}
-\end{figure}
-
 \subsection{Technology choice}
 Clearly, payload performance depends on inert mass fraction and specific impulse, and would be maximized for $\epsilon \rightarrow 0, \quad I_{sp} \rightarrow \infty$. However, there are technological limits on the achievable values, which depend on a collection of design decisions, i.e. the propellant, engine cycle, tank and structure materials, etc. We refer to this collection of decisions as a "technology choice". The technology choice sets $I_{sp, 1}, I_{sp, 2}$, and sets lowers feasible limits for the inert mass fractions, which we will call $E_1, E_2$. The technology choice also influences the cost model (see next section). We will analyze reuse strategies under two example technology choices:
 
@@ -188,6 +197,11 @@ Clearly, payload performance depends on inert mass fraction and specific impulse
 
 These technologies are mature and have had fairly consistent specific impulse and inert mass limits over the past 30 years\footnote{This analysis can easily be extended to new technologies, e.g. \ce{CH4} / \ce{O2} propellants or composite tanks, as the engineering limits on these technologies emerge}. Stages using hydrogen technology have higher $I_{sp}$ but higher feasible inert mass $E$ than those using kerosene. The balance of these effects works out to slightly favor hydrogen in terms of payload performance [Figure \ref{fig:payload_vs_dv}]. Finally, note that the technology choice and reuse strategy are independent - any reuse strategy can conceivably be used with any technology choice.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{../../lvreuse/analysis/performance/plots/payload_vs_dv}
+    \caption{\label{fig:payload_vs_dv} The quick model makes reasonably accurate predictions of the payload capacity of two expendable launch vehicles. Payload performance declines with increasing $\Delta v_*$, and is slightly higher for \ce{H_2} fueled vehicles than for kerosene vehicles.}
+\end{figure}
 
 \subsection{How first stage reuse effects performance}
 So far we have reviewed the factors determining launch vehicle performance. Now we ask, how does first stage reuse change these factors? Two mechanisms are possible:
@@ -198,6 +212,12 @@ So far we have reviewed the factors determining launch vehicle performance. Now 
 \end{itemize}
 
 The first can be ignored, as the variation of losses for different recovery strategies is minor and comparable to the variation in losses for fully expendable vehicles \cite{Stappert2017}. Thus, the main effect of first stage reuse on performance is that extra mass must be carried during ascent.
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\textwidth]{payload_vs_unavail_mass_annotated}
+    \caption{\label{fig:payload_vs_unavail_mass} Payload performance declines as first stage unavailable mass increases.}
+\end{figure*}
 
 \subsection{First stage unavailable mass}
 We define the "first stage unavailable mass fraction", $\epsilon_1'$, to be the fraction of first stage gross mass that is unavailable to be expelled during ascent, i.e.:
@@ -213,12 +233,6 @@ The payload performance of a vehicle with first stage reuse can be found by subs
 Note that all reuse strategies add unavailable mass to the first stage, so we will always have $\epsilon_1' > E_1$.
 
 The effect of first stage unavailable mass on payload performance is shown in Figure \ref{fig:payload_vs_unavail_mass}. The top plots show the overall payload mass fraction as a function of $\epsilon_1'$. The bottom plots show the payload capacity of a vehicle with first stage reuse as a fraction of the payload capacity of an "equivalent" expendable vehicle with the minimum feasible first stage inert mass fraction $E_1$. Note that the same $\epsilon_1'$ causes a larger fractional reduction of payload capacity on higher $\Delta v$ missions.
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=\textwidth]{payload_vs_unavail_mass_annotated}
-    \caption{\label{fig:payload_vs_unavail_mass} Payload performance declines as first stage unavailable mass increases.}
-\end{figure*}
 
 \subsection{Relating unavailable mass to recovery hardware and propulsion}
 Next, we relate $\epsilon_1'$ to the feasible limit on inert mass ($E_1$) and the extra hardware and propellant needed for recovery.
@@ -286,7 +300,9 @@ A brief summary of the input parameter distributions is given below; more detail
 
 We estimate $H$ by examining the mass breakdowns of detailed design studies for some types of reusable boosters \cite{Healy1998, Isakowitz2004, Sippel2003, Hellman2005}, and by analogy to the mass breakdowns of other aerospace vehicles. The resulting estimates are summarized in Table \ref{tab:hardware_factor_distributions}.
 
-\begin{table}[hbt!]
+% TODO fix table
+
+\begin{table}[H]
     \centering
     \caption{\label{tab:hardware_factor_distributions} Uncertainty distribution parameters of the recovery hardware factor $H$. $H$ can run from 0 to 1, higher values of $H$ indicate that more recovery hardware is needed.}
     \begin{tabular}{l l c c c}
@@ -301,16 +317,13 @@ We estimate $H$ by examining the mass breakdowns of detailed design studies for 
     Propulsive landing  & 0.09 & 0.14 & 0.19 \\
     \hline
     Parachutes & 0.050 & 0.065 & 0.080 \\
-    Parachutes and inflatable heat shield  & 0.150 & 0.170 & 0.190 \\
+    Parachutes and & 0.150 & 0.170 & 0.190 \\
+    inflatable heat shield & & & \\
     \hline
     \end{tabular}
 \end{table}
 
 We do not estimate $P$ directly; rather we assume distributions on the factors determining $P$. For propulsive landing, these are the $\Delta v$ of the entry burn (which could be \SIrange{0}{1000}{\meter\per\second}), and the $\Delta v$ of the landing burn (which depends on the stage's ballistic coefficient and the landing burn acceleration) [Figure \ref{fig:propulsive_landing}]. For winged stages with air-breathing propulsion, these factors are the lift/drag ratio (4 to 8), air breathing engine specific impulse (\SIrange{3200}{4000}{\second}), and cruise speed (\SIrange{100}{300}{\meter\per\second}) during the powered cruise portion of the return trajectory [Figure \ref{fig:flyback_trajectory}].
-
-For launch site recovery there is a further wrinkle - the stage separation velocity $v_{ss}$ depends on the unavailable mass ($v_ss$ decreases as $\epsilon_1'$ increases). But for return-to-launch-site strategies, the recovery propellant factor $P$ (and therefore $\epsilon_1'$) depends on $v_{ss}$. Thus, for return-to-launch-site strategies, we solve simultaneously for $\pi_*, \epsilon_1'$ and $P$. For rocket propelled return, we compute the impulsive $\Delta v$ needed to place the stage on a ballistic trajectory to the launch site, plus gravity losses. For air-breathing return, we use the Berguet range equation \footnote{In both cases, we model the downrange distance at stage separation as $R = f_{ss} v_{ss}^2$, where $f_{ss}$ is an uncertain coefficient, whose dispersion is calibrated to data from actual launches and detailed trajectory simulations}.
-
-The specific impulses and minimum feasible inert mass fractions are also dispersed. Their distributions are based on data from previous launch vehicles and engines \cite{Isakowitz2004, hist_lpre}. 
 
 % TODO do we really need these figures here?
 \begin{figure}[H]
@@ -319,12 +332,15 @@ The specific impulses and minimum feasible inert mass fractions are also dispers
     \caption{\label{fig:propulsive_landing} Propulsive landing: trajectory options for launch site and downrange recovery. Propulsive portions of the trajectory are shown as red solid lines.}
 \end{figure}
 
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{flyback_trajectory}
     \caption{\label{fig:flyback_trajectory} Winged landing: trajectory options for launch site and downrange recovery. Portions of the trajectory flown under rocket propulsion are shown as red solid lines; air-breathing propulsion is indicated with blue.}
 \end{figure}
+
+For launch site recovery there is a further wrinkle - the stage separation velocity $v_{ss}$ depends on the unavailable mass ($v_ss$ decreases as $\epsilon_1'$ increases). But for return-to-launch-site strategies, the recovery propellant factor $P$ (and therefore $\epsilon_1'$) depends on $v_{ss}$. Thus, for return-to-launch-site strategies, we solve simultaneously for $\pi_*, \epsilon_1'$ and $P$. For rocket propelled return, we compute the impulsive $\Delta v$ needed to place the stage on a ballistic trajectory to the launch site, plus gravity losses. For air-breathing return, we use the Berguet range equation \footnote{In both cases, we model the downrange distance at stage separation as $R = f_{ss} v_{ss}^2$, where $f_{ss}$ is an uncertain coefficient, whose dispersion is calibrated to data from actual launches and detailed trajectory simulations}.
+
+The specific impulses and minimum feasible inert mass fractions are also dispersed. Their distributions are based on data from previous launch vehicles and engines \cite{Isakowitz2004, hist_lpre}. 
 
 These estimates are summarized in Figure \ref{fig:unavail_mass_contours}, which shows contours of $\epsilon_1'$ on $P$ vs. $H$ axes. The likely ranges of $P$ and $H$ for some recovery strategies are shown as blue ellipses. This figure assumes kerosene technology and full recovery of the first stage. Note that the (launch site, rocket-propelled, propulsive landing) strategy incurs the highest unavailable mass because of the large amount of propellant required to return the stage to the launch site. The (downrange, no propulsion, parachute landing) strategy has the lowest unavailable mass. 
 

@@ -3,6 +3,7 @@ import os.path
 
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib import rc as rc
 
 from lvreuse.data.missions import LEO, GTO
 from lvreuse.performance import payload_fixed_stages
@@ -42,19 +43,23 @@ def plot_lv(lv, color='C0'):
 def main():
     lvs = [launch_vehicles.delta_iv_m, launch_vehicles.f9_b3_e]
     colors = ['C0', 'C1']
+    fontsize = 15
     plt.figure()
     for lv, color in zip(lvs, colors):
         plot_lv(lv, color)
-    plt.xlabel('$\\Delta v_*$ to target orbit [km s^-1]')
-    plt.text(LEO.dv * 1e-3, 0.005, 'LEO', rotation=90)
-    plt.text(GTO.dv * 1e-3, 0.005, 'GTO', rotation=90)
-    plt.ylabel('Payload mass fraction $\\pi_*$ [-]')
+    plt.xlabel('$\\Delta v_*$ to target orbit [km s^-1]', fontsize=fontsize)
+    plt.text(LEO.dv * 1e-3, 0.005, 'LEO', rotation=90, fontsize=fontsize)
+    plt.text(GTO.dv * 1e-3, 0.005, 'GTO', rotation=90, fontsize=fontsize)
+    plt.ylabel('Payload mass fraction $\\pi_*$ [-]', fontsize=fontsize)
     plt.ylim([0, plt.ylim()[1]])
     plt.grid(True)
-    plt.legend()
-    plt.title('Payload performance vs. $\\Delta v$')
-    plt.text(11.1, 0.026, '$\\mathrm{H_2} / \\mathrm{O_2}$', color='C0')
-    plt.text(10, 0.017, 'kerosene$/ \\mathrm{O_2}$', color='C1')
+    plt.legend(fontsize=0.8*fontsize)
+    plt.title('Payload performance vs. $\\Delta v$', fontsize=fontsize)
+    plt.text(11.1, 0.026, '$\\mathrm{H_2} / \\mathrm{O_2}$', color='C0', fontsize=fontsize)
+    plt.text(9.5, 0.017, 'kerosene$/ \\mathrm{O_2}$', color='C1', fontsize=fontsize)
+    plt.xticks(fontsize=0.8*fontsize)
+    plt.yticks(fontsize=0.8*fontsize)
+
     plt.savefig(os.path.join('plots', 'payload_vs_dv.png'), dpi=200)
     plt.show()
 

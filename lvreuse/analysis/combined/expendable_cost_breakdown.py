@@ -6,6 +6,7 @@ import numpy as np
 from lvreuse.analysis.combined import strategy_models
 from lvreuse.data.missions import LEO
 from num_reuse_sweep import get_mode_values
+from lvreuse.analysis.cost.strategy_cost_models import wyr_conversion
 
 
 def main():
@@ -18,15 +19,14 @@ def main():
 
     results = strat_instance.evaluate(**modes)
     print(results)
-    prod_cost_per_flight = results[2]
-    s1_e1_prod_cost_per_flight = results[7]
-    s2_e2_prod_cost_per_flight = results[8]
-    veh_int_checkout = results[9]
-    ops_cost_per_flight = results[3]
-    props_cost = results[10]
-    refurb_cost = results[11]
-    cpf = results[4]
-    print(refurb_cost)
+    prod_cost_per_flight = results[2] * wyr_conversion
+    s1_e1_prod_cost_per_flight = results[7] * wyr_conversion
+    s2_e2_prod_cost_per_flight = results[8] * wyr_conversion
+    veh_int_checkout = results[9] * wyr_conversion
+    ops_cost_per_flight = results[3] * wyr_conversion
+    props_cost = results[10] * wyr_conversion
+    refurb_cost = results[11] * wyr_conversion
+    cpf = results[4] * wyr_conversion
 
     print('cpf_expendable: ', cpf)
 
@@ -48,16 +48,22 @@ def main():
         top=False,         # ticks along the top edge are off
         labelbottom=False) # labels along the bottom edge are off 
 
-    plt.title('Cost per flight breakdown of expendable vehicle for LEO mission, 10.0 Mg payload \n stage 1: kerosene gas generator tech., stage 2: kerosene gas generator tech', x=1)
-    plt.ylabel('Cost [WYr]')
+    plt.title('Cost per flight breakdown of expendable vehicle for LEO mission, 10.0 Mg payload \n stage 1: kerosene gas generator tech., stage 2: kerosene gas generator tech', loc='left')
+    plt.ylabel('Cost [Million US Dollars in 2018]')
     plt.xlim(0, width)
     # ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
 
+    ax1 = ax.twinx()
+    ax1.set_ylabel('Cost [WYr]')
+    ax1.set_ylim(0, ax.get_ylim()[1]/wyr_conversion)
+    ax1.grid(False)
+
+    ax.spines['top'].set_visible(False)
+    ax1.spines['top'].set_visible(False)
 
 
     handles, labels = ax.get_legend_handles_labels()
-    ax.legend(handles=handles[::-1], labels=labels[::-1], loc='center left', bbox_to_anchor=(1, 0.5))
+    ax.legend(handles=handles[::-1], labels=labels[::-1], loc='center left', bbox_to_anchor=(1.3, 0.5))
 
     plt.tight_layout()
 
