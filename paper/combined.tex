@@ -41,6 +41,47 @@ This study finds that downrange recovery of the full first stage is the cost-dom
 
 \begin{multicols}{2}
 
+\section*{Nomenclature}
+\begin{itemize}
+    \item $a$ - cost estimating relationship coefficient
+    \item $C$ - cost [work years or dollars]
+    \item $E_i$ - feasible inert mass limit for the $i$-th stage [dimensionless]
+    \item $g_0 = \SI{9.80665}{\meter\per\second\squared}$ standard acceleration due to gravity
+    \item $H$ - recovery hardware factor [dimensionless]
+    \item $I_{sp,i}$ - specific impulse of the $i$-th stage rocket engines [\si{\second}]
+    \item $I_{sp}^{ab}$ - specific impulse of air-breathing engines used for recovery [\si{\second}]
+    \item $(L/D)$ - lift to drag ratio of a winged stage during fly-back cruise [dimensionless]
+    \item $m_i$ - wet mass of the $i$-th stage [\si{kg}]
+    \item $m_{inert,i}$ - inert mass of the $i$-th stage [\si{kg}]
+    \item $m_{hb,1}$ - Mass of baseline hardware, first stage [\si{kg}]
+    \item $m_{hr,1}$ - Mass of recovery hardware, first stage [\si{kg}]
+    \item $m_{hv,1}$ - Mass of valuable hardware to be recovered, first stage [\si{kg}]
+    \item $m_{p,i}$ - propellant mass of the $i$-th stage [\si{kg}]
+    \item $m_{pr,1}$ - Mass of propellant reserved for recovery, first stage [\si{kg}]
+    \item $m_*$ - Payload mass [\si{kg}]
+    \item $m_0$ - Launch vehicle gross liftoff mass, including payload [\si{kg}]
+    \item $N = 2$ - Number of stages
+    \item $n_{reuse}$ - Lifetime (number of reuses) of a reusable first stage
+    \item $P$ - Recovery propellant factor [dimensionless]
+    \item $R_{cruise}$ - Cruise range for fly-back recovery [\si{\meter}]
+    \item $v_{cruise}$ - Cruise speed for fly-back recovery [\si{\meter\per\second}]
+    \item $x$ - cost estimating relationship exponent [dimensionless]
+    \item $y$ - Stage 2 / stage 1 wet mass ratio [dimensionless]
+    \item $z_m$ - Fraction of first stage baseline mass recovered [dimensionless]
+    \item $\Delta v$ - Velocity increment provided by a rocket stage or required for a mission or maneuver [\si{\meter\per\second}]
+    \item $\epsilon_i$ - Inert mass fraction of the $i$-th stage [dimensionless]
+    \item $\epsilon_i'$ - First stage unavailable mass fraction [dimensionless]
+    \item $\pi_*$ - Overall payload mass fraction [dimensionless]
+\end{itemize}
+
+\section*{Acronyms/Abbreviations}
+\begin{itemize}
+    \item CER - Cost estimating relationship
+    \item GTO - Geosynchronous transfer orbit
+    \item LEO - Low earth orbit
+    \item TRL - Technology readiness level
+\end{itemize}
+
 \section{Introduction}
 
 Reduction of launch costs and increase of launch rates are essential for increasing accessibility to space. Many high-count commercial satellite constellations are under development \cite{SIA2017, Henry2017}, and militaries have indicated interest in distributing their space capabilities across higher-count constellations that can be quickly replenished \cite{DARPA_Blackjack}. These trends in the satellite market indicate that launch providers may need to reduce costs and increase launch rates to remain competitive. Customers may become more sensitive to launch costs as serial production drops the cost of satellites, and high-count constellations will require high launch rates to be deployed in a viable timeframe.
