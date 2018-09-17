@@ -53,7 +53,7 @@ def main():
                   refurb_cost*wyr_conversion, props_cost*wyr_conversion, refurb_cost*wyr_conversion, labels=labels)
     plt.xlabel('Number of 1st stage uses')
     plt.ylabel('Cost [Million US Dollars in 2018]')
-    plt.title('Cost per flight breakdown')
+    plt.title('Cost per flight breakdown vs. vehicle life for LEO mission, 10.0 Mg payload \n stage 1: kerosene gas generator tech., stage 2: kerosene gas generator tech')
     ax.set_xscale('log')
     ax.set_ylim(0,60)
     handles, labels = ax.get_legend_handles_labels()
@@ -85,9 +85,9 @@ def main():
             cpf[j, i] = results[4]
         plt.semilogx(num_reuses, cpf[j, :]*wyr_conversion)
 
-    plt.title('Cost per flight')
+    plt.title('Cost per flight vs. vehicle life for LEO mission, 10.0 Mg payload \n stage 1: kerosene gas generator tech., stage 2: kerosene gas generator tech')
     plt.xlabel('Number of 1st stage uses')
-    plt.ylabel('Cost [Million US Dollars in 2018]')
+    plt.ylabel('Cost per flight [Million US Dollars in 2018]')
     labels = [str(i) for i in launch_rate]
     plt.legend(labels=labels, title='Launch rate')
     plt.xlim(1e0, 1e2)
@@ -95,7 +95,7 @@ def main():
     plt.grid(True, which='both')
 
     ax1 = ax.twinx()
-    ax1.set_ylabel('Cost [WYr]')
+    ax1.set_ylabel('Cost per flight [WYr]')
     ax1.set_ylim(0, 75/wyr_conversion)
     ax1.grid(False)
 
@@ -137,7 +137,7 @@ def main():
                   refurb_cost*wyr_conversion, props_cost*wyr_conversion, refurb_cost*wyr_conversion, labels=labels)
     plt.xlabel('Annual launch rate')
     plt.ylabel('Cost [Million US Dollars in 2018]')
-    plt.title('Cost per flight breakdown')
+    plt.title('Cost per flight breakdown vs. launch rate for LEO mission, 10.0 Mg payload \n stage 1: kerosene gas generator tech., stage 2: kerosene gas generator tech')
     ax.set_xscale('log')
     ax.set_ylim(0, 75)
     handles, labels = ax.get_legend_handles_labels()
@@ -191,7 +191,7 @@ def main():
                   refurb_cost*wyr_conversion, props_cost*wyr_conversion, refurb_cost*wyr_conversion, labels=labels)
     plt.xlabel('Number of 1st stage uses')
     plt.ylabel('Cost [Million US Dollars in 2018]')
-    plt.title('Cost per flight breakdown')
+    plt.title('Cost per flight breakdown vs. vehicle life for LEO mission, 100 kg payload \n stage 1: kerosene gas generator tech., stage 2: kerosene gas generator tech')
     ax.set_xscale('log')
     ax.set_ylim(0,12)
     handles, labels = ax.get_legend_handles_labels()

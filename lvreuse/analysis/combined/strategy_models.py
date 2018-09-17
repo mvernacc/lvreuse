@@ -20,6 +20,7 @@ import lvreuse.cost as cost
 from lvreuse.analysis.cost import strategy_cost_models
 from lvreuse.analysis.combined.construct_launch_vehicle import construct_launch_vehicle
 from lvreuse.data.missions import LEO, LEO_smallsat, GTO
+from lvreuse.analysis.cost.strategy_cost_models import wyr_conversion
 
 Technology = namedtuple('Technology',
                        ['fuel', 'oxidizer', 'of_mass_ratio',
@@ -942,9 +943,10 @@ def demo():
             cost_per_flight = {}
             for strat_name in results:
                 pi_star[strat_name] = results[strat_name]['pi_star']
-                cost_per_flight[strat_name] = results[strat_name]['cost_per_flight']
+                cost_per_flight[strat_name] = results[strat_name]['cost_per_flight'] 
             pi_star = pandas.DataFrame(pi_star)
             cost_per_flight = pandas.DataFrame(cost_per_flight)
+            cost_per_flight = cost_per_flight.multiply(wyr_conversion)
 
             sns.set(style='whitegrid')
 
@@ -991,14 +993,20 @@ def demo():
                 + ', {:.1f} Mg payload'.format(mission.m_payload * 1e-3)
                 + '\nstage 1: {:s} {:s} tech.,'.format(tech_1.fuel, tech_1.cycle)
                 + ' stage 2: {:s} {:s} tech.'.format(tech_2.fuel, tech_2.cycle))
-            plt.ylabel('Cost per flight [WYr]')
-            y_upper = 550
+            ax.set_ylabel('Cost per flight [Million US Dollars in 2018]')
+            y_upper = 550 * wyr_conversion
+
+            ax1 = ax.twinx()
+            ax1.set_ylabel('Cost per flight [WYr]')
+
             if mission.name == 'LEO':
                 if mission.m_payload > 1000:
-                    y_upper = 300
+                    y_upper = 300 * wyr_conversion
                 else:
-                    y_upper = 50
-            plt.ylim([0, y_upper])
+                    y_upper = 50 * wyr_conversion
+            ax.set_ylim(0, y_upper)
+            ax1.set_ylim(0, y_upper/wyr_conversion)
+            ax1.grid(False)
 
             ax.set_xticklabels(xticks)
             plt.xticks(rotation=30)

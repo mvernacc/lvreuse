@@ -6,6 +6,7 @@ import numpy as np
 
 from lvreuse.analysis.combined import strategy_models
 from lvreuse.utils import quantile_plot
+from lvreuse.analysis.cost.strategy_cost_models import wyr_conversion
 
 def get_mode_values(uncerts):
     modes = {}
@@ -33,7 +34,7 @@ def main():
         for mission in [strategy_models.LEO, strategy_models.GTO]:
             plt.figure(figsize=(10, 6))
             ax1 = plt.subplot(1, 2, 1)
-            ax2 = plt.subplot(1, 2, 1, sharey=ax1)
+            ax2 = plt.subplot(1, 2, 1) #, sharey=ax1)
 
             for strat, color in zip(strats, colors):
                 strat_instance = strat(tech_1, tech_2, mission)
@@ -46,7 +47,7 @@ def main():
                     modes['num_reuses_s1'] = num_reuses[i]
                     modes['num_reuses_e1'] = num_reuses[i]
                     results = strat_instance.evaluate(**modes)
-                    cpf[i] = results[4]
+                    cpf[i] = results[4] * wyr_conversion
                 plt.subplot(1, 2, 1)
                 plt.semilogx(num_reuses, cpf, color=color)
 
@@ -58,7 +59,7 @@ def main():
                     # strat_instance.cost_model.vehicle_prod_nums_list = \
                         # list(range(modes['launch_rate'] * 2, modes['launch_rate'] * 3))
                     results = strat_instance.evaluate(**modes)
-                    cpf[i] = results[4]
+                    cpf[i] = results[4] * wyr_conversion
                 plt.subplot(1, 2, 2)
                 plt.semilogx(num_reuses, cpf, color=color, label=label)
 
@@ -71,25 +72,34 @@ def main():
                          + '\nstage 1: {:s} {:s} tech.,'.format(tech_1.fuel, tech_1.cycle)
                          + ' stage 2: {:s} {:s} tech.'.format(tech_2.fuel, tech_2.cycle))
 
-            plt.subplot(1, 2, 1)
-            plt.title('No effect on launch rate')
-
-            plt.subplot(1, 2, 2)
-            plt.title('Reuse increases launch rate')
-
             for i in [1, 2]:
                 plt.subplot(1, 2, i)
-                plt.axhline(y=np.percentile(expd_results['cost_per_flight'], 50), color='grey')
-                plt.axhspan(ymin=np.percentile(expd_results['cost_per_flight'], 10),
-                            ymax=np.percentile(expd_results['cost_per_flight'], 90),
+                plt.axhline(y=np.percentile(expd_results['cost_per_flight'], 50) * wyr_conversion, color='grey')
+                plt.axhspan(ymin=np.percentile(expd_results['cost_per_flight'], 10) * wyr_conversion,
+                            ymax=np.percentile(expd_results['cost_per_flight'], 90) * wyr_conversion,
                             color='grey', alpha=0.5)
                 plt.xlabel('Number of uses of 1st stage [-]')
-                plt.ylabel('Cost per flight [WYr]')
-                plt.ylim([0, plt.ylim()[1]])
+                plt.ylabel('Cost per flight [Million US Dollars in 2018]')
+                
+                plt.ylim(0, plt.ylim()[1])
                 plt.legend()
                 plt.grid(True, which='major')
                 plt.grid(True, which='minor', color=[0.8]*3)
                 plt.xlim(1, 100)
+
+            plt.subplot(1, 2, 1)
+            plt.title('No effect on launch rate')
+            ax3 = ax1.twinx()
+            ax3.set_ylabel('Cost per flight [WYr]')
+            # ax3.grid(False)
+            ax3.set_ylim(0, ax1.get_ylim()[1]/wyr_conversion)
+
+            plt.subplot(1, 2, 2)
+            plt.title('Reuse increases launch rate')
+            # ax4 = ax1.twinx()
+            ax3.set_ylabel('Cost per flight [WYr]')
+            # ax4.grid(False)
+            ax3.set_ylim(0, ax1.get_ylim()[1]/wyr_conversion)
 
             plt.tight_layout()
             plt.subplots_adjust(top=0.85)

@@ -937,9 +937,9 @@ def demo():
     data=price_per_flight.multiply(wyr_conversion)
     ax = sns.violinplot(data=data)
     ax.set_ylim(0, 450)
-    ax.set_ylabel('Price [Million US Dollars in 2018]')
+    ax.set_ylabel('Price per flight [Million US Dollars in 2018]')
 
-    plt.title('Price per flight')
+    plt.title('Price distributions for LEO mission, 10.0 Mg payload \n stage 1: kerosene gas generator tech., stage 2: kerosene gas generator tech.')
     plt.xlabel('Launch vehicle')
 
     plt.scatter(0, 314*wyr_conversion, s=50, color='red', zorder=10) # atlas
@@ -948,7 +948,7 @@ def demo():
     plt.scatter(2, 460*wyr_conversion, s=50, color='red', zorder=10) # delta, astronautix, 133million in 2004
 
     ax1 = ax.twinx()
-    ax1.set_ylabel('Price [WYr]')
+    ax1.set_ylabel('Price per flight [WYr]')
     ax1.set_ylim(0, 450/wyr_conversion)
     ax1.grid(False)
 
