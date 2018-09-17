@@ -35,13 +35,13 @@ In order to evaluate the cost per flight distributions for various first stage r
 \begin{figure}[hbt!]
     \centering
     \includegraphics[width=\textwidth]{../../lvreuse/analysis/combined/plots/strategy_cost_LEO_kerosene_pld10000}
-    \caption{\label{fig:strategy_cost_LEO_kerosene_pld10000} Distributions of cost per flight for various first stage recovery strategies to LEO with kerosene technology.}
+    \caption{\label{fig:strategy_cost_LEO_kerosene_pld10000} Cost per flight distributions for various first stage reuse strategies, assuming kerosene technology and carrying a 10 ton payload to LEO. Note that downrange propulsive landing and downrange parachute recovery have the lowest expected costs, and that the cost of winged strategies is highly uncertain.}
 \end{figure}
 
 \begin{figure}[hbt!]
     \centering
     \includegraphics[width=\textwidth]{../../lvreuse/analysis/combined/plots/strategy_cost_LEO_H2_pld10000}
-    \caption{\label{fig:strategy_cost_LEO_H2_pld10000} Distributions of cost per flight for various first stage recovery strategies to LEO with hydrogen technology.}
+    \caption{\label{fig:strategy_cost_LEO_H2_pld10000} Cost per flight distributions for various first stage reuse strategies, assuming hydrogen technology and carrying a 10 ton payload to LEO. The distributions are similar to those for kerosene, although the expected costs are slightly higher.}
 \end{figure}
 
 The downrange propulsive landing and parachute strategies for full first stage recovery show very similar distributions with the lowest cost per flight distributions among all the strategies. However, as mentioned previously, parachute recovery of the full first stage is not very feasible for large vehicles. Therefore downrange propulsive landing is the most effective strategy for achieving the lowest cost per flight. 
@@ -60,16 +60,12 @@ Additionally, partial reuse strategies do not seem to yield substantial cost per
 % Maybe include some GTO stuff here if there is room.
 
 \subsection{Effect of number of reuses and launch rate}
-stack plot with reuse sweep- show why cost declines with number of reuses
-cpf vs. reuse plot with varying launch rate curves - shows significant decrease in cost with increasing launch rate for low launch rates
-cpf vs. reuse plot for different strategies 
-
 In order to look at the breakdown of costs for a launch vehicle with a reusable first stage, we consider a point cost estimate to demonstrate general trends. The following example evaluates a two stage launch vehicle carrying a 10,000 kg payload to LEO using kerosene and liquid oxygen propellants at a launch rate of 15 launches per year. We consider the case of a propulsive downrange landing to recover and reuse the entire first stage. The cost per flight is determined over a range of number of first stage uses. The results of this analysis are shown in Figure \ref{fig:cpf_stackplot_reuses_sweep}.
 
 \begin{figure}[hbt!]
     \centering
     \includegraphics[width=\textwidth]{../../lvreuse/analysis/combined/plots/cpf_stackplot_reuses_sweep}
-    \caption{\label{fig:cpf_stackplot_reuses_sweep} Cost per flight breakdown for a range of number of first stage uses for LEO mission with kerosene technology.}
+    \caption{\label{fig:cpf_stackplot_reuses_sweep} A sweep of cost per flight vs number of first stage reuses for an example downrange propulsive landing strategy. Stage 1 production cost per flight declines as the first stage is reused more times. Refurbishment costs make up a small fraction of the cost per flight, but increase with increasing number of reuses.}
 \end{figure}
 
 Several things should be noticed from the results in Figure \ref{fig:cpf_stackplot_reuses_sweep}. First, the stage one productions costs per flight decrease dramatically as we increase the number of first stage reuses. This result is very intuitive -- as the cost of first stage production is spread over a larger number of flights, the per flight amortization share of the first stage production cost decreases. This leads to a reduction in the cost per flight. However, this trend of decreasing amortization share of first stage production costs is opposed by the refurbishment cost trends. As the number of first stage uses increases, the refurbishment cost per flight also increases. This is due to the fact that more components on the first stage will need inspected or replaced  as the number of reuses increases. 
@@ -81,7 +77,7 @@ The cost per flight is also affected by the annual launch rate. Although most co
 \begin{figure}[hbt!]
     \centering
     \includegraphics[width=\textwidth]{../../lvreuse/analysis/combined/plots/cpf_reuses_sweep_vary_launch_rate}
-    \caption{\label{fig:cpf_reuses_sweep_vary_launch_rate} Cost per flight for a range of number of first stage uses for LEO mission with kerosene technology. Cost per flight trends decrease as launch rate increases.}
+    \caption{\label{fig:cpf_reuses_sweep_vary_launch_rate} The cost per flight vs. number of reuses sweep repeated at several launch rates. Increasing launch rate decreases cost per flight (primarily through lower operational costs) but the benefits diminish past about 20 launches/year.}
 \end{figure}
 
 As expected, Figure \ref{fig:cpf_reuses_sweep_vary_launch_rate} shows that the cost per flight is higher at lower launch rates, regardless of the number of first stage reuses. For low launch rates, we see a substantial decrease in the cost per flight for only a modest increase in launch rate. However, for high launch rates, further increases in launch rate do not have a large effect on the cost per flight. For instance, we see a large difference in cost per flight by increasing the launch rate from 3 to 5 launches per year. However, increasing the launch rate from 20 to 40 launches per year yields only minimal cost per flight reductions. 
@@ -93,12 +89,12 @@ We next consider some of these cost per flight trends for various first stage re
   \item First stage reuse allows the launch rate to increase beyond the first stage production rate. For illustration, we assume that the first stage production rate is 15 stages per year, and that in this case the launch rate is $min(15 * n_{reuse}, 50)$
 \end{itemize}
 
-For all strategies, we see a decrease in the cost per flight as the number of first stage uses increases. This result is not surprising -- increasing the launch rate decreases the operations cost per flight. It is interesting though to compare the strategy cost per flight trends with the cost of an expendable vehicle. For the strategies considered in Figure \ref{fig:num_reuse_sweep_LEO_kerosene}, all but the partial parachute recovery strategy show costs per flight below the 10th percentile of expendable cost per flight estimates for a certain minimum number of reuses. With partial parachute recovery, the high-value hardware reuse savings do not compensate for the additional costs of producing and operating a reusable vehicle. However, the other strategies show potential for significant cost per flight savings with a high enough number of first stage reuses. 
+For all strategies, we see a decrease in the cost per flight as the number of first stage uses increases. This result is not surprising -- increasing the launch rate decreases the operations cost per flight. It is interesting though to compare the strategy cost per flight trends with the cost of an expendable vehicle. For the strategies considered in Figure \ref{fig:num_reuse_sweep_LEO_kerosene}, all but the partial parachute recovery strategy show costs per flight below the 10th percentile of expendable cost per flight estimates above a certain number of reuses. With partial parachute recovery, the high-value hardware reuse savings do not compensate for the additional costs of producing and operating a reusable vehicle. However, the other strategies show potential for significant cost per flight savings with a high enough number of first stage reuses. 
 
 \begin{figure}[hbt!]
     \centering
     \includegraphics[width=\textwidth]{../../lvreuse/analysis/combined/plots/num_reuse_sweep_LEO_kerosene}
-    \caption{\label{fig:num_reuse_sweep_LEO_kerosene} Cost per flight for a range of number of first stage uses for LEO mission with kerosene technology. The gray bar depicts the 10th to 90th percentile cost per flight estimates for an expendable vehicle.}
+    \caption{\label{fig:num_reuse_sweep_LEO_kerosene} The cost per flight vs. number of reuses sweep, repeated for various reuse strategies. For comparison, the grey bar shows the expendable cost distribution's \nth{10} to \nth{90} percentiles.}
 \end{figure}
 
 \subsection{Effect of launch vehicle size}
@@ -110,7 +106,7 @@ Let's consider the case of a small 100 kg payload to LEO. As can be seen in Figu
 \begin{figure}[hbt!]
     \centering
     \includegraphics[width=\textwidth]{../../lvreuse/analysis/combined/plots/cpf_stackplot_reuses_sweep_small_sat}
-    \caption{\label{fig:cpf_stackplot_reuses_sweep_small_sat} Cost per flight breakdown for a range of number of first stage vehicle uses for a small payload to LEO with kerosene technology.}
+    \caption{\label{fig:cpf_stackplot_reuses_sweep_small_sat} The cost per flight of a small launcher (100 kg payload) is expected to be dominated by operations costs, and does not decline meaningfully with first stage reuse.}
 \end{figure}
 
 We next consider the cost per kilogram payload per flight over a range of payload masses, as given in Figure \ref{fig:m_payload_sweep_LEO_kerosene}. This plot reveals a trend of decreasing cost per kilogram payload per flight as payload mass -- and therefore vehicle size -- increases. More interesting though is that the spread between the estimates of cost per kilogram payload per flight increases with increasing payload mass and launch vehicle size. 
@@ -120,7 +116,7 @@ As previously discussed, the cost per flight for small vehicles is not dominated
 \begin{figure}[hbt!]
     \centering
     \includegraphics[width=\textwidth]{../../lvreuse/analysis/combined/plots/m_payload_sweep_LEO_kerosene}
-    \caption{\label{fig:m_payload_sweep_LEO_kerosene} Cost per flight per unit payload mass for a range of payload masses to LEO with kerosene technology. Point estimates at decade markers are shifted slightly to avoid overlap.}
+    \caption{\label{fig:m_payload_sweep_LEO_kerosene} As payload mass increases, the cost/mass spread between reuse strategies widens. The error bars on each point show the \nth{10} to \nth{90} percentiles of the cost/mass estimate. The points are "jittered" on the x-axis for visual clarity.}
 \end{figure}
 
 \subsection{Paying off development costs}
@@ -136,7 +132,7 @@ In order for a strategy to be economically viable, the present value of the savi
 \begin{figure}[hbt!]
     \centering
     \includegraphics[width=\textwidth]{reuse_npv}
-    \caption{\label{fig:reuse_npv} Present value of reuse savings for a range of cost per flight ratios at selected launch rates. Credible ranges of development costs and cost per flight ratios are highlighted.}
+    \caption{\label{fig:reuse_npv} The present value of the cost savings from reuse is higher at higher launch rates.}
 \end{figure}
 
 \bibliography{first_stage_recovery}
