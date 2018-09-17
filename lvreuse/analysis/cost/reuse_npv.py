@@ -9,6 +9,8 @@ def main():
     # (cost per flight w/ 1st stage reuse)
     # / (cost per flight of all-expendable launch vehicle)
     # [units: dimensionless].
+    fontsize = 17
+
     cpf_ratio = np.linspace(0, 1)
 
     # Launch rate [units: year**-1].
@@ -24,6 +26,7 @@ def main():
     # [units: multiples of (cost per flight of all-expendable launch vehicle)]
     pres_val = np.zeros(len(cpf_ratio))
 
+    plt.figure(figsize=(8,6))
     for launch_rate in launch_rates:
         # Discount rate per "payment period", i.e. per
         # interval between launches.
@@ -53,15 +56,17 @@ def main():
 
     plt.xlim([0, 1])
     plt.ylim([0, 100])
-    plt.xlabel('Cost p.f. w/ 1st stage reuse / cost p.f. expendable [-]')
-    plt.ylabel('Present value of savings / cost p.f. expendable [-]')
+    plt.xticks(fontsize=0.8*fontsize)
+    plt.yticks(fontsize=0.8*fontsize)
+    plt.xlabel('Cost p.f. w/ 1st stage reuse / cost p.f. expendable [-]', fontsize=fontsize)
+    plt.ylabel('Present value of savings / cost p.f. expendable [-]', fontsize=fontsize)
     plt.title('Present value of reuse cost per flight savings'
               + '\n {:.0f} %/year discount rate, {:.0f} year horizon'.format(
-                  discount_rate_annual * 100, horizon))
+                  discount_rate_annual * 100, horizon), fontsize=fontsize)
     plt.tight_layout()
     plt.savefig(os.path.join('plots', 'reuse_npv.png'), dpi=200)
 
-    plt.legend(title='Launch rate / year')
+    plt.legend(title='Launch rate / year', fontsize=0.8*fontsize)
     plt.show()
 
 if __name__ == '__main__':

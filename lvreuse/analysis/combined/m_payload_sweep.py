@@ -8,6 +8,7 @@ from lvreuse.analysis.combined import strategy_models
 from lvreuse.data import missions
 from lvreuse.analysis.cost.strategy_cost_models import wyr_conversion
 
+fontsize = 17
 
 def get_mode_values(uncerts):
     modes = {}
@@ -30,7 +31,7 @@ def main():
     jitters = np.logspace(-0.05, 0.05, len(strats))
     m_payload = np.array([100, 1e3, 10e3, 100e3])
 
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(10, 8))
     ax = plt.subplot(1, 1, 1)
     ax.set_xscale('log')
     ax.set_yscale('log')
@@ -65,18 +66,20 @@ def main():
 
     plt.suptitle('Cost/mass vs. payload capacity for {:s} mission'.format(mission_default.name)
                  + '\nstage 1: {:s} {:s} tech.,'.format(tech_1.fuel, tech_1.cycle)
-                 + ' stage 2: {:s} {:s} tech.'.format(tech_2.fuel, tech_2.cycle))
+                 + ' stage 2: {:s} {:s} tech.'.format(tech_2.fuel, tech_2.cycle), fontsize=fontsize)
 
-    plt.xlabel('Max. payload mass [Mg]')
-    ax.set_ylabel('Cost per flight / payload mass [Million US Dollars in 2018 kg^-1]')
-    plt.legend()
+    plt.xlabel('Max. payload mass [Mg]', fontsize=fontsize)
+    ax.set_ylabel('Cost per flight / payload mass \n [Million US Dollars in 2018 kg^-1]', fontsize=fontsize)
+    ax.tick_params(axis='both', labelsize=0.7*fontsize)
+    plt.legend(fontsize=0.8*fontsize, loc=3)
     plt.grid(True, which='major')
     plt.grid(True, which='minor', color=[0.8]*3)
 
     ax1 = ax.twinx()
-    ax1.set_ylabel('Cost per flight / payload mass [WYr kg^-1]')
+    ax1.set_ylabel('Cost per flight / payload mass [WYr kg^-1]', fontsize=fontsize)
     ax1.set_yscale('log') # , nonposy='clip')
     ax1.set_ylim(ax.get_ylim()[0]/wyr_conversion, ax.get_ylim()[1]/wyr_conversion)
+    ax1.tick_params(axis='y', labelsize=0.8*fontsize)
     ax1.grid(False)
 
     plt.tight_layout()
