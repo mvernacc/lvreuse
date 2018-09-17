@@ -53,7 +53,7 @@ Reduction of launch costs and increase of launch rates are essential for increas
 
 Dating back to von Braun, launch vehicle reusability has been proposed as a means to reduce costs and increase launch rate \cite{vonBraun52}. The essential argument has been that the high costs of launch are driven by the difficulty of producing and testing rocket hardware. Reuse would enable this cost to be spread over many flights, thereby reducing the cost per flight. Some proposals have also argued that a reusable vehicle could streamline launch operations, reducing operational costs as well \cite{Butrica03}.
 
-However, fully reusable launch vehicles have yet to be achieved, and are difficult to develop. Several efforts have been abandoned during development (e.g. U.S. National Aerospace Plane, X-33, Delta Clipper) or de-scoped to a partially reusable system (U.S. Space Shuttle). These concepts often relied on advanced (i.e. low TRL) propulsion or structural technologies, which made development difficult and expensive.
+However, fully reusable launch vehicles have yet to be achieved, and are difficult to develop. Several efforts have been abandoned during development (e.g. U.S. National Aerospace Plane, X-33, Delta Clipper) or de-scoped to a partially reusable system (U.S. Space Shuttle). These concepts often relied on advanced (i.e. low technology readiness level) propulsion or structural technologies, which made development difficult and expensive.
 
 Partial reuse of multi-stage launch vehicles is a more viable step towards cost reductions in the near term. Recovering and reusing the first stage, or part of the first stage, is considerably easier than recovering upper stages. Further, the first stage typically embodies the majority of the launch vehicle production cost. Reusing only the first stage (or part thereof) captures most of the potential economic benefit of reusability at a lower level of technical difficulty. Thus, first stage reuse is gaining considerable traction in the launch industry: SpaceX's Falcon 9 often operates with a reusable first stage, and at least three other orbital launch vehicles with first stage reuse are under serious development (Blue Origin's New Glenn, ULA's Vulcan/SMART, and Boeing's XS-1 Phantom Express).
 
@@ -300,8 +300,6 @@ A brief summary of the input parameter distributions is given below; more detail
 
 We estimate $H$ by examining the mass breakdowns of detailed design studies for some types of reusable boosters \cite{Healy1998, Isakowitz2004, Sippel2003, Hellman2005}, and by analogy to the mass breakdowns of other aerospace vehicles. The resulting estimates are summarized in Table \ref{tab:hardware_factor_distributions}.
 
-% TODO fix table
-
 \begin{table}[H]
     \centering
     \caption{\label{tab:hardware_factor_distributions} Uncertainty distribution parameters of the recovery hardware factor $H$. $H$ can run from 0 to 1, higher values of $H$ indicate that more recovery hardware is needed.}
@@ -318,7 +316,7 @@ We estimate $H$ by examining the mass breakdowns of detailed design studies for 
     \hline
     Parachutes & 0.050 & 0.065 & 0.080 \\
     Parachutes and & 0.150 & 0.170 & 0.190 \\
-    inflatable heat shield & & & \\
+    \quad inflatable heat shield & & & \\
     \hline
     \end{tabular}
 \end{table}
@@ -388,9 +386,9 @@ The TRANSCOST model considers three separate cost areas for launch vehicles: dev
     \caption{\label{fig:expendable_cost_breakdown} Cost per flight breakdown for two stage fully expendable vehicle.}
 \end{figure}
 
-It is interesting to look at the breakdown of costs in the cost per flight of a launch vehicle. Consider a two stage fully expendable launch vehicle utilizing kerosene and liquid oxygen propellants to carry a 10,000 kg payload to LEO. The cost per flight breakdown for such a launch vehicle can be seen in Figure \ref{fig:expendable_cost_breakdown}. 
+It is interesting to look at the breakdown of costs in the cost per flight of a typical launch vehicle. Consider a two stage fully expendable launch vehicle utilizing kerosene and liquid oxygen propellants to carry a 10 Mg payload to LEO. The cost per flight breakdown for such a launch vehicle can be seen in Figure \ref{fig:expendable_cost_breakdown}. 
 
-For this launch strategy -- and similarly for most fully expendable launch vehicle strategies -- the cost per flight is dominated by the first stage production costs. These large first stage production costs motivate strategies for first stage reusability, which would allow the first stage production cost to be amortized over a number of flights, therefore potentially reducing the total cost per flight. 
+For this launch strategy -- and similarly for most fully expendable launch vehicle strategies -- the cost per flight is dominated by the first stage production costs. These large first stage production costs motivate first stage reusability, which would allow the first stage production cost to be amortized over a number of flights, therefore potentially reducing the total cost per flight. 
 
 \subsection{Validation of Cost Model}
 
@@ -404,10 +402,10 @@ In order to validate the TRANSCOST model, the prices per flight for several curr
 
 It should be noted that the TRANSCOST model as published only gives point estimates of launch vehicle costs, and provides no quantification for uncertainty in the model itself. The coefficients $a$ and $x$ in the element cost estimation relationships $C = a M^x$ are simply derived by curve fitting to historical reference data. In order to account for cost model uncertainty, we refit the reference data to the element CERs, extracting confidence bounds for each CER coefficient so that we can establish uncertainty distributions to sample. 
 
-Four launch vehicles were used to evaluate the TRANSCOST model: Atlas V 401, Ariane 5G, Delta IV Medium (4,0), and Falcon 9 Block 3. The price per flight estimates for each were evaluated, including production costs, operations costs, and nominal profit, excluding any development amortization charges. The results, along with available price per flight data, are shown as a violin plot in Figure \ref{fig:vehicle_ppf_validation} \cite{ULARocketBuilder, FlightGlobalArianespace, GAO2017, SpaceXCapabilities}. 
+Four launch vehicles were used to validate the TRANSCOST model: Atlas V 401, Ariane 5G, Delta IV Medium (4,0), and Falcon 9 Block 3. The price per flight estimates for each were evaluated, including production costs, operations costs, and nominal profit, excluding any development amortization charges. The results, along with available price per flight data, are shown as a violin plot in Figure \ref{fig:vehicle_ppf_validation} \cite{ULARocketBuilder, FlightGlobalArianespace, GAO2017, SpaceXCapabilities}. 
 
 
-The price estimate distributions for these four vehicles are all reasonable, capturing the actual price per flight near the mode of the distribution. The distribution for Falcon 9 is predictably lower than the others, accounting for its high launch rate and SpaceX's lean manufacturing practices with minimal overhead costs. We see a slightly broader distribution of costs for the Delta IV launch vehicle, likely due to a few reasons. First, its use of the modern RS-68 engine on the first stage -- which has few similar reference projects for fitting of historical data -- requires a relatively broad confidence interval to characterize the CER coefficients. Second, the sensitivity of the launch vehicle costs to its learning factor is larger since the Delta IV is earlier in its program life than the other launch vehicles. These estimates lend credibility to the cost per flight estimates for the various first stage reuse strategies to be shown. 
+The price estimate distributions for these four vehicles are all reasonable, capturing the actual price per flight near the mode of the distribution. The distribution for Falcon 9 is predictably lower than the others, accounting for its high launch rate and SpaceX's lean manufacturing practices with minimal overhead costs. We see a slightly broader distribution of costs for the Delta IV launch vehicle, likely due to a few reasons. First, its use of the modern RS-68 engine on the first stage -- which has few similar reference projects for fitting of historical data -- requires a relatively broad confidence interval to characterize the CER coefficients. Second, the sensitivity of the launch vehicle costs to its learning factor is larger since the Delta IV is earlier in its program life than the other launch vehicles. These estimates lend credibility to the cost per flight estimate process, which is used to assess  the cost savings of first stage reuse in the next section.
 
 \section{Discussion}
 
@@ -419,13 +417,20 @@ The discussion is organized as follows: the first subsection shows the distribut
 
 \subsection{Strategy cost-per-flight estimates}
 
-In order to evaluate the cost per flight distributions for various first stage reuse strategies, we again perform a Monte Carlo analysis. This is implemented by evaluating the performance and cost models in sequence, sampling from generic distributions of model input parameters. For a given payload, we first evaluate the required masses of the launch vehicle elements for different reuse strategies using the performance model. Then, those resulting masses are used with the cost model to evaluate the cost per flight of the launch vehicles for each reuse strategy. Some of these cost per flight distributions are shown in Figure \ref{fig:strategy_cost_LEO_kerosene_pld10000}. 
+In order to evaluate the cost per flight distributions for various first stage reuse strategies, we again perform a Monte Carlo analysis. This is implemented by evaluating the performance and cost models in sequence, sampling from generic distributions of model input parameters. For a given payload, we first evaluate the required masses of the launch vehicle elements for different reuse strategies using the performance model. Then, those resulting masses are used with the cost model to evaluate the cost per flight of the launch vehicles for each reuse strategy. Some of these cost per flight distributions are shown in Figures \ref{fig:strategy_cost_kerosene} and \ref{fig:strategy_cost_LEO_H2}. 
 
 \begin{figure*}
     \centering
-    \includegraphics[width=\textwidth]{../../lvreuse/analysis/combined/plots/strategy_cost_LEO_kerosene_pld10000}
-        \includegraphics[width=\textwidth]{../../lvreuse/analysis/combined/plots/strategy_cost_LEO_H2_pld10000}
-    \caption{\label{fig:strategy_cost_LEO_kerosene_pld10000} Cost per flight distributions for various first stage reuse strategies for kerosene and hydrogen technologies, carrying a 10 ton payload to LEO. Note that downrange propulsive landing and downrange parachute recovery have the lowest expected costs, and that the cost of winged strategies is highly uncertain.}
+    \includegraphics[width=\textwidth]{strategy_cost_annotated/LEO_kero}
+     \includegraphics[width=\textwidth]{strategy_cost_annotated/GTO_kero}
+    \caption{\label{fig:strategy_cost_kerosene} Cost per flight distributions for various first stage reuse strategies for kerosene technology, carrying a 10 ton payload to LEO or GTO. Note that downrange propulsive landing and downrange parachute recovery have the lowest expected costs, and that the cost of winged strategies is highly uncertain.}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\textwidth]{strategy_cost_annotated/LEO_H2}
+     \includegraphics[width=\textwidth]{strategy_cost_annotated/GTO_H2}
+    \caption{\label{fig:strategy_cost_LEO_H2} Cost per flight distributions for various first stage reuse strategies for hydrogen technology, carrying a 10 ton payload to LEO or GTO.}
 \end{figure*}
 
 The downrange propulsive landing and parachute strategies for full first stage recovery show very similar distributions with the lowest cost per flight distributions among all the strategies. However, as mentioned previously, parachute recovery of the full first stage is not very feasible for large vehicles. Therefore downrange propulsive landing is the most effective strategy for achieving the lowest cost per flight. 
@@ -470,7 +475,7 @@ We next consider some of these cost per flight trends for various first stage re
 
 \begin{figure*}
     \centering
-    \includegraphics[width=\textwidth]{../../lvreuse/analysis/combined/plots/num_reuse_sweep_LEO_kerosene}
+    \includegraphics[width=\textwidth]{n_reuse_sweep_LEO_kerosene_annotated}
     \caption{\label{fig:num_reuse_sweep_LEO_kerosene} The cost per flight vs. number of reuses sweep, repeated for various reuse strategies. For comparison, the grey bar shows the expendable cost distribution's \nth{10} to \nth{90} percentiles.}
 \end{figure*}
 
@@ -497,13 +502,14 @@ We next consider the cost per kilogram payload per flight over a range of payloa
     \caption{\label{fig:cpf_stackplot_reuses_sweep_small_sat} The cost per flight of a small launcher (100 kg payload) is expected to be dominated by operations costs, and does not decline meaningfully with first stage reuse.}
 \end{figure}
 
+
+As previously discussed, the cost per flight for small vehicles is not dominated by vehicle hardware costs. Even though there are differences in payload mass fractions (see Figures \ref{fig:strategy_perf_kerosene} and \ref{fig:strategy_perf_H2}) between strategies, these differences are relatively inconsequential in estimating cost per flight for small vehicles since hardware mass was not a strong cost driver anyway. However, for increasing payload vehicle size, hardware costs make up a larger fraction of the cost per flight. Therefore, as the vehicle size increases, we see the cost per flight per mass payload estimates for the different reuse strategies diverge as differences in payload performance become more important in determining costs. 
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{../../lvreuse/analysis/combined/plots/m_payload_sweep_LEO_kerosene}
+    \includegraphics[width=0.5\textwidth]{m_payload_sweep_LEO_kerosene_annotated}
     \caption{\label{fig:m_payload_sweep_LEO_kerosene} As payload mass increases, the cost/mass spread between reuse strategies widens. The error bars on each point show the \nth{10} to \nth{90} percentiles of the cost/mass estimate. The points are "jittered" on the x-axis for visual clarity.}
 \end{figure}
-
-As previously discussed, the cost per flight for small vehicles is not dominated by vehicle hardware costs. Even though there are differences in payload mass fractions (TODO ref performance section/violin plots) between strategies, these differences are relatively inconsequential in estimating cost per flight for small vehicles since hardware mass was not a strong cost driver anyway. However, for increasing payload vehicle size, hardware costs make up a larger fraction of the cost per flight. Therefore, as the vehicle size increases, we see the cost per flight per mass payload estimates for the different reuse strategies diverge as differences in payload performance become more important in determining costs. 
 
 \subsection{Paying off development costs}
 
@@ -511,13 +517,13 @@ In our models and discussion so far, we have yet to consider the development cos
 
 We address this question by comparing the present value of the savings brought by reusability to the reusable vehicle development costs. In Figure \ref{fig:reuse_npv}, we evaluate the present value of the savings for different launch rates over a range of cost per flight ratios, or the ratio between the cost per flight of a vehicle with first stage reuse and the cost per flight of an expendable vehicle. Credible ranges of development costs and cost per flight ratios are highlighted.
 
+The vehicle launch rate determines how quickly the cost per flight savings for reusability are accrued. With higher launch rates, savings are realized sooner, the present value of the savings is larger, and the investment in reuse development can be paid off faster. This is why we see steeper trends for the present value of savings with higher launch rates. 
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{reuse_npv}
     \caption{\label{fig:reuse_npv} The present value of the cost savings from reuse is higher at higher launch rates.}
 \end{figure}
-
-The vehicle launch rate determines how quickly the cost per flight savings for reusability are accrued. With higher launch rates, savings are realized sooner, the present value of the savings is larger, and the investment in reuse development can be paid off faster. This is why we see steeper trends for the present value of savings with higher launch rates. 
 
 In order for a strategy to be economically viable, the present value of the savings must exceed the vehicle's development costs. This seems unlikely for low launch rates -- savings will be realized slowly such that development costs will be greater than the present value of the savings. However, for high launch rates greater than 20 launches per year, first stage reusability appears economically viable. Increased launch rates both reduce the cost per flight and enable the development investment to be paid off sooner. This leads to a higher present value of reuse cost per flight savings, such that the development costs could feasibly be paid off.
 

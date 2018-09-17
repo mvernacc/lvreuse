@@ -8,7 +8,7 @@ from lvreuse.analysis.combined import strategy_models
 from lvreuse.data import missions
 from lvreuse.analysis.cost.strategy_cost_models import wyr_conversion
 
-fontsize = 17
+fontsize = 21
 
 def get_mode_values(uncerts):
     modes = {}
@@ -31,7 +31,7 @@ def main():
     jitters = np.logspace(-0.05, 0.05, len(strats))
     m_payload = np.array([100, 1e3, 10e3, 100e3])
 
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(10, 11))
     ax = plt.subplot(1, 1, 1)
     ax.set_xscale('log')
     ax.set_yscale('log')
@@ -66,7 +66,7 @@ def main():
 
     plt.suptitle('Cost/mass vs. payload capacity for {:s} mission'.format(mission_default.name)
                  + '\nstage 1: {:s} {:s} tech.,'.format(tech_1.fuel, tech_1.cycle)
-                 + ' stage 2: {:s} {:s} tech.'.format(tech_2.fuel, tech_2.cycle), fontsize=fontsize)
+                 + '\nstage 2: {:s} {:s} tech.'.format(tech_2.fuel, tech_2.cycle), fontsize=fontsize)
 
     plt.xlabel('Max. payload mass [Mg]', fontsize=fontsize)
     ax.set_ylabel('Cost per flight / payload mass \n [Million US Dollars in 2018 kg^-1]', fontsize=fontsize)
