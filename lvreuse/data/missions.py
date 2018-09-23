@@ -54,5 +54,6 @@ dv = 10.12 km/s + 1.65 km/s = 11.77 km/s
 """
 
 LEO_smallsat = Mission('LEO', 9.85e3, 100)
+LEO_heavy = Mission('LEO', 9.85e3, 100e3)
 LEO = Mission('LEO', 9.85e3, 10e3)
 GTO = Mission('GTO', 11.77e3, 10e3)
