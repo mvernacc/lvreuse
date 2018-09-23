@@ -9,7 +9,14 @@ def main():
     # (cost per flight w/ 1st stage reuse)
     # / (cost per flight of all-expendable launch vehicle)
     # [units: dimensionless].
-    fontsize = 17
+    
+    # Figure format switch - paper or presentation?
+
+    fig_format = 'presentation'
+    if fig_format == 'presentation':
+        fontsize = 14
+    if fig_format == 'paper':
+        fontsize = 17
 
     cpf_ratio = np.linspace(0, 1)
 
@@ -26,7 +33,7 @@ def main():
     # [units: multiples of (cost per flight of all-expendable launch vehicle)]
     pres_val = np.zeros(len(cpf_ratio))
 
-    plt.figure(figsize=(8,6))
+    plt.figure(figsize=(8, 6))
     for launch_rate in launch_rates:
         # Discount rate per "payment period", i.e. per
         # interval between launches.
@@ -43,7 +50,14 @@ def main():
         plt.plot(cpf_ratio, pres_val, label='{:.0f}'.format(launch_rate))
 
     # Highlight credible range of cpf ratio
-    plt.axvspan(xmin=0.33, xmax=1, color='green', alpha=0.1)
+    # These ranges were computed by lvreuse.analysis.combined.cost_ratio.py,
+    # https://github.mit.edu/mvernacc/1st-stage-return/blob/1d0a2a4421405421b4fb6cac9cb14ff232de4fd0/lvreuse/analysis/combined/cost_ratio.py
+    # For downrange propulsive landing, LEO mission, kerosene technology.
+    # For medium-heavy launch vehicles (10 to 100 Mg payload to LEO)
+    plt.axvspan(xmin=0.39, xmax=0.68, color='green', alpha=0.1)
+    # For small lauch vehicles (100 kg to LEO)
+    plt.axvspan(xmin=0.80, xmax=0.96, color='green', alpha=0.1)
+
     # Highlight credible range of dev costs
     # e.g. for a eelv-size vehicle, cpf is likely $50M, and
     # reusability development probably costs $400M to $3B
