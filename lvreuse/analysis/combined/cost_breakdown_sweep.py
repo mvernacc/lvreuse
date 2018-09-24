@@ -11,7 +11,7 @@ from num_reuse_sweep import get_mode_values
 
 def main():
 
-    fontsize = 22
+    fontsize = 20
 
     strat = strategy_models.PropulsiveDownrange
 
@@ -48,7 +48,7 @@ def main():
 
     labels = ['Stage 1 Production', 'Stage 2 Production', 'Vehicle Integration and Checkout',
               'Operations', 'Propellants', 'Refurbishment']
-    plt.figure(figsize=(10.5, 9))
+    plt.figure(figsize=(10.5, 12.5))
     ax = plt.subplot(1, 1, 1)
     plt.stackplot(num_reuses, s1_e1_prod_cost_per_flight*wyr_conversion, s2_e2_prod_cost_per_flight*wyr_conversion,
                   veh_int_checkout*wyr_conversion, ops_cost_per_flight*wyr_conversion - props_cost*wyr_conversion - 
@@ -62,7 +62,7 @@ def main():
     ax.set_ylim(0,60)
     ax.tick_params(axis='y', labelsize=0.8*fontsize)
     handles, labels = ax.get_legend_handles_labels()
-    ax.legend(handles[::-1], labels[::-1], fontsize=fontsize*0.85)
+    ax.legend(handles[::-1], labels[::-1], fontsize=fontsize)
     plt.xlim(1e0, 1e2)
 
     ax1 = ax.twinx()
@@ -70,6 +70,7 @@ def main():
     ax1.set_ylim(0, 60/wyr_conversion)
     ax1.tick_params(axis='y', labelsize=0.8*fontsize)
     ax1.grid(False)
+    plt.tight_layout()
 
     plt.savefig(os.path.join('plots', 'cpf_stackplot_reuses_sweep.png'))
 
@@ -79,7 +80,7 @@ def main():
     launch_rate = np.array([3, 5, 10, 20, 40])
     cpf = np.zeros((len(launch_rate),len(num_reuses)))
 
-    plt.figure(figsize=(10.5, 12))
+    plt.figure(figsize=(10.5, 12.5))
     ax = plt.subplot(1, 1, 1)
 
     for j in range(len(launch_rate)):
@@ -139,7 +140,7 @@ def main():
 
     labels = ['Stage 1 Production', 'Stage 2 Production', 'Vehicle Integration and Checkout',
               'Operations', 'Propellants', 'Refurbishment']
-    plt.figure(figsize=(10.5, 10.5))
+    plt.figure(figsize=(10.5, 12.5))
     ax = plt.subplot(1, 1, 1)
     plt.stackplot(launch_rate, s1_e1_prod_cost_per_flight*wyr_conversion, s2_e2_prod_cost_per_flight*wyr_conversion, 
                   veh_int_checkout*wyr_conversion, ops_cost_per_flight*wyr_conversion - props_cost*wyr_conversion - 
@@ -204,7 +205,7 @@ def main():
     plt.ylabel('Cost [Million US Dollars in 2018]', fontsize=fontsize)
     plt.title('Cost per flight breakdown vs. vehicle life \n LEO mission, 100 kg payload \n stage 1: kerosene gas generator tech., \nstage 2: kerosene gas generator tech', fontsize=fontsize)
     ax.set_xscale('log')
-    ax.set_ylim(0,12)
+    ax.set_ylim(0, 12)
     ax.tick_params(axis='both', labelsize=0.8*fontsize)
     handles, labels = ax.get_legend_handles_labels()
     ax.legend(handles[::-1], labels[::-1], fontsize=fontsize)
@@ -215,6 +216,8 @@ def main():
     ax1.set_ylim(0, 12/wyr_conversion)
     ax1.tick_params(axis='y', labelsize=0.85*fontsize)
     ax1.grid(False)
+    plt.tight_layout()
+
 
     plt.savefig(os.path.join('plots', 'cpf_stackplot_reuses_sweep_small_sat.png'))
 
