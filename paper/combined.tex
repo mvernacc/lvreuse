@@ -13,6 +13,8 @@
 \usepackage{multicol}
 \usepackage{float}
 \usepackage{array,makecell,booktabs}
+\usepackage{authblk}
+\usepackage{hyperref}
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
 \usepackage[super]{nth}
 \makesavenoteenv{tabular}
@@ -23,13 +25,17 @@
 
 \title{Strategies for reuse of Launch Vehicle First Stages}
 
-\author{Matthew T. Vernacchia \footnote{Research Assistant, Department of Aeronautics and Astronautics, 77 Massachusetts Avenue, AIAA Student Member.}
-and Kelly J. Mathesius  \footnote{Research Assistant, Department of Aeronautics and Astronautics, 77 Massachusetts Avenue, AIAA Student Member.}}
-\affil{Massachusetts Institute of Technology, Cambridge, MA, 02139}
+\author[1, 2, 3]{Matthew T. Vernacchia}
+\author[1, 2]{Kelly J. Mathesius}
 
+\affil[1]{Department of Aeronautics and Astronautics, Massachusetts Institute of Technology, 77 Massachusetts Avenue, Cambridge, MA 02139}
+\affil[2]{Both authors contributed equally to this work.}
+\affil[3]{Corresponding author: \textup{\href{mvernacc@mit.edu}{mvernacc@mit.edu}}}
 
 \begin{document}
+
 \maketitle
+\saythanks
 
 \begin{abstract}
 Many strategies have been proposed for recovery and reuse of launch vehicle first stages in an effort to reduce cost per flight and expand access to space. Although a reusable first stage has been operated (Falcon 9) and several others are under development, there is still much debate as to which first stage reuse strategy, if any, is economically worthwhile. To clarify the situation, an analysis was performed of the payload performance and cost of all major first stage recovery strategies, under common assumptions. The analyzed strategies include propulsive landing (downrange or at the launch site), winged stages (air-breathing fly-back to the launch site or downrange glider recovery), and engines-only recovery via parachutes.
