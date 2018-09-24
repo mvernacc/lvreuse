@@ -1,6 +1,7 @@
 import os.path
 
 from matplotlib import pyplot as plt
+import matplotlib.ticker
 import numpy as np
 
 from lvreuse.analysis.combined import strategy_models
@@ -12,6 +13,8 @@ from num_reuse_sweep import get_mode_values
 def main():
 
     fontsize = 20
+    fontsize_axes = 24
+    fontsize_ticks = 24
 
     strat = strategy_models.PropulsiveDownrange
 
@@ -55,20 +58,23 @@ def main():
                   refurb_cost*wyr_conversion, props_cost*wyr_conversion, refurb_cost*wyr_conversion, labels=labels)
     plt.xlabel('Number of 1st stage uses', fontsize=fontsize)
     plt.xticks(fontsize=fontsize)
-    plt.ylabel('Cost [Million US Dollars in 2018]', fontsize=fontsize)
+    plt.ylabel('Cost [Million US Dollars in 2018]', fontsize=fontsize_axes)
     plt.title('Cost per flight breakdown vs. vehicle life \n LEO mission, 10.0 Mg payload \n stage 1: kerosene gas generator tech., \nstage 2: kerosene gas generator tech', fontsize=fontsize)
     plt.yticks(fontsize=fontsize)
     ax.set_xscale('log')
-    ax.set_ylim(0,60)
-    ax.tick_params(axis='y', labelsize=0.8*fontsize)
+    ax.set_ylim(0, 60)
+    ax.tick_params(axis='both', labelsize=fontsize_ticks)
     handles, labels = ax.get_legend_handles_labels()
     ax.legend(handles[::-1], labels[::-1], fontsize=fontsize)
     plt.xlim(1e0, 1e2)
+    # make x-axis not use exponential notation (exp. not. is de default for a log axis).
+    ax.get_xaxis().set_major_formatter(matplotlib.ticker.FormatStrFormatter('%.0f'))
+    ax.get_xaxis().set_minor_formatter(matplotlib.ticker.NullFormatter())
 
     ax1 = ax.twinx()
-    ax1.set_ylabel('Cost [WYr]', fontsize=fontsize)
+    ax1.set_ylabel('Cost [WYr]', fontsize=fontsize_axes)
     ax1.set_ylim(0, 60/wyr_conversion)
-    ax1.tick_params(axis='y', labelsize=0.8*fontsize)
+    ax1.tick_params(axis='y', labelsize=fontsize_ticks)
     ax1.grid(False)
     plt.tight_layout()
 
@@ -202,19 +208,22 @@ def main():
                   veh_int_checkout*wyr_conversion, ops_cost_per_flight*wyr_conversion - props_cost*wyr_conversion - 
                   refurb_cost*wyr_conversion, props_cost*wyr_conversion, refurb_cost*wyr_conversion, labels=labels)
     plt.xlabel('Number of 1st stage uses', fontsize=fontsize)
-    plt.ylabel('Cost [Million US Dollars in 2018]', fontsize=fontsize)
+    plt.ylabel('Cost [Million US Dollars in 2018]', fontsize=fontsize_axes)
     plt.title('Cost per flight breakdown vs. vehicle life \n LEO mission, 100 kg payload \n stage 1: kerosene gas generator tech., \nstage 2: kerosene gas generator tech', fontsize=fontsize)
     ax.set_xscale('log')
     ax.set_ylim(0, 12)
-    ax.tick_params(axis='both', labelsize=0.8*fontsize)
+    ax.tick_params(axis='both', labelsize=fontsize_ticks)
     handles, labels = ax.get_legend_handles_labels()
     ax.legend(handles[::-1], labels[::-1], fontsize=fontsize)
     plt.xlim(1e0, 1e2)
+    # make x-axis not use exponential notation (exp. not. is de default for a log axis).
+    ax.get_xaxis().set_major_formatter(matplotlib.ticker.FormatStrFormatter('%.0f'))
+    ax.get_xaxis().set_minor_formatter(matplotlib.ticker.NullFormatter())
 
     ax1 = ax.twinx()
-    ax1.set_ylabel('Cost [WYr]', fontsize=fontsize)
+    ax1.set_ylabel('Cost [WYr]', fontsize=fontsize_axes)
     ax1.set_ylim(0, 12/wyr_conversion)
-    ax1.tick_params(axis='y', labelsize=0.85*fontsize)
+    ax1.tick_params(axis='y', labelsize=fontsize_ticks)
     ax1.grid(False)
     plt.tight_layout()
 
