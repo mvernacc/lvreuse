@@ -1,4 +1,5 @@
 import os.path
+import argparse
 
 from matplotlib import pyplot as plt
 import numpy as np
@@ -9,15 +10,20 @@ from num_reuse_sweep import get_mode_values
 from lvreuse.analysis.cost.strategy_cost_models import wyr_conversion
 
 
-def main():
-        
+def main(fig_format):
+    """Make plots
+
+    Arguments:
+        fig_format (string):  Figure format switch - paper or presentation?
+    """
+
     mission = LEO
     strat = strategy_models.Expendable
 
     strat_instance = strat(strategy_models.kero_GG_boost_tech, strategy_models.kero_GG_upper_tech, mission)
     modes = get_mode_values(strat_instance.uncertainties)
 
-    fontsize = 17
+    
 
     results = strat_instance.evaluate(**modes)
     prod_cost_per_flight = results[2] * wyr_conversion
@@ -31,8 +37,18 @@ def main():
 
     width = 0.3
 
-    plt.figure(figsize=(10,5))
-    ax = plt.subplot(1,1,1)
+    if fig_format == 'paper':
+        plt.figure(figsize=(10, 5))
+        fontsize = 17
+        fontsize_ticks = 0.8 * fontsize
+    elif fig_format == 'presentation':
+        plt.figure(figsize=(16, 12.5))
+        fontsize = 24
+        fontsize_ticks = 24
+    else:
+        raise ValueError()
+
+    ax = plt.subplot(1, 1, 1)
 
     plt.bar(0, s1_e1_prod_cost_per_flight, width, align='edge', label='Stage 1 Production')
     plt.bar(0, s2_e2_prod_cost_per_flight, width, bottom=s1_e1_prod_cost_per_flight, align='edge', label='Stage 2 Production')
@@ -47,10 +63,13 @@ def main():
         top=False,         # ticks along the top edge are off
         labelbottom=False) # labels along the bottom edge are off 
 
-    plt.title('Cost per flight breakdown of expendable vehicle \n for LEO mission, 10.0 Mg payload \n stage 1: kerosene gas generator tech., \n stage 2: kerosene gas generator tech', loc='left', fontsize=fontsize)
+    if fig_format == 'paper':
+        plt.title('Cost per flight breakdown of expendable vehicle \n for LEO mission, 10.0 Mg payload \n stage 1: kerosene gas generator tech., \n stage 2: kerosene gas generator tech', loc='left', fontsize=fontsize)
     plt.ylabel('Cost [Million US Dollars in 2018]', fontsize=fontsize)
     plt.xlim(0, width)
     # ax.spines['right'].set_visible(False)
+    if fig_format == 'presentation':
+        plt.ylim([0, 60])
 
     ax1 = ax.twinx()
     ax1.set_ylabel('Cost [WYr]', fontsize=fontsize)
@@ -60,18 +79,28 @@ def main():
     ax.spines['top'].set_visible(False)
     ax1.spines['top'].set_visible(False)
 
-    plt.xticks(fontsize=0.8*fontsize)
-    plt.yticks(fontsize=0.8*fontsize)
-    ax1.tick_params(axis='y', labelsize=0.8*fontsize)
+    plt.xticks(fontsize=fontsize_ticks)
+    plt.yticks(fontsize=fontsize_ticks)
+    ax.tick_params(axis='y', labelsize=fontsize_ticks)
+    ax1.tick_params(axis='y', labelsize=fontsize_ticks)
 
     handles, labels = ax.get_legend_handles_labels()
-    ax.legend(handles=handles[::-1], labels=labels[::-1], loc='center left', bbox_to_anchor=(1.4, 0.5), fontsize=0.8*fontsize)
+    ax.legend(handles=handles[::-1], labels=labels[::-1], loc='center left', bbox_to_anchor=(1.4, 0.5), fontsize=fontsize)
 
     plt.tight_layout()
 
-    plt.savefig(os.path.join('plots', 'expendable_cost_breakdown.png'))
+    plt.savefig(os.path.join('plots',
+        'expendable_cost_breakdown_{:s}.png'.format(fig_format)))
 
     plt.show()
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Plot the cost breakdown of a typical expendable launch vehicle.')
+    parser.add_argument('--fig_format', type=str,
+                    default='presentation',
+                    help='Figure format switch - paper or presentation?')
+    args = parser.parse_args()
+    fig_format = args.fig_format
+    if fig_format == 'pres':
+        fig_format = 'presentation'
+    main(fig_format)
