@@ -152,6 +152,17 @@ reuse_cost_uncerts = [
     rdm.TriangularUncertainty('f5_e1', min_value=0.5e-2, mode_value=1e-2, max_value=3e-2),
     rdm.TriangularUncertainty('f5_s1', min_value=0.008e-2, mode_value=1e-2, max_value=2.3e-2),
 ]
+
+reuse_cost_sea_uncerts = [
+
+    rdm.TriangularUncertainty('num_reuses_e1', min_value=2, mode_value=4, max_value=6),
+    rdm.TriangularUncertainty('num_reuses_s1', min_value=2, mode_value=4, max_value=6),
+    rdm.TriangularUncertainty('f5_e1', min_value=0.5*28e-2, mode_value=28e-2, max_value=2*28e-2),
+    rdm.TriangularUncertainty('f5_s1', min_value=0.5*28e-2, mode_value=28e-2, max_value=2*28e-2),
+    # from Forcast International Space Shuttle Archived Report: NASA study said SRBs cost $25 million 
+    # to produce and $7 million to refurbish
+]
+
 reuse_cost_ab_uncerts = [
     rdm.TriangularUncertainty('num_reuses_ab', min_value=100, mode_value=700, max_value=1000),
     rdm.TriangularUncertainty('f5_ab', min_value=0.001e-2, mode_value=0.1e-2, max_value=0.5e-2),
@@ -802,7 +813,7 @@ class Parachute(StrategyNoPropulsion):
             dev_cost_unc_list=dev_cost_uncerts + dev_cost_stage_1_uncerts,
             )
         self.uncertainties += self.cost_model.uncertainties
-        self.uncertainties += reuse_cost_uncerts
+        self.uncertainties += reuse_cost_sea_uncerts
         self.setup_model()
 
 
