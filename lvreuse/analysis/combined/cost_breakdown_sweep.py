@@ -103,11 +103,15 @@ def main():
     #plt.xticks(fontsize=fontsize)
     plt.ylabel('Cost per flight [Million US Dollars in 2018]', fontsize=fontsize)
     labels = [str(i) for i in launch_rate]
-    plt.legend(labels=labels, title='Launch rate', fontsize=fontsize*0.85)
+    # plt.legend(labels=labels, title='Launch rate', fontsize=fontsize*0.85)
     plt.xlim(1e0, 1e2)
     plt.ylim(0, 75)
     ax.tick_params(axis='both', labelsize=0.8*fontsize)
-    plt.grid(True, which='both')
+    ax.grid(True, which='major')
+    ax.grid(True, which='minor', color=[0.9]*3)
+    # make x-axis not use exponential notation (exp. not. is de default for a log axis).
+    ax.get_xaxis().set_major_formatter(matplotlib.ticker.FormatStrFormatter('%.0f'))
+    ax.get_xaxis().set_minor_formatter(matplotlib.ticker.NullFormatter())
 
     ax1 = ax.twinx()
     ax1.set_ylabel('Cost per flight [WYr]', fontsize=fontsize)
