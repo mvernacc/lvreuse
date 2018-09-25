@@ -936,10 +936,10 @@ def demo():
     sns.set(style='whitegrid')
     data=price_per_flight.multiply(wyr_conversion)
     ax = sns.violinplot(data=data)
-    ax.set_ylim(0, 450)
+    ax.set_ylim(0, 400)
     ax.set_ylabel('Price per flight [Million US Dollars in 2018]')
 
-    plt.title('Price distributions for LEO mission, 10.0 Mg payload \n stage 1: kerosene gas generator tech., stage 2: kerosene gas generator tech.')
+    plt.title('Price estimates for some operational launch vehicles')
     plt.xlabel('Launch vehicle')
 
     plt.scatter(0, 314*wyr_conversion, s=50, color='red', zorder=10) # atlas
@@ -949,7 +949,7 @@ def demo():
 
     ax1 = ax.twinx()
     ax1.set_ylabel('Price per flight [WYr]')
-    ax1.set_ylim(0, 450/wyr_conversion)
+    ax1.set_ylim(0, ax.get_ylim()[1]/wyr_conversion)
     ax1.grid(False)
 
     legend_item = [Line2D([0], [0], marker='o', color='w', label='Actual price per flight',
