@@ -85,7 +85,7 @@ def main(fig_format):
     ax1.tick_params(axis='y', labelsize=fontsize_ticks)
 
     handles, labels = ax.get_legend_handles_labels()
-    ax.legend(handles=handles[::-1], labels=labels[::-1], loc='center left', bbox_to_anchor=(1.4, 0.5), fontsize=fontsize)
+    ax.legend(handles=handles[::-1], labels=labels[::-1], loc='center left', bbox_to_anchor=(1.4, 0.5), fontsize=0.87*fontsize)
 
     plt.tight_layout()
 
