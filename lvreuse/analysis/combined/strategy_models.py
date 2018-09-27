@@ -969,12 +969,12 @@ def demo():
             plt.ylim([0, plt.ylim()[1]])
 
             ax.set_xticklabels(xticks)
-            plt.xticks(rotation=30)
+            # plt.xticks(rotation=30)
 
             plt.axvline(x=0.5, color='grey')
-            plt.text(x=1, y=0.0, s='Launch site recovery')
+            # plt.text(x=1, y=0.0, s='Launch site recovery')
             plt.axvline(x=3.5, color='grey')
-            plt.text(x=4, y=0.0, s='Downrange recovery')
+            # plt.text(x=4, y=0.0, s='Downrange recovery')
 
             if (tech_1.fuel == 'kerosene' and tech_1.cycle == 'gas generator'
                 and tech_2.fuel == 'kerosene' and tech_2.cycle == 'gas generator'):
@@ -1020,11 +1020,11 @@ def demo():
             ax1.grid(False)
 
             ax.set_xticklabels(xticks)
-            plt.xticks(rotation=30)
+            # plt.xticks(rotation=30)
             plt.axvline(x=0.5, color='grey')
-            plt.text(x=1, y=0.0, s='Launch site recovery')
+            # plt.text(x=1, y=0.0, s='Launch site recovery')
             plt.axvline(x=3.5, color='grey')
-            plt.text(x=4, y=0.0, s='Downrange recovery')
+            # plt.text(x=4, y=0.0, s='Downrange recovery')
 
             plt.tight_layout()
             plt.savefig(os.path.join('plots', 'strategy_cost_{:s}_{:s}_pld{:.0f}.png'.format(
