@@ -51,7 +51,7 @@ def main():
 
     labels = ['Stage 1 Production', 'Stage 2 Production', 'Vehicle Integration and Checkout',
               'Operations', 'Propellants', 'Refurbishment']
-    plt.figure(figsize=(10.5, 12.5))
+    plt.figure(figsize=(10.5, 9.5))
     ax = plt.subplot(1, 1, 1)
     plt.stackplot(num_reuses, s1_e1_prod_cost_per_flight*wyr_conversion, s2_e2_prod_cost_per_flight*wyr_conversion,
                   veh_int_checkout*wyr_conversion, ops_cost_per_flight*wyr_conversion - props_cost*wyr_conversion - 
@@ -86,7 +86,7 @@ def main():
     launch_rate = np.array([3, 5, 10, 20, 40])
     cpf = np.zeros((len(launch_rate),len(num_reuses)))
 
-    plt.figure(figsize=(10.5, 12.5))
+    plt.figure(figsize=(10.5, 10.5))
     ax = plt.subplot(1, 1, 1)
 
     for j in range(len(launch_rate)):
@@ -150,7 +150,7 @@ def main():
 
     labels = ['Stage 1 Production', 'Stage 2 Production', 'Vehicle Integration and Checkout',
               'Operations', 'Propellants', 'Refurbishment']
-    plt.figure(figsize=(10.5, 12.5))
+    plt.figure(figsize=(10.5, 10.5))
     ax = plt.subplot(1, 1, 1)
     plt.stackplot(launch_rate, s1_e1_prod_cost_per_flight*wyr_conversion, s2_e2_prod_cost_per_flight*wyr_conversion, 
                   veh_int_checkout*wyr_conversion, ops_cost_per_flight*wyr_conversion - props_cost*wyr_conversion - 
@@ -206,7 +206,7 @@ def main():
 
     labels = ['Stage 1 Production', 'Stage 2 Production', 'Vehicle Integration and Checkout',
               'Operations', 'Propellants', 'Refurbishment']
-    plt.figure(figsize=(10.5, 12.5))
+    plt.figure(figsize=(10.5, 11))
     ax = plt.subplot(1, 1, 1)
     plt.stackplot(num_reuses, s1_e1_prod_cost_per_flight*wyr_conversion, s2_e2_prod_cost_per_flight*wyr_conversion,
                   veh_int_checkout*wyr_conversion, ops_cost_per_flight*wyr_conversion - props_cost*wyr_conversion - 
