@@ -29,7 +29,7 @@
 
 \affil[1]{Department of Aeronautics and Astronautics, Massachusetts Institute of Technology}
 \affil[2]{Both authors contributed equally to this work.}
-\affil[3]{Corresponding author: \textup{\href{mvernacc@mit.edu}{mvernacc@mit.edu}}}
+\affil[3]{Corresponding email: \textup{\href{mvernacc@mit.edu}{mvernacc@mit.edu}}}
 
 \begin{document}
 
@@ -58,33 +58,33 @@ This study finds that downrange, propulsive-landing recovery of the full first s
     \item $(L/D)$ - lift to drag ratio of a winged stage during fly-back cruise [dimensionless]
     \item $m_i$ - wet mass of the $i$-th stage [\si{kg}]
     \item $m_{inert,i}$ - inert mass of the $i$-th stage [\si{kg}]
-    \item $m_{hb,1}$ - Mass of baseline hardware, first stage [\si{kg}]
-    \item $m_{hr,1}$ - Mass of recovery hardware, first stage [\si{kg}]
-    \item $m_{hv,1}$ - Mass of valuable hardware to be recovered, first stage [\si{kg}]
+    \item $m_{hb,1}$ - mass of baseline hardware, first stage [\si{kg}]
+    \item $m_{hr,1}$ - mass of recovery hardware, first stage [\si{kg}]
+    \item $m_{hv,1}$ - mass of valuable hardware to be recovered, first stage [\si{kg}]
     \item $m_{p,i}$ - propellant mass of the $i$-th stage [\si{kg}]
-    \item $m_{pr,1}$ - Mass of propellant reserved for recovery, first stage [\si{kg}]
-    \item $m_*$ - Payload mass [\si{kg}]
-    \item $m_0$ - Launch vehicle gross liftoff mass, including payload [\si{kg}]
-    \item $N = 2$ - Number of stages
-    \item $n_{reuse}$ - Lifetime (number of reuses) of a reusable first stage
-    \item $P$ - Recovery propellant factor [dimensionless]
-    \item $R_{cruise}$ - Cruise range for fly-back recovery [\si{\meter}]
-    \item $v_{cruise}$ - Cruise speed for fly-back recovery [\si{\meter\per\second}]
+    \item $m_{pr,1}$ - mass of propellant reserved for recovery, first stage [\si{kg}]
+    \item $m_*$ - payload mass [\si{kg}]
+    \item $m_0$ - launch vehicle gross (wet) liftoff mass, including payload [\si{kg}]
+    \item $N = 2$ - number of stages
+    \item $n_{reuse}$ - lifetime (number of reuses) of a reusable first stage
+    \item $P$ - recovery propellant factor [dimensionless]
+    \item $R_{cruise}$ - cruise range for fly-back recovery [\si{\meter}]
+    \item $v_{cruise}$ - cruise speed for fly-back recovery [\si{\meter\per\second}]
     \item $x$ - cost estimating relationship exponent [dimensionless]
-    \item $y$ - Stage 2 / stage 1 wet mass ratio [dimensionless]
-    \item $z_m$ - Fraction of first stage baseline mass recovered [dimensionless]
-    \item $\Delta v$ - Velocity increment provided by a rocket stage or required for a mission or maneuver [\si{\meter\per\second}]
-    \item $\epsilon_i$ - Inert mass fraction of the $i$-th stage [dimensionless]
-    \item $\epsilon_1'$ - First stage unavailable mass fraction [dimensionless]
-    \item $\pi_*$ - Overall payload mass fraction [dimensionless]
+    \item $y$ - stage 2 / stage 1 wet mass ratio [dimensionless]
+    \item $z_m$ - fraction of first stage baseline mass recovered [dimensionless]
+    \item $\Delta v$ - velocity increment provided by a rocket stage or required for a mission or maneuver [\si{\meter\per\second}]
+    \item $\epsilon_i$ - inert mass fraction of the $i$-th stage [dimensionless]
+    \item $\epsilon_1'$ - first stage unavailable mass fraction [dimensionless]
+    \item $\pi_*$ - overall payload mass fraction [dimensionless]
 \end{itemize}
 
 \section*{Acronyms/Abbreviations}
 \begin{itemize}
-    \item CER - Cost estimating relationship
-    \item GTO - Geosynchronous transfer orbit
-    \item LEO - Low earth orbit
-    \item TRL - Technology readiness level
+    \item CER - cost estimating relationship
+    \item GTO - geosynchronous transfer orbit
+    \item LEO - low earth orbit
+    \item TRL - technology readiness level
 \end{itemize}
 
 \section{Introduction}
@@ -103,7 +103,7 @@ There is still substantial disagreement on the economic merits of reuse amongst 
 
 While many first stage reuse concepts have been studied individually, there have been few attempts to compare the performance and cost of different first stage reuse strategies with common assumptions. This paper attempts to fill this gap by evaluating, under a common framework, the relative merits of all major first stage reuse strategies. First, a taxonomy is developed which classifies first stage reuse strategies according to four architecture choices. Second, the effect of first stage reuse on launch vehicle payload capacity is considered and modeled. The payload performance model is derived from physical first principles and calibrated against historical launch vehicle data. Third, the production and operations costs of each strategy are modeled using TRANSCOST 8.2, a high-level set of cost estimating relationships based on system masses, and calibrated against historical data. Finally, the payload performance and cost of several strategies are compared. We identify trade-offs between the strategies, and examine the variation of their performance and cost with propellant choice, the target orbit, payload size, launch rate, and first stage lifetime. We focus our analysis on orbital launch vehicles with two (sequential) stages, using established propulsion and structural technologies.
 
-Our modeling approach emphasizes the representation of uncertainty and reproducibility. As a preliminary concept, point estimates of system performance and cost do not have much credibility - too much is unknown. Instead, we estimate distributions of payload and cost, which illustrate the credible range of outcomes. To do so, we quantify the uncertainty on our model parameters (e.g. by examining the spread of outcomes of past projects), and then use Monte Carlo techniques to determine the resulting uncertainty in the model outputs. To allow other workers to reproduce these efforts, we 1) use only publicly available data in our models and 2) release the software used to evaluate our models under an open license (\url{https://github.com/mvernacc/lvreuse}).
+Our modeling approach emphasizes the representation of uncertainty and reproducibility. As a preliminary concept, point estimates of system performance and cost do not have much credibility -- too much is unknown. Instead, we estimate distributions of payload and cost, which illustrate the credible range of outcomes. To do so, we quantify the uncertainty of our model parameters (e.g. by examining the spread of outcomes of past projects), and then use Monte Carlo techniques to determine the resulting uncertainty in the model outputs. To allow other workers to reproduce these efforts, we 1) use only publicly available data in our models and 2) release the software used to evaluate our models under an open license (\url{https://github.com/mvernacc/lvreuse}).
 
 \section{Classification of first stage reuse strategies}
 Although only two orbital vehicles with recoverable stages have been operated (Falcon 9 and Space Shuttle), a wide variety of first stage recovery strategies have been proposed. This section develops a systematic classification of recovery strategies.
@@ -227,7 +227,7 @@ A given launch vehicle design is represented by the parameters $(I_{sp,1}, I_{sp
     \item solving (numerically) the system of equations (\ref{eq:dv_2_stage}-\ref{eq:pi_prod}) for $\pi_*$
 \end{enumerate}
 
-To validated the model, calculations were run for the Delta IV Medium and Falcon 9 Block 3 (expendable configuration) launch vehicles [Figure \ref{fig:payload_vs_dv}]. The advertised payload mass fractions for LEO and GTO are shown for comparison. The model slightly over-predicts $\pi_*$, likely because it neglects the mass of the payload fairing.
+To validate the model, calculations were run for the Delta IV Medium and Falcon 9 Block 3 (expendable configuration) launch vehicles [Figure \ref{fig:payload_vs_dv}]. The advertised payload mass fractions for LEO and GTO are shown for comparison. The model slightly over-predicts $\pi_*$, likely because it neglects the mass of the payload fairing.
 
 \begin{figure}[H]
     \centering
@@ -244,7 +244,7 @@ Clearly, payload performance depends on inert mass fraction and specific impulse
 \end{itemize}
 
 
-These technologies are mature and have had fairly consistent specific impulse and inert mass fraction limits over the past 30 years\footnote{This analysis can easily be extended to new technologies, e.g. \ce{CH4} / \ce{O2} propellants or composite tanks, as the engineering limits on these technologies emerge}. Stages using hydrogen technology have higher specific impulse $I_{sp}$ but higher feasible inert mass fraction $E$ than those using kerosene. The balance of these effects slightly favors hydrogen in terms of payload performance [Figure \ref{fig:payload_vs_dv}]. Finally, note that the technology choice and reuse strategy are independent - any reuse strategy can conceivably be used with any technology choice.
+These technologies are mature and have had fairly consistent specific impulse and inert mass fraction limits over the past 30 years\footnote{This analysis can easily be extended to new technologies, e.g. \ce{CH4} / \ce{O2} propellants or composite tanks, as the engineering limits on these technologies emerge}. Stages using hydrogen technology have higher specific impulse $I_{sp}$ but higher feasible inert mass fraction $E$ than those using kerosene. The balance of these effects slightly favors hydrogen in terms of payload performance [Figure \ref{fig:payload_vs_dv}]. Finally, note that the technology choice and reuse strategy are independent -- any reuse strategy can conceivably be used with any technology choice.
 
 \subsection{Effects of first stage reuse on performance} \label{sec:effects_of_first_stage_reuse_on_performance}
 So far we have reviewed the factors determining launch vehicle performance. Now we ask, how does first stage reuse change these factors? Two mechanisms are possible:
@@ -284,7 +284,7 @@ It will be helpful to compare the inert mass of the first stage to a "baseline" 
 m_{hb,1} \equiv \frac{E_1}{1 - E_1} m_{p,1}.
 \end{equation}
 
-This is the mass that the first stage would have if it were build to the lightest feasible limit for an expendable vehicle. We can think of this as the mass of the baseline hardware that would be present on an expendable first stage, i.e. tanks, rocket engines and thrust structure. In addition to the baseline mass, a reusable stage will have some additional recovery hardware (e.g. wings, landing gear, parachutes) with mass $m_{hr,1}$. Thus, for a reusable stage $m_{inert,1} = m_{hb,1} + m_{hr,1}$.
+This is the mass that the first stage would have if it were built to the lightest feasible limit for an expendable vehicle. We can think of this as the mass of the baseline hardware that would be present on an expendable first stage, i.e. tanks, rocket engines and thrust structure. In addition to the baseline mass, a reusable stage will have some additional recovery hardware (e.g. wings, landing gear, parachutes) with mass $m_{hr,1}$. Thus, for a reusable stage $m_{inert,1} = m_{hb,1} + m_{hr,1}$.
 
 Then, we define three new dimensionless variables:
 \begin{itemize}
@@ -333,10 +333,10 @@ Note that $\epsilon_1'$ increases monotonically with $z_m, H$ and $P$; i.e. reco
 
 Now, we can estimate the unavailable mass of the first stage (and therefore the launch vehicle payload performance) from the portion of the stage recovered ($z_m$) and estimates of the hardware ($H$) and propulsion ($P$) required by the selected recovery strategy. 
 
-\subsection{Estimating hardware and propellant for recovery strategies} \label{sec:est_hardware_and_propellant}
+\subsection{Estimating hardware and propellant factors for recovery strategies} \label{sec:est_hardware_and_propellant}
 In this subsection, we establish estimates of the recovery hardware factor $H$ and propellant factor $P$ for various recovery strategies.
 
-We account for uncertainty in our model using Monte Carlo techniques. In a preliminary design we do not know enough details to make point estimates of $H$, $P$ and the other model input parameters. Instead, we estimate the credible range that each model input parameter could lie in, and fit probability distributions to these estimates. We then draw random samples from the input distribution and evaluate our model on each sample to generate a population of model outputs. This population represents the range of values that the model output can be expected to take on. A brief summary of the input parameter distributions is given below \footnote{More detail is given in the Uncertainty Quantification appendix, available on the project \href{https://github.com/mvernacc/lvreuse}{github page}.}.
+We account for uncertainty in our model using Monte Carlo techniques. In a preliminary design we do not know enough details to make point estimates of $H$, $P$ and the other model input parameters. Instead, we estimate the credible range that each model input parameter could lie in, and fit probability distributions to these estimates. We then draw random samples from the input distributions and evaluate our model on each sample to generate a population of model outputs. This population represents the range of values that the model output can be expected to take on. A brief summary of the input parameter distributions is given below \footnote{More detail is given in the Uncertainty Quantification appendix, available on the project \href{https://github.com/mvernacc/lvreuse}{github page}.}.
 
 We estimate $H$ by examining the mass breakdowns of detailed design studies for some types of reusable boosters \cite{Healy1998, Isakowitz2004, Sippel2003, Hellman2005}, and by analogy to the mass breakdowns of other aerospace vehicles. The resulting estimates are summarized in Table \ref{tab:hardware_factor_distributions}.
 
@@ -405,7 +405,7 @@ Estimates for hardware and propellant factors are summarized in Figure \ref{fig:
     \caption{\label{fig:strategy_perf_H2} Distributions of payload performance for various first stage recovery strategies with \ce{H2} technology.}
 \end{figure*}
 
-The distributions of payload performance resulting from this model are shown as violin plots in Figures \ref{fig:strategy_perf_kerosene} and \ref{fig:strategy_perf_H2}. A different plot is provided for each combination of technology choice (kerosene, \ce{H2}) and mission (LEO, GTO). First, note the spread of the distribution for a fully expendable vehicle - this indicates the uncertainty due to technology factors ($I_{sp}$ and $E$). We should only consider a reuse strategy to have a meaningful impact on payload performance if most of its $\pi_*$ distribution does not overlap the range of $\pi_*$ that can be expected from an expendable vehicle.
+The distributions of payload performance resulting from this model are shown as violin plots in Figures \ref{fig:strategy_perf_kerosene} and \ref{fig:strategy_perf_H2}. A different plot is provided for each combination of technology choice (kerosene, \ce{H2}) and mission (LEO, GTO). First, note the spread of the distribution for a fully expendable vehicle -- this indicates the uncertainty due to technology factors ($I_{sp}$ and $E$). We should only consider a reuse strategy to have a meaningful impact on payload performance if most of its $\pi_*$ distribution does not overlap the range of $\pi_*$ that can be expected from an expendable vehicle.
 
 Across all technology choices and missions, the parachute landing strategies have little impact on payload performance, and their difference from the expendable performance is small compared to the range of uncertainty. The (launch site, air-breathing, winged, partial recovery), (downrange, propulsive landing, full recovery), and (downrange, no propulsion, winged, full recovery)  strategies have slightly lower payload performance than expendable, and are almost indistinguishable from each other.  Propulsive landing at the launch site has the worst payload performance; with kerosene on a GTO mission its payload mass fraction is unacceptably low. Across all strategies, reuse causes a larger fractional decrease in $\pi_*$ on the higher-$\Delta v$ mission (GTO).
 
@@ -420,7 +420,7 @@ The following subsections describe the underlying TRANSCOST model [Subsection \r
 
 \subsection{Cost model description} \label{sec:cost_model_description}
 
-The TRANSCOST 8.2 model was implemented to evaluate the costs of different first stage reuse strategies \cite{transcost}. TRANSCOST considers three separate cost areas for launch vehicles: development, production, and operations costs. The production cost sub-model takes a top-down approach, utilizing historical data for similar projects to estimate the cost of launch vehicle elements. A series of cost estimating relationships (CERs) of the form $C = a M^x$ relate the mass $M$ of launch vehicle elements to their production costs using the empirically fitted parameters $a$ and $x$. Costs of all launch vehicle elements are then summed to determine the total launch vehicle production cost. 
+The TRANSCOST 8.2 model was implemented to evaluate the costs of different first stage reuse strategies \cite{transcost}. TRANSCOST considers three separate cost areas for launch vehicles: development, production, and operations costs. The production cost sub-model takes a top-down approach, utilizing historical data for similar projects to estimate the cost of launch vehicle elements. A series of cost estimating relationships (CERs) of the form $C = a \cdot M^x$ relate the mass $M$ of launch vehicle elements to their production costs using the empirically fitted parameters $a$ and $x$. Costs of all launch vehicle elements are then summed to determine the total launch vehicle production cost. 
 
 The cost per flight of a launch vehicle is the cost paid by the launch service provider for each flight, which includes production and operations costs only. The price per flight is the price paid by a customer to the launch service provider. This includes production and operations costs, as well as profit for the launch service provider and a potential development amortization charge. It should be noted, however, that typically a large part of development costs are funded by government contracts, such as for the Falcon 9 and Ariane 5 launch vehicles \cite{NASAspaceX, ESAAriane5}. In these cases, a development amortization charge is substantially reduced or not included as part of the price per flight.
 
@@ -441,12 +441,12 @@ For this example -- and similarly for most medium- to heavy-lift, fully expendab
 \begin{figure*}
     \centering
     \includegraphics[width=\textwidth]{../../lvreuse/analysis/cost/plots/vehicle_ppf_validation}
-    \caption{\label{fig:vehicle_ppf_validation} Distributions of price per flight estimates for several launch vehicles. Available actual price per flight information is included for comparison, showing that the cost model's predictions are accurate.}
+    \caption{\label{fig:vehicle_ppf_validation} Distributions of price per flight estimates for several launch vehicles. Available actual price per flight information is included for comparison, showing that the cost model's predictions are reasonable.}
 \end{figure*}
 
 As with the performance model, uncertainty in the cost model is accounted for using Monte Carlo methods. Credible range estimates for various cost parameters are used to establish parameter distributions. These distributions are then sampled to evaluate the cost model, generating a collection of cost model outputs that represent a range of credible cost estimates.
 
-It should be noted that the TRANSCOST model as published only gives point estimates of launch vehicle costs, and provides no quantification for uncertainty in the model itself. The coefficients $a$ and $x$ in the element cost estimation relationships $C = a M^x$ are simply derived by curve fitting to historical reference data. In order to account for cost model uncertainty, we refit the reference data to the element CERs, extracting confidence bounds for each CER coefficient so that we can establish uncertainty distributions to sample. 
+It should be noted that the TRANSCOST model as published only gives point estimates of launch vehicle costs, and provides no quantification for uncertainty in the model itself. The coefficients $a$ and $x$ in the element cost estimating relationships $C = a \cdot M^x$ are simply derived by curve fitting to historical reference data. In order to account for cost model uncertainty, we refit the reference data to the element CERs, extracting confidence bounds for each CER coefficient so that we can establish uncertainty distributions to sample. 
 
 \subsection{Validation of cost model} \label{sec:validation_cost_model}
 In order to validate the TRANSCOST model, the prices per flight for several current launch vehicles were evaluated with the model and compared to their actual advertised launch prices. Four launch vehicles were used: Atlas V 401, Ariane 5G, Delta IV Medium (4,0), and Falcon 9 Block 3. The price per flight estimates for each were evaluated, including production costs, operations costs, and nominal profit, excluding any development amortization charges. The results, along with available price per flight data  \cite{ULARocketBuilder, FlightGlobalArianespace, GAO2017, SpaceXCapabilities}, are shown as a violin plot in Figure \ref{fig:vehicle_ppf_validation}. 
@@ -472,7 +472,7 @@ In order to evaluate the cost per flight distributions for various first stage r
     \centering
     \includegraphics[width=\textwidth]{strategy_cost_annotated/LEO_kero}
      \includegraphics[width=\textwidth]{strategy_cost_annotated/GTO_kero}
-    \caption{\label{fig:strategy_cost_kerosene} Cost per flight distributions for various first stage reuse strategies for kerosene technology, carrying a 10 Mg payload to LEO or GTO. Downrange propulsive landing has the lowest expected costs, and that the cost of winged strategies is highly uncertain.}
+    \caption{\label{fig:strategy_cost_kerosene} Cost per flight distributions for various first stage reuse strategies for kerosene technology, carrying a 10 Mg payload to LEO or GTO. Downrange propulsive landing has the lowest expected costs, and the cost of winged strategies is highly uncertain.}
     \small Note these common assumptions/uncertainties for all strategies: Number of uses of reusable components: triangular distribution with min 5, mode 10, max 25 (except for strategies which land directly in the ocean, which have min 2, mode 4, max 6). Launch rate: triangular distribution with min 10, mode 15, max 20.
 \end{figure*}
 
@@ -512,7 +512,7 @@ These opposing trends lead to an interesting result: the total cost per flight t
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{../../lvreuse/analysis/combined/plots/cpf_stackplot_reuses_sweep}
-    \caption{\label{fig:cpf_stackplot_reuses_sweep} A sweep of cost per flight vs number of first stage reuses for an example downrange propulsive landing strategy. First stage production costs per flight decline as the first stage is reused more times, while refurbishment costs increase.}
+    \caption{\label{fig:cpf_stackplot_reuses_sweep} A sweep of cost per flight vs. number of first stage reuses for an example downrange propulsive landing strategy. First stage production costs per flight decline as the first stage is reused more times, while refurbishment costs increase.}
 \end{figure}
 
 The cost per flight is also affected by the annual launch rate. Although most components of the cost per flight do not vary with launch rate, operations costs are very sensitive to it. Launch operations require a dedicated workforce and facilities, which are underutilized at low launch rates. Therefore we see a higher operations cost per flight at low launch rates. The cost per flight trends with varied launch rates are given in Figure \ref{fig:cpf_reuses_sweep_vary_launch_rate}. 
@@ -559,7 +559,7 @@ Consider instead the case of a small satellite launcher, capable of carrying a 1
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{../../lvreuse/analysis/combined/plots/cpf_stackplot_reuses_sweep_small_sat}
-    \caption{\label{fig:cpf_stackplot_reuses_sweep_small_sat} The cost per flight of a small launcher (100 kg payload) is expected to be dominated by operations costs, and does not decline meaningfully with first stage reuse.}
+    \caption{\label{fig:cpf_stackplot_reuses_sweep_small_sat} The cost per flight of a small launcher (100 kg payload) is most likely dominated by operations costs, and does not decline meaningfully with first stage reuse.}
 \end{figure}
 
 
