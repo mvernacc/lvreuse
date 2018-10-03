@@ -1,0 +1,9 @@
+Name,Estimate type,Recovery fuel,"a, glider","a, powered",P
+Baikal,Detailed,kero,,0.60,0.15
+"LFBB, NASA/Boeing, Dual Config",Detailed,kero,,0.65,0.20
+"LFBB, DRL",Detailed,H2,,0.49,0.08
+Hellman,Mass est. rel.,kero,0.54,0.52,0.16
+STS Orbiter,Analogy,,0.39,,
+C-141,Analogy,,0.43,0.62,
+Gulfstream G550,Analogy,,0.38,0.60,
+Boeing 787-8,Analogy,,0.39,0.54,
