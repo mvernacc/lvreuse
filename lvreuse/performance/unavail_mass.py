@@ -18,3 +18,25 @@ def unavail_mass(a, P, z_m, E_1):
     epsilon_1_prime = ((1 + chi_r + z_m / (1 - a) * (np.exp(P) - 1))
                        / (1 + chi_r + (1 - E_1) / E_1))
     return epsilon_1_prime
+
+
+def inert_masses(m_1, a, z_m, E_1):
+    """First stage inert masses.
+
+    Arguments:
+        m_1 (scalar): First stage wet mass [units: kilogram].
+        a (scalar): Fraction of the recovery vehicle dry mass which is added recovery
+            hardware [units: dimensionless].
+        z_m (scalar): Fraction of baseline dry mass which is to be recovered [units: dimensionless].
+        E_1 (scalar): Structural mass ratio w/o reuse hardware [units: dimensionless].
+
+    Returns:
+        scalar: First stage inert mass
+        scalar: Recovery vehicle inert mass
+    """
+    chi_r = a * z_m / (1 - a)
+    m_inert_1 = m_1 * ((1 + chi_r)
+                       / (1 + chi_r + (1 - E_1) / E_1))
+    m_inert_recov_1 = m_1 * ((z_m + chi_r)
+                             / (1 + chi_r + (1 - E_1) / E_1))
+    return m_inert_1, m_inert_recov_1

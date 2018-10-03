@@ -8,6 +8,7 @@ from lvreuse.performance import payload_fixed_stages
 from lvreuse.performance.launch_site_return import (stage_sep_velocity,
                                                     propulsive_ls_perf,
                                                     winged_powered_ls_perf)
+from lvreuse.data.missions import LEO, GTO
 
 
 def dv_mission_sweep():
@@ -36,11 +37,10 @@ def dv_mission_sweep():
             pi_star_expend[i] = expend_result[0]
             pi_1 = expend_result[1]
             v_ss_expend[i] = stage_sep_velocity(c_1, E_1, pi_1)
-        (pi_star_prop_ls[i], v_ss_prop_ls[i]) = \
-            propulsive_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission[i], a_prop)
-        (pi_star_wing_pwr_ls[i], v_ss_wing_pwr_ls[i]) = \
-            winged_powered_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission[i], a_wing_pwr)
-
+        results = propulsive_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission[i], a_prop)
+        (pi_star_prop_ls[i], v_ss_prop_ls[i]) = (results.pi_star, results.v_ss)
+        results = winged_powered_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission[i], a_wing_pwr)
+        (pi_star_wing_pwr_ls[i], v_ss_wing_pwr_ls[i]) = (results.pi_star, results.v_ss)
     plt.figure(figsize=(6, 8))
     ax1 = plt.subplot(2, 1, 1)
     plt.plot(dv_mission * 1e-3, pi_star_expend, label='Expendable', color='black')
@@ -52,8 +52,8 @@ def dv_mission_sweep():
     plt.title('Effect of mission $\\Delta v$ on payload capacity'
         + '\nStage 2 / stage 1 mass ratio $y$={:.2f}, kerosene/O2 tech.'.format(y))
     plt.legend()
-    plt.text(9.5, 0.005, 'LEO', rotation=90)
-    plt.text(12, 0.005, 'GTO', rotation=90)
+    plt.text(LEO.dv * 1e-3, 0.005, 'LEO', rotation=90)
+    plt.text(GTO.dv * 1e-3, 0.005, 'GTO', rotation=90)
     plt.grid(True)
 
     plt.subplot(2, 1, 2, sharex=ax1)

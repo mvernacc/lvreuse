@@ -1,4 +1,7 @@
 """Performanc models for launch site return."""
+
+from collections import namedtuple
+
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.optimize import fsolve, minimize_scalar
@@ -90,6 +93,9 @@ def stage_sep_velocity(c_1, e_1, pi_1, dv_loss_ascent=1000):
     return v_ss
 
 
+PerfResult = namedtuple('PerfResult', ['pi_star', 'pi_1', 'e_1', 'v_ss'])
+
+
 def coupled_perf_solver(a, c_1, c_2, E_1, E_2, y, dv_mission, recovery_propellant_func, z_m=1):
     # Solve for the 1st stage payload mass fraction
     def root_fun(x):
@@ -123,7 +129,8 @@ def coupled_perf_solver(a, c_1, c_2, E_1, E_2, y, dv_mission, recovery_propellan
         return (np.nan, np.nan)
 
     v_ss = stage_sep_velocity(c_1, e_1, pi_1)
-    return (pi_star, v_ss)
+    results = PerfResult(pi_star=pi_star, pi_1=pi_1, e_1=e_1, v_ss=v_ss)
+    return results
 
 
 def propulsive_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission, a,

@@ -186,8 +186,8 @@ class TurboJetEngine(LaunchVehicleElement):
         self.dev_a, self.dev_x, self.prod_a, self.prod_x = [1380., 0.295, 2.29, 0.545]
         self.dev_a_conf_int = [462.492874820969, 3640.1151895792027]
         self.dev_x_conf_int = [0.16479322, 0.43652455]
-        self.prod_a_conf_int = [3.200280413229723e-05, 90664.04883039849]
-        self.prod_x_conf_int = [0, 1] # [-0.80539725, 1.96446499]
+        self.prod_a_conf_int = [1.484, 3.021]
+        self.prod_x_conf_int = [0.5125299122673098, 0.6584429840182615]
 
 
 class RamjetEngine(LaunchVehicleElement):
@@ -275,6 +275,9 @@ class VTOStageFlybackVehicle(LaunchVehicleElement):
         self.dev_a, self.dev_x, self.prod_a, self.prod_x = [1462., 0.325, 0.357, 0.762]
         self.dev_a_conf_int = [135.34253464446792, 15336.623033405793]
         self.dev_x_conf_int = [0.10541958, 0.5443403]
+        # Note: the following are 90% confidence intervals, not 95% as used elsewhere.
+        self.prod_a_conf_int = [0.0350, 3.32]
+        self.prod_x_conf_int = [0.545, 0.987]
 
     def element_development_cost(self, CER_vals, element_cost_factors):
 
@@ -307,3 +310,32 @@ class CrewedSpaceSystem(LaunchVehicleElement):
                     element_cost_factors.f10 * element_cost_factors.f11 * CER_vals.dev_a * \
                     self.m**CER_vals.dev_x
         return dev_cost
+
+class ExpendableTank(ComplexElement):
+    """An expendable liquid propellant tank, with little other equipment (e.g. avionics)
+
+    Notes:
+    Production exponent taken from ExpendableBallisticStageStorable. Production coefficient
+    calibrated to Space Shuttle Super Lightweight Tank.
+    Shuttle SLWT values:
+        mass = 26.5 Mg [https://en.wikipedia.org/wiki/Space_Shuttle_external_tank#Super_Lightweight_Tank]
+        cost = $34M in 2002 dollars at 10 units/year [https://www.nasa.gov/sites/default/files/atoms/files/29_2016_nasa_cost_symp-learn_rate_curves_webb_tagged.pdf]
+                We assume the 10/year production rate most accurately reflects the true production costs; the production costs at lower rates
+                are inflated by "dedicated people producing at less than full capacity"
+             = 153 WYr
+                We expect the first unit cost to be about 2x this value, due to learning effects. (0.9**(log_2(100)) = ~0.5)
+        first unit cost = ~300 WYr
+        Slide 15 of Webb indicates 450k touch labor hours (216 WYr) for the first unit in 1978-79.
+        Plus materials & equipment, this agrees w/ the 300 WYr first unit cost.
+
+    a = c_fu * m**-x
+    a = (300) * (26.5e3)**-0.59 = 0.76
+    """
+
+    def __init__(self, name, m):
+        super(ExpendableTank, self).__init__(name, m)
+        self.dev_a, self.dev_x, self.prod_a, self.prod_x = [98.5, 0.555, 0.76, 0.59]
+        self.dev_a_conf_int = [50.043972009639276, 198.97130393516127] # Copied from ExpendableBallisticStageStorable
+        self.dev_x_conf_int = [0.47663718, 0.63094232] # Copied from ExpendableBallisticStageStorable
+        self.prod_a_conf_int = [0.76 / 2, 0.76 * 2]
+        self.prod_x_conf_int = [0.50440936, 0.68569942] # Copied from ExpendableBallisticStageStorable

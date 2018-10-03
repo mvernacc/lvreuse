@@ -7,6 +7,7 @@ import rhodium as rdm
 
 from lvreuse.analysis.performance import strategy_perf_models
 from lvreuse.utils import quantile_plot
+from lvreuse.data.missions import GTO
 
 
 def main():
@@ -17,7 +18,7 @@ def main():
     tech_1 = strategy_perf_models.kero_GG_boost_tech
 
     tech_2 = strategy_perf_models.kero_GG_upper_tech
-    mission = strategy_perf_models.GTO
+    mission = GTO
 
 
     plt.figure(figsize=(8, 6))

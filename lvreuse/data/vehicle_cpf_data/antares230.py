@@ -42,4 +42,4 @@ antares_fc = 0.7
 antares_sum_QN = 0.55
 antares_launch_provider_type = 'B'
 
-antares_props_dict = {'RP-1': 34571, 'LOX': 207428 * 1.6}
+antares_props_dict = {'kerosene': 34571, 'O2': 207428 * 1.6}

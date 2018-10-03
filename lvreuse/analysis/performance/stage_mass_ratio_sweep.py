@@ -8,6 +8,7 @@ from lvreuse.performance import payload_fixed_stages
 from lvreuse.performance.launch_site_return import (stage_sep_velocity,
                                                     propulsive_ls_perf,
                                                     winged_powered_ls_perf)
+from lvreuse.data.missions import LEO
 
 
 def stage_mass_ratio_sweep():
@@ -17,7 +18,7 @@ def stage_mass_ratio_sweep():
     c_2 = 3500
     E_1 = 0.06
     E_2 = 0.04
-    dv_mission = 9.5e3
+    mission = LEO
 
     y = np.linspace(0.10, 1.)
     pi_star_expend = np.zeros(len(y))
@@ -29,15 +30,15 @@ def stage_mass_ratio_sweep():
 
     for i in range(len(y)):
         expend_result = payload_fixed_stages(c_1, c_2, E_1, E_2, y[i],
-                                             dv_mission, return_all_pis=True)
+                                             mission.dv, return_all_pis=True)
         if not np.any(np.isnan(expend_result)):
             pi_star_expend[i] = expend_result[0]
             pi_1 = expend_result[1]
             v_ss_expend[i] = stage_sep_velocity(c_1, E_1, pi_1)
-        (pi_star_prop_ls[i], v_ss_prop_ls[i]) = \
-            propulsive_ls_perf(c_1, c_2, E_1, E_2, y[i], dv_mission, a_prop)
-        (pi_star_wing_pwr_ls[i], v_ss_wing_pwr_ls[i]) = \
-            winged_powered_ls_perf(c_1, c_2, E_1, E_2, y[i], dv_mission, a_wing_pwr)
+        results = propulsive_ls_perf(c_1, c_2, E_1, E_2, y[i], mission.dv, a_prop)
+        (pi_star_prop_ls[i], v_ss_prop_ls[i]) = (results.pi_star, results.v_ss)
+        results = winged_powered_ls_perf(c_1, c_2, E_1, E_2, y[i], mission.dv, a_wing_pwr)
+        (pi_star_wing_pwr_ls[i], v_ss_wing_pwr_ls[i]) = (results.pi_star, results.v_ss)
 
     plt.figure(figsize=(6, 8))
     ax1 = plt.subplot(2, 1, 1)
@@ -48,7 +49,7 @@ def stage_mass_ratio_sweep():
     plt.ylabel('Overall payload mass fraction $\\pi_*$ [-]')
     plt.ylim([0, plt.ylim()[1]])
     plt.title('Effect of stage mass ratio on payload capacity'
-        + '\nMission $\\Delta v_*$ = {:.1f} km/s, kerosene/O2 tech.'.format(dv_mission * 1e-3))
+        + '\nMission $\\Delta v_*$ = {:.1f} km/s, kerosene/O2 tech.'.format(mission.dv * 1e-3))
     plt.legend()
     plt.grid(True)
 

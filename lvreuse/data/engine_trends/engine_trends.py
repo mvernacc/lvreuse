@@ -10,7 +10,8 @@ engines = pandas.read_csv('engines.csv', index_col=0)
 engines.sort_values(by='Engine', inplace=True)
 
 # Compute thurst/weight for each engine [units: dimensionless]
-engines['Thrust/Weight'] = engines['Thrust (vac)'] / (engines['Mass'] * 9.81)
+engines['Thrust/Weight (vac)'] = engines['Thrust (vac)'] / (engines['Mass'] * 9.81)
+engines['Thrust/Weight (sl)'] = engines['Thrust (sl)'] / (engines['Mass'] * 9.81)
 
 # Convert chamber pressure from pascals to megapascals.
 engines['Chamber pressure'] = engines['Chamber pressure'] * 1e-6
@@ -20,7 +21,7 @@ print(engines)
 # Save engines data as a latex table
 with open('engine_historical_trends.tex', 'w') as f:
     tex = engines.to_latex(
-        columns=['Use', 'Fuel', 'Cycle', 'Isp (vac)', 'Isp (sl)', 'Chamber pressure', 'Thrust/Weight', 'Year of first flight'],
+        columns=['Use', 'Fuel', 'Cycle', 'Isp (vac)', 'Isp (sl)', 'Chamber pressure', 'Thrust/Weight (vac)', 'Year of first flight'],
         formatters={
             'Use': '{:s}'.format,
             'Fuel': '{:s}'.format,
@@ -28,7 +29,7 @@ with open('engine_historical_trends.tex', 'w') as f:
             'Isp (vac)': '{:.0f}'.format,
             'Isp (sl)': '{:.0f}'.format,
             'Chamber pressure': '{:.1f}'.format,
-            'Thrust/Weight': '{:.0f}'.format,
+            'Thrust/Weight (vac)': '{:.0f}'.format,
             'Year of first flight': '{:d}'.format,
             }
         )
@@ -37,7 +38,7 @@ with open('engine_historical_trends.tex', 'w') as f:
     tex = tex.replace('Isp (vac)', '\\head{1.5cm}{$I_{sp}$, vacuum [s]}')
     tex = tex.replace('Isp (sl)', '\\head{1.5cm}{$I_{sp}$, sea level [s]}')
     tex = tex.replace('Chamber pressure', '\\head{1.5cm}{Chamber pressure [MPa]}')
-    tex = tex.replace('Thrust/Weight', '\\head{1.5cm}{Thrust \\slash Weight [-]}')
+    tex = tex.replace('Thrust/Weight (vac)', '\\head{1.5cm}{Thrust \\slash Weight [-]}')
     tex = tex.replace('Year of first flight', '\\head{1.5cm}{Year of first flight}')
     f.write(tex)
 
@@ -61,7 +62,7 @@ plt.ylabel('Chamber pressure [Pa]')
 
 
 plt.subplot(2, 2, 4)
-sns.scatterplot(data=engines, x='Year of first flight', y='Thrust/Weight',
+sns.scatterplot(data=engines, x='Year of first flight', y='Thrust/Weight (vac)',
                 hue='Fuel', style='Cycle', legend=False)
 plt.ylabel('(Vacuum Thrust)/(Weight) [-]')
 plt.suptitle('Historical Trends in Liquid-Propellant Rocket Engine Performance')
@@ -94,6 +95,24 @@ plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.tight_layout()
 
 plt.savefig('engine_isp_dist.png')
+
+# Thrust/weight distributions
+hue_order = ['GG', 'SC', 'Expander', 'Electric']
+plt.figure(figsize=(8, 4))
+ax1 = plt.subplot(2, 1, 1)
+sns.stripplot(data=upper_engines, x='Thrust/Weight (vac)', y='Fuel', hue='Cycle',
+              jitter=False, dodge=True, hue_order=hue_order)
+plt.title('Thrust/Weight of Modern (Post-1975) Upper-Stage Engines')
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+
+plt.subplot(2, 1, 2, sharex=ax1)
+sns.stripplot(data=booster_engines, x='Thrust/Weight (sl)', y='Fuel', hue='Cycle',
+              jitter=False, dodge=True,  hue_order=hue_order)
+plt.title('Thrust/Weight of Modern (Post-1975) Booster Engines')
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+plt.tight_layout()
+
+plt.savefig('engine_tw_dist.png')
 
 # Compute the min, max, and mean vacuum Isp for each propellant and cycle
 print('Performance statistics, upper stage engines:')

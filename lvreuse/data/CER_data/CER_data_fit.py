@@ -3,11 +3,10 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from scipy import stats
 import statsmodels.api as sm
-from CER_data import CER_data_list
+from CER_data import CER_data_list, liquid_storable_prod
 import math
 
-special = False
-data_set = CER_data_list[-1]
+data_set = liquid_storable_prod
 
 x_data = data_set.x_data
 y_data = data_set.y_data
@@ -30,15 +29,15 @@ log_x = sm.add_constant(log_x)
 mod = sm.OLS(log_y, log_x)
 res = mod.fit()
 #print(res.params)
-conf_int = res.conf_int(alpha=0.05)
+conf_int = res.conf_int(alpha=0.1)
 
 exp_conf_int = []
 for bound in conf_int[0]:
     exp_conf_int.append(10**(bound))
 
 
-print('a confidence interval: ', exp_conf_int)
 print('x confidence interval: ', conf_int[1])
+print('a confidence interval: ', exp_conf_int)
 
 
 
