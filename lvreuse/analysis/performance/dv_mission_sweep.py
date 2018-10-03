@@ -13,8 +13,8 @@ from lvreuse.data.missions import LEO, GTO
 
 def dv_mission_sweep():
     """Plot payload mass fraction versus mission delta-v."""
-    a_prop = 0.14
-    a_wing_pwr = 0.57
+    H_prop = 0.14
+    H_wing_pwr = 0.57
     c_1 = 3000
     c_2 = 3500
     E_1 = 0.06
@@ -37,9 +37,9 @@ def dv_mission_sweep():
             pi_star_expend[i] = expend_result[0]
             pi_1 = expend_result[1]
             v_ss_expend[i] = stage_sep_velocity(c_1, E_1, pi_1)
-        results = propulsive_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission[i], a_prop)
+        results = propulsive_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission[i], H_prop)
         (pi_star_prop_ls[i], v_ss_prop_ls[i]) = (results.pi_star, results.v_ss)
-        results = winged_powered_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission[i], a_wing_pwr)
+        results = winged_powered_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission[i], H_wing_pwr)
         (pi_star_wing_pwr_ls[i], v_ss_wing_pwr_ls[i]) = (results.pi_star, results.v_ss)
     plt.figure(figsize=(6, 8))
     ax1 = plt.subplot(2, 1, 1)

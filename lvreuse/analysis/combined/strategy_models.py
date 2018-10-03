@@ -272,7 +272,7 @@ class Strategy(object):
 
         return z_m
 
-    def get_masses(self, pi_star, a, E_1, E_2):
+    def get_masses(self, pi_star, H, E_1, E_2):
         # Gross liftoff mass [units: kilogram].
         m_0 = self.mission.m_payload / pi_star
         # Stage 1 wet mass [units: kilogram].
@@ -280,7 +280,7 @@ class Strategy(object):
         # Stage 2 wet mass [units: kilogram].
         m_2 = self.y / (1 + self.y) * (m_0 - self.mission.m_payload)
         # Stage inert masses [units: kilogram].
-        m_inert_1 = inert_masses(m_1, a, z_m=1, E_1=E_1)[0]
+        m_inert_1 = inert_masses(m_1, H, z_m=1, E_1=E_1)[0]
         m_inert_2 = E_2 * m_2
         # Stage engine masses [units: kilogram].
         m_eng_1 = masses.booster_engine_mass(m_0, n_engines=self.tech_1.n_engines,
@@ -331,10 +331,10 @@ class StrategyNoPropulsion(Strategy):
         super(StrategyNoPropulsion, self).__init__(landing_method, recovery_prop_method, recovery_location,
                                                    portion_recovered, tech_1, tech_2, mission, y)
 
-    def evaluate(self, c_1, c_2, E_1, E_2, a, **kwargs):
-        e_1 = unavail_mass(a, P=0, z_m=1, E_1=E_1)
+    def evaluate(self, c_1, c_2, E_1, E_2, H, **kwargs):
+        e_1 = unavail_mass(H, P=0, z_m=1, E_1=E_1)
         pi_star = payload_fixed_stages(c_1, c_2, e_1, E_2, self.y, self.mission.dv)
-        element_masses = self.get_masses(pi_star, a=a, E_1=E_1, E_2=E_2)
+        element_masses = self.get_masses(pi_star, H=H, E_1=E_1, E_2=E_2)
         self.cost_model.update_masses(element_masses)
         cost_results = self.cost_model.evaluate_cost(**kwargs)
         return (pi_star, e_1, *cost_results)
@@ -379,7 +379,7 @@ class Expendable(Strategy):
 
     def evaluate(self, c_1, c_2, E_1, E_2, **kwargs):
         pi_star = payload_fixed_stages(c_1, c_2, E_1, E_2, self.y, self.mission.dv)
-        element_masses = self.get_masses(pi_star, a=0, E_1=E_1, E_2=E_2)
+        element_masses = self.get_masses(pi_star, H=0, E_1=E_1, E_2=E_2)
         self.cost_model.update_masses(element_masses)
         cost_results = self.cost_model.evaluate_cost(**kwargs)
         return (pi_star, E_1, *cost_results)
@@ -391,7 +391,7 @@ class PropulsiveLaunchSite(Strategy):
         super(PropulsiveLaunchSite, self).__init__('propulsive', 'rocket', 'launch site', 'full',
                                                    tech_1, tech_2, mission, y)
         self.uncertainties += [
-            rdm.TriangularUncertainty('a', min_value=0.09, mode_value=0.14, max_value=0.19),
+            rdm.TriangularUncertainty('H', min_value=0.09, mode_value=0.14, max_value=0.19),
             f_ss_uncert,
             dv_entry_uncert,
             landing_m_A_large_uncert,
@@ -431,11 +431,11 @@ class PropulsiveLaunchSite(Strategy):
         self.uncertainties += reuse_cost_uncerts
         self.setup_model()
 
-    def evaluate(self, c_1, c_2, E_1, E_2, a,
+    def evaluate(self, c_1, c_2, E_1, E_2, H,
                        dv_entry, landing_m_A, landing_accel, f_ss, **kwargs):
-        results = propulsive_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
+        results = propulsive_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, H,
                                        dv_entry, landing_m_A, landing_accel, f_ss)
-        element_masses = self.get_masses(results.pi_star, a=a, E_1=E_1, E_2=E_2)
+        element_masses = self.get_masses(results.pi_star, H=H, E_1=E_1, E_2=E_2)
         self.cost_model.update_masses(element_masses)
         cost_results = self.cost_model.evaluate_cost(**kwargs)
         return (results.pi_star, results.e_1, *cost_results)
@@ -446,7 +446,7 @@ class WingedPoweredLaunchSite(Strategy):
         super(WingedPoweredLaunchSite, self).__init__('winged', 'air-breathing', 'launch site', 'full',
                                                       tech_1, tech_2, mission, y)
         self.uncertainties += [
-            rdm.TriangularUncertainty('a', min_value=0.490, mode_value=0.574, max_value=0.650),
+            rdm.TriangularUncertainty('H', min_value=0.490, mode_value=0.574, max_value=0.650),
             f_ss_uncert,
             I_sp_ab_uncert,
             v_cruise_uncert,
@@ -489,16 +489,16 @@ class WingedPoweredLaunchSite(Strategy):
         self.uncertainties += reuse_cost_ab_uncerts
         self.setup_model()
 
-    def evaluate(self, c_1, c_2, E_1, E_2, a,
+    def evaluate(self, c_1, c_2, E_1, E_2, H,
                        I_sp_ab, v_cruise, lift_drag, f_ss, **kwargs):
-        results = winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
+        results = winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, H,
                                            I_sp_ab, v_cruise, lift_drag, f_ss)
-        element_masses = self.get_masses(results.pi_star, a=a, E_1=E_1, E_2=E_2)
+        element_masses = self.get_masses(results.pi_star, H=H, E_1=E_1, E_2=E_2)
         self.cost_model.update_masses(element_masses)
         cost_results = self.cost_model.evaluate_cost(**kwargs)
         return (results.pi_star, results.e_1, *cost_results)
 
-    def get_masses(self, pi_star, a, E_1, E_2):
+    def get_masses(self, pi_star, H, E_1, E_2):
         # Gross liftoff mass [units: kilogram].
         m_0 = self.mission.m_payload / pi_star
         # Stage 1 wet mass [units: kilogram].
@@ -506,7 +506,7 @@ class WingedPoweredLaunchSite(Strategy):
         # Stage 2 wet mass [units: kilogram].
         m_2 = self.y / (1 + self.y) * (m_0 - self.mission.m_payload)
         # Stage inert masses [units: kilogram].
-        m_inert_1 = inert_masses(m_1, a, z_m=1, E_1=E_1)[0]
+        m_inert_1 = inert_masses(m_1, H, z_m=1, E_1=E_1)[0]
         m_inert_2 = E_2 * m_2
         # Stage rocket engine masses [units: kilogram].
         m_eng_1 = masses.booster_engine_mass(m_0, n_engines=self.tech_1.n_engines,
@@ -558,7 +558,7 @@ class WingedPoweredLaunchSitePartial(Strategy):
         super(WingedPoweredLaunchSitePartial, self).__init__('winged', 'air-breathing', 'launch site', 'partial',
                                                       tech_1, tech_2, mission, y)
         self.uncertainties += [
-            rdm.TriangularUncertainty('a', min_value=0.490, mode_value=0.574, max_value=0.650),
+            rdm.TriangularUncertainty('H', min_value=0.490, mode_value=0.574, max_value=0.650),
             f_ss_uncert,
             I_sp_ab_uncert,
             v_cruise_uncert,
@@ -602,17 +602,17 @@ class WingedPoweredLaunchSitePartial(Strategy):
         self.uncertainties += reuse_cost_ab_uncerts
         self.setup_model()
 
-    def evaluate(self, c_1, c_2, E_1, E_2, a,
+    def evaluate(self, c_1, c_2, E_1, E_2, H,
                        I_sp_ab, v_cruise, lift_drag, f_ss, **kwargs):
         z_m = self.get_z_m_engine_pod(E_1)
-        results = winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, a,
+        results = winged_powered_ls_perf(c_1, c_2, E_1, E_2, self.y, self.mission.dv, H,
                                            I_sp_ab, v_cruise, lift_drag, f_ss, z_m)
-        element_masses = self.get_masses(results.pi_star, a=a, E_1=E_1, E_2=E_2)
+        element_masses = self.get_masses(results.pi_star, H=H, E_1=E_1, E_2=E_2)
         self.cost_model.update_masses(element_masses)
         cost_results = self.cost_model.evaluate_cost(**kwargs)
         return (results.pi_star, results.e_1, *cost_results)
 
-    def get_masses(self, pi_star, a, E_1, E_2):
+    def get_masses(self, pi_star, H, E_1, E_2):
         z_m = self.get_z_m_engine_pod(E_1)
         # Gross liftoff mass [units: kilogram].
         m_0 = self.mission.m_payload / pi_star
@@ -622,7 +622,7 @@ class WingedPoweredLaunchSitePartial(Strategy):
         m_2 = self.y / (1 + self.y) * (m_0 - self.mission.m_payload)
         # Stage 1 inert mass [units: kilogram].
         # and Stage 1 recovered inert mass (e.g. winged engine pod) [units: kilogram]
-        m_inert_1, m_inert_recov_1 = inert_masses(m_1, a, z_m, E_1)
+        m_inert_1, m_inert_recov_1 = inert_masses(m_1, H, z_m, E_1)
         # Stage 1 disposed inert mass [units: kilogram].
         # e.g. tanks
         m_dispose_1 = m_inert_1 - m_inert_recov_1
@@ -680,7 +680,7 @@ class PropulsiveDownrange(Strategy):
         super(PropulsiveDownrange, self).__init__('propulsive', 'rocket', 'downrange', 'full',
                                                    tech_1, tech_2, mission, y)
         self.uncertainties += [
-            rdm.TriangularUncertainty('a', min_value=0.09, mode_value=0.14, max_value=0.19),
+            rdm.TriangularUncertainty('H', min_value=0.09, mode_value=0.14, max_value=0.19),
             dv_entry_uncert,
             landing_m_A_large_uncert,
             landing_accel_uncert,
@@ -719,15 +719,15 @@ class PropulsiveDownrange(Strategy):
         self.uncertainties += reuse_cost_uncerts
         self.setup_model()
 
-    def evaluate(self, c_1, c_2, E_1, E_2, a,
+    def evaluate(self, c_1, c_2, E_1, E_2, H,
                        dv_entry, landing_m_A, landing_accel, **kwargs):
         dv_land = landing_dv(m_A=landing_m_A, accel=landing_accel)
         P = (dv_entry + dv_land) / c_1
         propellant_margin = 0.10
         P *= 1 + propellant_margin
-        e_1 = unavail_mass(a, P, z_m=1, E_1=E_1)
+        e_1 = unavail_mass(H, P, z_m=1, E_1=E_1)
         pi_star = payload_fixed_stages(c_1, c_2, e_1, E_2, self.y, self.mission.dv)
-        element_masses = self.get_masses(pi_star, a=a, E_1=E_1, E_2=E_2)
+        element_masses = self.get_masses(pi_star, H=H, E_1=E_1, E_2=E_2)
         self.cost_model.update_masses(element_masses)
         cost_results = self.cost_model.evaluate_cost(**kwargs)
         return (pi_star, e_1, *cost_results)
@@ -738,7 +738,7 @@ class WingedGlider(StrategyNoPropulsion):
         super(WingedGlider, self).__init__('winged', 'none', 'downrange', 'full',
                                            tech_1, tech_2, mission, y)
         self.uncertainties += [
-            rdm.TriangularUncertainty('a', min_value=0.380, mode_value=0.426, max_value=0.540),
+            rdm.TriangularUncertainty('H', min_value=0.380, mode_value=0.426, max_value=0.540),
         ]
         # Cost model stuff
         # Create propellant dictionary needed by cost model
@@ -779,7 +779,7 @@ class Parachute(StrategyNoPropulsion):
         super(Parachute, self).__init__('parachute', 'none', 'downrange', 'full',
                                         tech_1, tech_2, mission, y)
         self.uncertainties += [
-            rdm.TriangularUncertainty('a', min_value=0.15, mode_value=0.17, max_value=0.19),
+            rdm.TriangularUncertainty('H', min_value=0.15, mode_value=0.17, max_value=0.19),
         ]
 
         # Cost model stuff
@@ -822,7 +822,7 @@ class ParachutePartial(StrategyNoPropulsion):
         super(ParachutePartial, self).__init__('parachute', 'none', 'downrange', 'partial',
                                                tech_1, tech_2, mission, y)
         self.uncertainties += [
-            rdm.TriangularUncertainty('a', min_value=0.15, mode_value=0.17, max_value=0.19),
+            rdm.TriangularUncertainty('H', min_value=0.15, mode_value=0.17, max_value=0.19),
         ]
         # Cost model stuff
         # Create propellant dictionary needed by cost model
@@ -858,16 +858,16 @@ class ParachutePartial(StrategyNoPropulsion):
         self.uncertainties += reuse_cost_uncerts
         self.setup_model()
 
-    def evaluate(self, c_1, c_2, E_1, E_2, a, **kwargs):
+    def evaluate(self, c_1, c_2, E_1, E_2, H, **kwargs):
         z_m = self.get_z_m_engine_pod(E_1)
-        e_1 = unavail_mass(a, P=0, z_m=z_m, E_1=E_1)
+        e_1 = unavail_mass(H, P=0, z_m=z_m, E_1=E_1)
         pi_star = payload_fixed_stages(c_1, c_2, e_1, E_2, self.y, self.mission.dv)
-        element_masses = self.get_masses(pi_star, a=a, E_1=E_1, E_2=E_2)
+        element_masses = self.get_masses(pi_star, H=H, E_1=E_1, E_2=E_2)
         self.cost_model.update_masses(element_masses)
         cost_results = self.cost_model.evaluate_cost(**kwargs)
         return (pi_star, e_1, *cost_results)
 
-    def get_masses(self, pi_star, a, E_1, E_2):
+    def get_masses(self, pi_star, H, E_1, E_2):
         z_m = self.get_z_m_engine_pod(E_1)
         # Gross liftoff mass [units: kilogram].
         m_0 = self.mission.m_payload / pi_star
@@ -877,7 +877,7 @@ class ParachutePartial(StrategyNoPropulsion):
         m_2 = self.y / (1 + self.y) * (m_0 - self.mission.m_payload)
         # Stage 1 inert mass [units: kilogram].
         # and Stage 1 recovered inert mass (e.g. winged engine pod) [units: kilogram]
-        m_inert_1, m_inert_recov_1 = inert_masses(m_1, a, z_m, E_1)
+        m_inert_1, m_inert_recov_1 = inert_masses(m_1, H, z_m, E_1)
         # Stage 1 disposed inert mass [units: kilogram].
         # e.g. tanks
         m_dispose_1 = m_inert_1 - m_inert_recov_1

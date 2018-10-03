@@ -19,23 +19,23 @@ def main():
 
 def plot_effect_of_structure_mass():
     E_1 = np.linspace(0.01, 0.15)
-    a = 0.07
+    H = 0.07
     P = 1.0
     z_m = 1.0
 
-    Strategy = namedtuple('Strategy', ['name', 'a', 'P', 'z_m', 'style'])
+    Strategy = namedtuple('Strategy', ['name', 'H', 'P', 'z_m', 'style'])
 
-    prop_ls = Strategy('Propulsive, launch site', a=0.07, P=1.2, z_m=1,
+    prop_ls = Strategy('Propulsive, launch site', H=0.07, P=1.2, z_m=1,
         style={'color': 'red'})
-    prop_dr = Strategy('Propulsive, downrange', a=0.07, P=0.3, z_m=1,
+    prop_dr = Strategy('Propulsive, downrange', H=0.07, P=0.3, z_m=1,
         style={'color': 'red', 'linestyle':'--'})
-    wing_ls = Strategy('Wing, launch site', a=0.45, P=0.2, z_m=1,
+    wing_ls = Strategy('Wing, launch site', H=0.45, P=0.2, z_m=1,
         style={'color': 'blue'})
 
     strats = (prop_ls, prop_dr, wing_ls)
     for strat in strats:
-        e_1 = unavail_mass(strat.a, strat.P, z_m, E_1)
-        label = '{:s} (a={:.2f}, P={:.2f})'.format(strat.name, strat.a, strat.P)
+        e_1 = unavail_mass(strat.H, strat.P, z_m, E_1)
+        label = '{:s} (H={:.2f}, P={:.2f})'.format(strat.name, strat.H, strat.P)
         plt.plot(E_1, e_1, label=label, **strat.style)
     plt.plot(E_1, E_1, color='grey', label='Expendable 1:1')
 
@@ -50,9 +50,9 @@ def plot_effect_of_structure_mass():
 
 
 def plot_contours_ap():
-    a = np.linspace(0, 0.99)
+    H = np.linspace(0, 0.99)
     P = np.linspace(0, 1.5)
-    a_grid, P_grid = np.meshgrid(a, P)
+    H_grid, P_grid = np.meshgrid(H, P)
 
     g_0 = 9.81
 
@@ -72,12 +72,12 @@ def plot_contours_ap():
 
     for case in cases:
 
-        e_grid = unavail_mass(a_grid, P_grid, case.z_m, case.E_1)
+        e_grid = unavail_mass(H_grid, P_grid, case.z_m, case.E_1)
 
         # Make contour plot
-        plt.figure(figsize=(8,6))        
+        plt.figure(figsize=(8, 6))        
         host_ax = plt.subplot(111)
-        cs = plt.contour(a_grid, P_grid, e_grid, np.logspace(-1, 0, 15))
+        cs = plt.contour(H_grid, P_grid, e_grid, np.logspace(-1, 0, 15))
         plt.clabel(cs, inline=1, fontsize=0.8*fontsize)
         host_ax.set_ylim([0, max(P)])
 

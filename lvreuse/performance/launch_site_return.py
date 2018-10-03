@@ -96,7 +96,7 @@ def stage_sep_velocity(c_1, e_1, pi_1, dv_loss_ascent=1000):
 PerfResult = namedtuple('PerfResult', ['pi_star', 'pi_1', 'e_1', 'v_ss'])
 
 
-def coupled_perf_solver(a, c_1, c_2, E_1, E_2, y, dv_mission, recovery_propellant_func, z_m=1):
+def coupled_perf_solver(H, c_1, c_2, E_1, E_2, y, dv_mission, recovery_propellant_func, z_m=1):
     # Solve for the 1st stage payload mass fraction
     def root_fun(x):
         e_1_guess = x[0]
@@ -106,7 +106,7 @@ def coupled_perf_solver(a, c_1, c_2, E_1, E_2, y, dv_mission, recovery_propellan
 
         v_ss = stage_sep_velocity(c_1, e_1_guess, pi_1)
         P = recovery_propellant_func(v_ss)
-        e_1 = unavail_mass(a, P, z_m=z_m, E_1=E_1)
+        e_1 = unavail_mass(H, P, z_m=z_m, E_1=E_1)
 
         pi_2 = (y + 1) - y / pi_1
         dv = - c_1 * np.log(e_1 + (1 - e_1) * pi_1) - c_2 * np.log(E_2 + (1 - E_2) * pi_2)
@@ -133,7 +133,7 @@ def coupled_perf_solver(a, c_1, c_2, E_1, E_2, y, dv_mission, recovery_propellan
     return results
 
 
-def propulsive_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission, a,
+def propulsive_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission, H,
                        dv_entry=800, landing_m_A=2000, landing_accel=30., f_ss=0.02):
     propellant_margin = 0.10
     def recovery_propellant_func(v_ss):
@@ -142,7 +142,7 @@ def propulsive_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission, a,
         P = (dv_rb + dv_entry + dv_land) / c_1
         return P * (1 + propellant_margin)
 
-    results = coupled_perf_solver(a, c_1, c_2, E_1, E_2, y,
+    results = coupled_perf_solver(H, c_1, c_2, E_1, E_2, y,
                                   dv_mission, recovery_propellant_func)
     return results
 
@@ -165,7 +165,7 @@ def breguet_propellant_winged_powered(R_cruise, v_cruise, lift_drag, I_sp_ab):
     return R_cruise / (v_cruise * lift_drag * I_sp_ab)
 
 
-def winged_powered_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission, a,
+def winged_powered_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission, H,
                            I_sp_ab=3600, v_cruise=150, lift_drag=4, f_ss=0.02, z_m=1):
     """
     Arguments:
@@ -180,7 +180,7 @@ def winged_powered_ls_perf(c_1, c_2, E_1, E_2, y, dv_mission, a,
         P = breguet_propellant_winged_powered(R_cruise, v_cruise, lift_drag, I_sp_ab)
         return P * (1 + propellant_margin)
 
-    results = coupled_perf_solver(a, c_1, c_2, E_1, E_2, y,
+    results = coupled_perf_solver(H, c_1, c_2, E_1, E_2, y,
                                   dv_mission, recovery_propellant_func, z_m)
     return results
 
