@@ -8,6 +8,7 @@ from matplotlib import pyplot as plt
 
 from lvreuse.performance.unavail_mass import unavail_mass
 
+fontsize = 15
 
 def main():
     plot_contours_ap()
@@ -41,9 +42,9 @@ def plot_effect_of_structure_mass():
     ax = plt.gca()
     ax.set_xlim(xmin=0)
     ax.set_ylim(ymin=0)
-    plt.xlabel('First stage mass tech limit $E_1$ [-]')
-    plt.ylabel("First stage unavail. mass $\\epsilon_1'$ [-]")
-    plt.legend()
+    plt.xlabel('First stage mass tech limit $E_1$ [-]', fontsize=fontsize)
+    plt.ylabel("First stage unavail. mass $\\epsilon_1'$ [-]", fontsize=fontsize)
+    plt.legend(fontsize=0.8*fontsize)
     plt.savefig('effect_of_structure_mass.png')
 
 
@@ -74,17 +75,17 @@ def plot_contours_ap():
         e_grid = unavail_mass(a_grid, P_grid, case.z_m, case.E_1)
 
         # Make contour plot
-        plt.figure(figsize=(6,6))        
+        plt.figure(figsize=(8,6))        
         host_ax = plt.subplot(111)
         cs = plt.contour(a_grid, P_grid, e_grid, np.logspace(-1, 0, 15))
-        plt.clabel(cs, inline=1, fontsize=10)
+        plt.clabel(cs, inline=1, fontsize=0.8*fontsize)
         host_ax.set_ylim([0, max(P)])
 
-        host_ax.set_xlabel('Recov. h/w mass ratio $a = m_{rh,1}/(m_{rh,1} + m_{hv,1})$ [-]')
-        host_ax.set_ylabel('Propulsion exponent $P$ [-]')
+        host_ax.set_xlabel('Hardware factor $H = m_{hr,1}/(m_{hr,1} + m_{hv,1})$ [-]', fontsize=fontsize)
+        host_ax.set_ylabel('Propellant Factor $P$ [-]')
         plt.title("Unavailable mass ratio $\\epsilon_1'$\n"
                   + 'for {:s} ($E_1$={:.2f}, $z_m$={:.2f})'.format(
-                      case.name, case.E_1, case.z_m))
+                      case.name, case.E_1, case.z_m), fontsize=fontsize)
 
         # Add secondary axis scales
         # Delta-v axis
@@ -94,19 +95,20 @@ def plot_contours_ap():
         dv_ax.spines['left'].set_visible(True)
         dv_ax.yaxis.set_label_position('left')
         dv_ax.yaxis.set_ticks_position('left')
-        dv_ax.set_ylabel('Recov. $\\Delta v$ [m/s]')
+        dv_ax.set_ylabel('Recov. $\\Delta v$ [m/s]', fontsize=fontsize)
         # Air-breathing cruise range axis
         ab_ax = host_ax.twinx()
         ab_ax.set_ylim(0, max(P) * lift_drag * Isp_ab * v_cruise * 1e-3)
         # ab_ax.spines['right'].set_position(('outward', 50))
         ab_ax.set_ylabel('Recov. range $R_{{cruise}}$ (for $L/D$ = {:.0f}, $v_{{cruise}}$ = {:.0f} m/s) [km]'.format(
-            lift_drag, v_cruise))
+            lift_drag, v_cruise), fontsize=fontsize)
 
         plt.tight_layout()
         plt.savefig(os.path.join(
             'plots',
             'unavail_mass_{:s}.png'.format(
-            case.name.replace(' ', '_').replace(',', ''))))
+            case.name.replace(' ', '_').replace(',', ''))),
+            dpi=200)
 
 
 if __name__ == '__main__':

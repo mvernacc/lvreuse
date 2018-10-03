@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from scipy import stats
 import statsmodels.api as sm
-from CER_data import CER_data_list
+from CER_data import CER_data_list, liquid_storable_prod
 import math
 
-data_set = CER_data_list[-2]
+data_set = liquid_storable_prod
 
 x_data = data_set.x_data
 y_data = data_set.y_data

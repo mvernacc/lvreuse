@@ -133,7 +133,7 @@ class LaunchVehicle(object):
 
         return C_rec
 
-    def element_refurb_cost(self, element_name, ops_cost_factors, element_map):
+    def element_refurb_cost(self, element_name, ops_cost_factors, element_map, element_reuses_dict):
         """Find refurbishment cost for an element.
 
         Arguments:
@@ -151,13 +151,17 @@ class LaunchVehicle(object):
 
         CER_vals, element_cost_factors, n = element_map[element_name]
 
+        f5_avg = ops_cost_factors.f5_dict[element_name]
+
+        f5_specific = f5_avg / 100 * element_reuses_dict[element_name] + 0.5 * f5_avg
+
         TFU = element_refurb.average_element_production_cost(CER_vals, element_cost_factors, [1])
 
-        element_refurb_cost = n * ops_cost_factors.f5_dict[element_name] * TFU
+        element_refurb_cost = n * f5_specific * TFU
 
         return element_refurb_cost
 
-    def total_refurbishment_cost(self, ops_cost_factors, element_map):
+    def total_refurbishment_cost(self, ops_cost_factors, element_map, element_reuses_dict):
         """Find total refurbishment cost for a particular vehicle.
 
         Arguments:
@@ -172,7 +176,7 @@ class LaunchVehicle(object):
         refurb_cost = 0
         for element_name in ops_cost_factors.f5_dict:
 
-            refurb_cost += self.element_refurb_cost(element_name, ops_cost_factors, element_map)
+            refurb_cost += self.element_refurb_cost(element_name, ops_cost_factors, element_map, element_reuses_dict)
 
         return refurb_cost
 

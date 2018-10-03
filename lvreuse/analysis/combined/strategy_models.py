@@ -20,6 +20,7 @@ import lvreuse.cost as cost
 from lvreuse.analysis.cost import strategy_cost_models
 from lvreuse.analysis.combined.construct_launch_vehicle import construct_launch_vehicle
 from lvreuse.data.missions import LEO, LEO_smallsat, GTO
+from lvreuse.analysis.cost.strategy_cost_models import wyr_conversion
 
 Technology = namedtuple('Technology',
                        ['fuel', 'oxidizer', 'of_mass_ratio',
@@ -151,6 +152,17 @@ reuse_cost_uncerts = [
     rdm.TriangularUncertainty('f5_e1', min_value=0.5e-2, mode_value=1e-2, max_value=3e-2),
     rdm.TriangularUncertainty('f5_s1', min_value=0.008e-2, mode_value=1e-2, max_value=2.3e-2),
 ]
+
+reuse_cost_sea_uncerts = [
+
+    rdm.TriangularUncertainty('num_reuses_e1', min_value=2, mode_value=4, max_value=6),
+    rdm.TriangularUncertainty('num_reuses_s1', min_value=2, mode_value=4, max_value=6),
+    rdm.TriangularUncertainty('f5_e1', min_value=0.5*28e-2, mode_value=28e-2, max_value=2*28e-2),
+    rdm.TriangularUncertainty('f5_s1', min_value=0.5*28e-2, mode_value=28e-2, max_value=2*28e-2),
+    # from Forcast International Space Shuttle Archived Report: NASA study said SRBs cost $25 million 
+    # to produce and $7 million to refurbish
+]
+
 reuse_cost_ab_uncerts = [
     rdm.TriangularUncertainty('num_reuses_ab', min_value=100, mode_value=700, max_value=1000),
     rdm.TriangularUncertainty('f5_ab', min_value=0.001e-2, mode_value=0.1e-2, max_value=0.5e-2),
@@ -801,7 +813,7 @@ class Parachute(StrategyNoPropulsion):
             dev_cost_unc_list=dev_cost_uncerts + dev_cost_stage_1_uncerts,
             )
         self.uncertainties += self.cost_model.uncertainties
-        self.uncertainties += reuse_cost_uncerts
+        self.uncertainties += reuse_cost_sea_uncerts
         self.setup_model()
 
 
@@ -942,9 +954,10 @@ def demo():
             cost_per_flight = {}
             for strat_name in results:
                 pi_star[strat_name] = results[strat_name]['pi_star']
-                cost_per_flight[strat_name] = results[strat_name]['cost_per_flight']
+                cost_per_flight[strat_name] = results[strat_name]['cost_per_flight'] 
             pi_star = pandas.DataFrame(pi_star)
             cost_per_flight = pandas.DataFrame(cost_per_flight)
+            cost_per_flight = cost_per_flight.multiply(wyr_conversion)
 
             sns.set(style='whitegrid')
 
@@ -956,12 +969,12 @@ def demo():
             plt.ylim([0, plt.ylim()[1]])
 
             ax.set_xticklabels(xticks)
-            plt.xticks(rotation=30)
+            # plt.xticks(rotation=30)
 
             plt.axvline(x=0.5, color='grey')
-            plt.text(x=1, y=0.0, s='Launch site recovery')
+            # plt.text(x=1, y=0.0, s='Launch site recovery')
             plt.axvline(x=3.5, color='grey')
-            plt.text(x=4, y=0.0, s='Downrange recovery')
+            # plt.text(x=4, y=0.0, s='Downrange recovery')
 
             if (tech_1.fuel == 'kerosene' and tech_1.cycle == 'gas generator'
                 and tech_2.fuel == 'kerosene' and tech_2.cycle == 'gas generator'):
@@ -991,21 +1004,27 @@ def demo():
                 + ', {:.1f} Mg payload'.format(mission.m_payload * 1e-3)
                 + '\nstage 1: {:s} {:s} tech.,'.format(tech_1.fuel, tech_1.cycle)
                 + ' stage 2: {:s} {:s} tech.'.format(tech_2.fuel, tech_2.cycle))
-            plt.ylabel('Cost per flight [WYr]')
-            y_upper = 550
+            ax.set_ylabel('Cost per flight [Million US Dollars in 2018]')
+            y_upper = 550 * wyr_conversion
+
+            ax1 = ax.twinx()
+            ax1.set_ylabel('Cost per flight [WYr]')
+
             if mission.name == 'LEO':
                 if mission.m_payload > 1000:
-                    y_upper = 300
+                    y_upper = 300 * wyr_conversion
                 else:
-                    y_upper = 50
-            plt.ylim([0, y_upper])
+                    y_upper = 50 * wyr_conversion
+            ax.set_ylim(0, y_upper)
+            ax1.set_ylim(0, y_upper/wyr_conversion)
+            ax1.grid(False)
 
             ax.set_xticklabels(xticks)
-            plt.xticks(rotation=30)
+            # plt.xticks(rotation=30)
             plt.axvline(x=0.5, color='grey')
-            plt.text(x=1, y=0.0, s='Launch site recovery')
+            # plt.text(x=1, y=0.0, s='Launch site recovery')
             plt.axvline(x=3.5, color='grey')
-            plt.text(x=4, y=0.0, s='Downrange recovery')
+            # plt.text(x=4, y=0.0, s='Downrange recovery')
 
             plt.tight_layout()
             plt.savefig(os.path.join('plots', 'strategy_cost_{:s}_{:s}_pld{:.0f}.png'.format(

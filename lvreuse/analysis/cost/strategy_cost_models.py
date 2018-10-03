@@ -15,6 +15,8 @@ from lvreuse.data.propellants import propellant_cost_list
 from lvreuse.data.vehicle_cpf_data import ariane5G, falcon9, atlasV, deltaIV, electron, antares230
 from lvreuse.cost.elements import VTOStageFlybackVehicle
     
+wyr_conversion = .3674
+
 def get_prod_dist(element):
     """Get the production CER parameter distributions from an element.
 
@@ -265,7 +267,7 @@ class TwoLiquidStageTwoEngine(VehicleArchitecture):
         direct_ops_cost = ground_ops + mission_ops + props_cost + fees + insurance + recovery_cost
         indir_ops_cost = indirect_ops_cost(launch_rate=launch_rate, launch_provider_type=self.launch_provider_type)
 
-        refurb_cost = self.launch_vehicle.total_refurbishment_cost(ops_cost_factors, element_map)
+        refurb_cost = self.launch_vehicle.total_refurbishment_cost(ops_cost_factors, element_map, element_reuses_dict)
 
         ops_cost_per_flight = direct_ops_cost + indir_ops_cost + refurb_cost
 
@@ -370,7 +372,7 @@ class TwoLiquidStageTwoEnginePartial(VehicleArchitecture):
         direct_ops_cost = ground_ops + mission_ops + props_cost + fees + insurance + recovery_cost
         indir_ops_cost = indirect_ops_cost(launch_rate=launch_rate, launch_provider_type=self.launch_provider_type)
 
-        refurb_cost = self.launch_vehicle.total_refurbishment_cost(ops_cost_factors, element_map)
+        refurb_cost = self.launch_vehicle.total_refurbishment_cost(ops_cost_factors, element_map, element_reuses_dict)
 
         ops_cost_per_flight = direct_ops_cost + indir_ops_cost + refurb_cost
 
@@ -474,7 +476,7 @@ class TwoLiquidStageTwoEnginePlusAirbreathing(VehicleArchitecture):
         direct_ops_cost = ground_ops + mission_ops + props_cost + fees + insurance + recovery_cost
         indir_ops_cost = indirect_ops_cost(launch_rate=launch_rate, launch_provider_type=self.launch_provider_type)
 
-        refurb_cost = self.launch_vehicle.total_refurbishment_cost(ops_cost_factors, element_map)
+        refurb_cost = self.launch_vehicle.total_refurbishment_cost(ops_cost_factors, element_map, element_reuses_dict)
 
         ops_cost_per_flight = direct_ops_cost + indir_ops_cost + refurb_cost
 
@@ -586,7 +588,7 @@ class TwoLiquidStagePartialPlusAirbreathing(VehicleArchitecture):
         direct_ops_cost = ground_ops + mission_ops + props_cost + fees + insurance + recovery_cost
         indir_ops_cost = indirect_ops_cost(launch_rate=launch_rate, launch_provider_type=self.launch_provider_type)
 
-        refurb_cost = self.launch_vehicle.total_refurbishment_cost(ops_cost_factors, element_map)
+        refurb_cost = self.launch_vehicle.total_refurbishment_cost(ops_cost_factors, element_map, element_reuses_dict)
 
         ops_cost_per_flight = direct_ops_cost + indir_ops_cost + refurb_cost
 
@@ -673,7 +675,7 @@ class OneSolidOneLiquid(VehicleArchitecture):
         direct_ops_cost = ground_ops + mission_ops + props_cost + fees + insurance + recovery_cost
         indir_ops_cost = indirect_ops_cost(launch_rate=launch_rate, launch_provider_type=self.launch_provider_type)
 
-        refurb_cost = self.launch_vehicle.total_refurbishment_cost(ops_cost_factors, element_map)
+        refurb_cost = self.launch_vehicle.total_refurbishment_cost(ops_cost_factors, element_map, element_reuses_dict)
 
         ops_cost_per_flight = direct_ops_cost + indir_ops_cost + refurb_cost
 
@@ -769,7 +771,7 @@ class TwoLiquidStageTwoEngineWithBooster(VehicleArchitecture):
         direct_ops_cost = ground_ops + mission_ops + props_cost + fees + insurance + recovery_cost
         indir_ops_cost = indirect_ops_cost(launch_rate=launch_rate, launch_provider_type=self.launch_provider_type)
 
-        refurb_cost = self.launch_vehicle.total_refurbishment_cost(ops_cost_factors, element_map)
+        refurb_cost = self.launch_vehicle.total_refurbishment_cost(ops_cost_factors, element_map, element_reuses_dict)
 
         ops_cost_per_flight = direct_ops_cost + indir_ops_cost + refurb_cost
 
@@ -891,7 +893,6 @@ def demo():
 
     """sa_results = rdm.sa(ariane5G_architecture.avg_prod_cost_model, "cost")
     print(sa_results)"""
-    wyr_conversion = .3674
 
     prod_cost_per_flight = {}
     ops_cost_per_flight = {}
@@ -935,10 +936,10 @@ def demo():
     sns.set(style='whitegrid')
     data=price_per_flight.multiply(wyr_conversion)
     ax = sns.violinplot(data=data)
-    ax.set_ylim(0, 450)
-    ax.set_ylabel('Price [Million US Dollars in 2018]')
+    ax.set_ylim(0, 400)
+    ax.set_ylabel('Price per flight [Million US Dollars in 2018]')
 
-    plt.title('Price per flight')
+    plt.title('Price estimates for some operational launch vehicles')
     plt.xlabel('Launch vehicle')
 
     plt.scatter(0, 314*wyr_conversion, s=50, color='red', zorder=10) # atlas
@@ -947,8 +948,8 @@ def demo():
     plt.scatter(2, 460*wyr_conversion, s=50, color='red', zorder=10) # delta, astronautix, 133million in 2004
 
     ax1 = ax.twinx()
-    ax1.set_ylabel('Price [WYr]')
-    ax1.set_ylim(0, 450/wyr_conversion)
+    ax1.set_ylabel('Price per flight [WYr]')
+    ax1.set_ylim(0, ax.get_ylim()[1]/wyr_conversion)
     ax1.grid(False)
 
     legend_item = [Line2D([0], [0], marker='o', color='w', label='Actual price per flight',
